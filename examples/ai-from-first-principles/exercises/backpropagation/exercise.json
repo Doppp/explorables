@@ -1,0 +1,10 @@
+{
+  "id": "differentiate-small-graph",
+  "title": "Differentiate the graph",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/backpropagation/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 30,
+  "centralFiles": ["starter/graph.ts"],
+  "protectedPaths": ["solution"]
+}

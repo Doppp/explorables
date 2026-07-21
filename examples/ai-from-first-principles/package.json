@@ -1,0 +1,17 @@
+{
+  "name": "ai-from-first-principles",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "course": "explorables start .",
+    "build": "explorables build .",
+    "validate": "explorables validate .",
+    "test": "vitest run --config vitest.config.ts && node scripts/verify-exercises.mjs"
+  },
+  "devDependencies": {
+    "@explorables/cli": "workspace:*",
+    "@explorables/explorable": "workspace:*",
+    "vitest": "4.1.10"
+  }
+}

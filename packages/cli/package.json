@@ -1,0 +1,15 @@
+{
+  "name": "@explorables/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "explorables": "./src/bin.ts"
+  },
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@explorables/markdown": "workspace:*",
+    "@explorables/sandbox": "workspace:*",
+    "@explorables/validator": "workspace:*",
+    "create-explorables-course": "workspace:*"
+  }
+}

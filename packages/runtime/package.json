@@ -1,0 +1,12 @@
+{
+  "name": "@explorables/runtime",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./src/index.tsx",
+  "dependencies": {
+    "@explorables/course-schema": "workspace:*",
+    "@explorables/sandbox": "workspace:*",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}

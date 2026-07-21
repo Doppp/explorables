@@ -1,0 +1,10 @@
+{
+  "id": "masked-attention-weights",
+  "title": "Implement masked attention weights",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/attention/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 35,
+  "centralFiles": ["starter/attention.ts"],
+  "protectedPaths": ["solution"]
+}

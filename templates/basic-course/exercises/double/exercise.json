@@ -1,0 +1,10 @@
+{
+  "id": "double-a-number",
+  "title": "Implement double",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm test",
+  "estimatedMinutes": 15,
+  "centralFiles": ["starter/double.ts"],
+  "protectedPaths": []
+}

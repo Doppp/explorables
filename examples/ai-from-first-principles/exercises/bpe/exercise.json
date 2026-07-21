@@ -1,0 +1,10 @@
+{
+  "id": "bpe-pairs-and-merge",
+  "title": "Count and merge token pairs",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/bpe/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 35,
+  "centralFiles": ["starter/bpe.ts"],
+  "protectedPaths": ["solution"]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "grouped-evaluation-split",
+  "title": "Create a leakage-safe split",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/leakage/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 30,
+  "centralFiles": ["starter/split.ts"],
+  "protectedPaths": ["solution"]
+}

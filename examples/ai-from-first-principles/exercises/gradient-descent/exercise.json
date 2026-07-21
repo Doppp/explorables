@@ -1,0 +1,10 @@
+{
+  "id": "gradient-descent-step",
+  "title": "Implement one gradient update",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/gradient-descent/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 25,
+  "centralFiles": ["starter/gradient.ts"],
+  "protectedPaths": ["solution"]
+}

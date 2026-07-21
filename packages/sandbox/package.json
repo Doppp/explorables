@@ -1,0 +1,12 @@
+{
+  "name": "@explorables/sandbox",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "dependencies": {
+    "@explorables/explorable": "workspace:*"
+  }
+}

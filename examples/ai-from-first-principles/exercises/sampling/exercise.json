@@ -1,0 +1,10 @@
+{
+  "id": "nucleus-distribution",
+  "title": "Build a decoding distribution",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/sampling/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 35,
+  "centralFiles": ["starter/sampling.ts"],
+  "protectedPaths": ["solution"]
+}
