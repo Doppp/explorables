@@ -42,8 +42,8 @@ external DNS and learner-study evidence remain.
 
 ## Known external evidence
 
-- GitHub Pages is configured with `build_type: workflow`; its first full build
-  and deploy succeeded in Actions run `29851762912`.
+- GitHub Pages is configured with `build_type: workflow`; the current Node 24
+  workflow's full build and deploy succeeded in Actions run `29851928963`.
 - DNS provider access for `explorables.ai` has not been established. DNS queries
   currently return no A, AAAA, or `www` CNAME records. Exact records are in
   `docs/deployment.md`.
@@ -73,6 +73,7 @@ generated course smoke                  pass (validate, 2 tests, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass
 GitHub Pages API                         pass (workflow source, public, CNAME configured)
-GitHub Actions run 29851762912           pass (build, checks, artifact, deploy)
+GitHub Actions run 29851928963           pass (current actions; build, checks, artifact, deploy)
+clean temporary SSH clone                pass (frozen install, check, course:test, full build)
 DNS A / AAAA / www CNAME                no records returned (external blocker)
 ```
