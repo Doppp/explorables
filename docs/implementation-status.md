@@ -26,9 +26,10 @@ Updated: 22 July 2026
 
 ## Current work
 
-Milestone 5 deployment: commit/push the verified implementation, enable GitHub
-Pages through the API, observe the Actions deployment, and configure the custom
-domain. Local implementation milestones 1–5 are complete.
+Milestone 5 deployment: the verified MVP commit is on `master`, Pages uses the
+Actions source, the static deployment succeeded, and repository settings name
+`explorables.ai`. Local implementation milestones 1–5 are complete. Only
+external DNS and learner-study evidence remain.
 
 ## Decisions
 
@@ -41,8 +42,8 @@ domain. Local implementation milestones 1–5 are complete.
 
 ## Known external evidence
 
-- GitHub Pages is not configured yet; it is enabled after the workflow commit
-  exists on `master`.
+- GitHub Pages is configured with `build_type: workflow`; its first full build
+  and deploy succeeded in Actions run `29851762912`.
 - DNS provider access for `explorables.ai` has not been established. DNS queries
   currently return no A, AAAA, or `www` CNAME records. Exact records are in
   `docs/deployment.md`.
@@ -71,5 +72,7 @@ pnpm site:test                          pass (content, no-tracking copy, axe, 72
 generated course smoke                  pass (validate, 2 tests, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass
+GitHub Pages API                         pass (workflow source, public, CNAME configured)
+GitHub Actions run 29851762912           pass (build, checks, artifact, deploy)
 DNS A / AAAA / www CNAME                no records returned (external blocker)
 ```
