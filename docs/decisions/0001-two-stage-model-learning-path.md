@@ -1,6 +1,6 @@
 # ADR 0001: Use a two-stage model learning path
 
-Status: accepted
+Status: superseded by ADR 0002
 Date: 28 July 2026
 
 ## Context
