@@ -1,12 +1,14 @@
 # AI from First Principles
 
-A six-lesson interactive course for software developers who use AI tools and
-want to understand the machinery underneath them.
+An expanding interactive course for software developers who use AI tools and
+want to understand the machinery underneath them. The current foundation
+milestone contains eight lessons, including a linear classifier built from
+matrix multiplication, cross-entropy, and optimiser updates.
 
 ## Prerequisites
 
 Basic TypeScript, algebra, arrays, a terminal, Git, and the ability to read a
-test failure. The vertical slice takes roughly six hours.
+test failure. The current course takes roughly eight hours.
 
 ## Start
 

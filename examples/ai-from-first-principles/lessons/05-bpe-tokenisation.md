@@ -1,7 +1,7 @@
 ---
 id: bpe-tokenisation
 title: BPE tokenisation
-order: 3
+order: 5
 objectives:
   - count adjacent token pairs
   - apply one BPE merge consistently

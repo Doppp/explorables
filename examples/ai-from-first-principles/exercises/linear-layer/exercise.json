@@ -1,0 +1,10 @@
+{
+  "id": "linear-layer-forward",
+  "title": "Implement a linear-layer forward pass",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/linear-layer/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 35,
+  "centralFiles": ["starter/linear.ts"],
+  "protectedPaths": ["solution"]
+}

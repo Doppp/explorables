@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 22 July 2026
+Updated: 28 July 2026
 
 ## Completed
 
@@ -23,13 +23,19 @@ Updated: 22 July 2026
 - Verified a freshly scaffolded course validates, tests, and builds.
 - Added source-position diagnostics, error-isolation/security tests, axe checks,
   and normal/narrow browser checks.
+- Accepted the two-stage learning path from `AI from First Principles` v0.2 to
+  `Open Frontier Models`.
+- Implemented the first v0.2 foundation milestone: shape-aware linear
+  projections, stable cross-entropy, clipping, SGD, momentum, AdamW, two
+  interactive lessons, and two protected exercises.
 
 ## Current work
 
-Milestone 5 deployment: the verified MVP commit is on `master`, Pages uses the
-Actions source, the static deployment succeeded, and repository settings name
-`explorables.ai`. Local implementation milestones 1–5 are complete. Only
-external DNS and learner-study evidence remain.
+The v0.1 runtime MVP remains verified. The first `AI from First Principles`
+v0.2 expansion milestone is implemented and verified. The next course
+milestone adds embeddings, positional information, multi-head attention, the
+complete Transformer block, and next-token training. External DNS and
+learner-study evidence also remain.
 
 ## Decisions
 
@@ -69,6 +75,9 @@ pnpm course:test                        pass (6 model suites; each starter fails
 pnpm build                              pass (9 package entries, both courses, static site)
 pnpm test:browser                       pass (sandbox interaction, navigation, axe, 720px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
+foundation model tests                  pass (8 suites, 21 tests)
+foundation exercise verification        pass (8 starters fail, 8 references pass)
+foundation browser tests                pass (3 tests, new failure and training states)
 generated course smoke                  pass (validate, 2 tests, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass

@@ -1,6 +1,6 @@
 # AI from First Principles v0.2 course brief
 
-Status: proposed expansion
+Status: accepted; implementation in progress
 Depends on: the existing v0.1 six-lesson vertical slice
 
 ## Promise
