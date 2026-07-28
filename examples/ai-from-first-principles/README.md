@@ -1,14 +1,14 @@
 # AI from First Principles
 
 An expanding interactive course for software developers who use AI tools and
-want to understand the machinery underneath them. The current twelve-lesson
-course builds from scalar gradients through embeddings, multi-head attention,
-a complete Transformer block, and next-token training.
+want to understand the machinery underneath them. The complete thirteen-lesson
+foundation builds from scalar gradients through a trained tiny Transformer,
+cached autoregressive generation, sampling, and claim-aligned evaluation.
 
 ## Prerequisites
 
 Basic TypeScript, algebra, arrays, a terminal, Git, and the ability to read a
-test failure. The current course takes roughly twelve hours.
+test failure. The current course takes roughly fifteen hours.
 
 ## Start
 

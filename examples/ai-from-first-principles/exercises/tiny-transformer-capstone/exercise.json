@@ -1,0 +1,10 @@
+{
+  "id": "tiny-transformer-capstone",
+  "title": "Assemble the tiny Transformer invariants",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/tiny-transformer-capstone/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 50,
+  "centralFiles": ["starter/capstone.ts"],
+  "protectedPaths": ["solution"]
+}
