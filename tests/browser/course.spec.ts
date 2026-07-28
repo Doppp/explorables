@@ -8,7 +8,7 @@ test("renders all lessons and a restricted interactive iframe", async ({ page })
   ).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Course lessons" }).getByRole("link"),
-  ).toHaveCount(12);
+  ).toHaveCount(13);
   const iframe = page.locator("iframe").first();
   await expect(iframe).toHaveAttribute("sandbox", "allow-scripts");
   await expect(iframe).not.toHaveAttribute("sandbox", /allow-same-origin/);
@@ -17,7 +17,9 @@ test("renders all lessons and a restricted interactive iframe", async ({ page })
     frame.getByRole("heading", { name: "Walk the loss curve" }),
   ).toBeVisible();
   await frame.getByRole("button", { name: "Take one step" }).click();
-  await expect(page.getByRole("status")).toContainText("simulation-completed");
+  await expect(
+    page.getByRole("status").filter({ hasText: "simulation-completed" }),
+  ).toBeVisible();
   await page.getByRole("link", { name: "Backpropagation" }).click();
   await expect(
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
@@ -63,7 +65,9 @@ test("new foundation lessons expose recoverable failures and training state", as
   ).toBeDisabled();
   await frame.getByRole("checkbox", { name: "Use naive softmax (broken)" }).uncheck();
   await frame.getByRole("button", { name: "Take one training step" }).click();
-  await expect(page.getByRole("status")).toContainText("simulation-completed");
+  await expect(
+    page.getByRole("status").filter({ hasText: "simulation-completed" }),
+  ).toBeVisible();
 });
 
 test("Transformer foundation lessons expose their core invariants", async ({
@@ -115,7 +119,9 @@ test("Transformer foundation lessons expose their core invariants", async ({
     frame.getByRole("heading", { name: "Shift the targets, then train" }),
   ).toBeVisible();
   await frame.getByRole("button", { name: "Take one training step" }).click();
-  await expect(page.getByRole("status")).toContainText("simulation-completed");
+  await expect(
+    page.getByRole("status").filter({ hasText: "simulation-completed" }),
+  ).toBeVisible();
   await frame
     .getByRole("checkbox", {
       name: "Use the current token as its own target (broken)",
@@ -124,6 +130,55 @@ test("Transformer foundation lessons expose their core invariants", async ({
   await expect(
     frame.getByText(/identity-biased model appears accurate/i),
   ).toBeVisible();
+});
+
+test("inference and capstone preserve cache equivalence and expose invalid claims", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("link", { name: "Autoregressive inference and KV caching" })
+    .click();
+  await expect(
+    page.getByRole("heading", {
+      name: "Autoregressive inference and KV caching",
+      level: 1,
+    }),
+  ).toBeVisible();
+  const cacheFrame = page.frameLocator("iframe").nth(0);
+  await expect(
+    cacheFrame.getByRole("heading", {
+      name: "Reuse the past without changing the answer",
+    }),
+  ).toBeVisible();
+  await expect(
+    cacheFrame.getByText("maximum output difference: 0.000000"),
+  ).toBeVisible();
+  await cacheFrame
+    .getByRole("checkbox", {
+      name: "Keep only the newest key and value (broken)",
+    })
+    .check();
+  await expect(
+    cacheFrame.getByText(/current query can no longer attend to earlier tokens/),
+  ).toBeVisible();
+
+  const capstoneFrame = page.frameLocator("iframe").nth(1);
+  await expect(
+    capstoneFrame.getByRole("heading", {
+      name: "Train, generate, and challenge the claim",
+    }),
+  ).toBeVisible();
+  await capstoneFrame.getByRole("button", { name: "Train" }).click();
+  await expect(
+    page.getByRole("status").filter({ hasText: "simulation-completed" }),
+  ).toBeVisible();
+  await capstoneFrame
+    .getByRole("checkbox", {
+      name: "Evaluate on training tokens (broken claim)",
+    })
+    .check();
+  await expect(capstoneFrame.getByText(/cannot support a held-out/)).toBeVisible();
 });
 
 test("course shell passes axe and fits a narrow preview pane", async ({ page }) => {
@@ -162,4 +217,20 @@ test("course shell passes axe and fits a narrow preview pane", async ({ page }) 
       (documentElement) => documentElement.scrollWidth > documentElement.clientWidth,
     );
   expect(trainingOverflow).toBe(false);
+
+  await page
+    .getByRole("link", { name: "Autoregressive inference and KV caching" })
+    .click();
+  const inferenceFrame = page.frameLocator("iframe").first();
+  await expect(
+    inferenceFrame.getByRole("heading", {
+      name: "Reuse the past without changing the answer",
+    }),
+  ).toBeVisible();
+  const inferenceOverflow = await inferenceFrame
+    .locator("html")
+    .evaluate(
+      (documentElement) => documentElement.scrollWidth > documentElement.clientWidth,
+    );
+  expect(inferenceOverflow).toBe(false);
 });

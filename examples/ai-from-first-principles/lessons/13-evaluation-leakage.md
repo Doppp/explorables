@@ -6,6 +6,7 @@ objectives:
   - distinguish examples from independent task families
   - identify contamination across a train-test boundary
   - design a grouped evaluation split
+  - state a reproducible claim supported by the chosen split
 ---
 
 # Evaluation leakage
@@ -28,6 +29,11 @@ accurate. Grouped splitting keeps families intact and exposes generalisation.
 Turn leakage on and inspect test rows marked “family seen in train.” The score
 is reproducible and still invalid for the stated claim.
 
+The capstone makes the same failure concrete: its cyclic training corpus is
+easy to fit, while a held-out corpus follows a different transition pattern.
+Reporting training accuracy as held-out performance changes the claim without
+changing a single prediction.
+
 :::exercise{path="../exercises/leakage" command="pnpm exec vitest run exercises/leakage/tests --config vitest.exercise.config.ts" title="Create a leakage-safe split"}
 Implement a deterministic grouped split. The starter shuffles examples rather
 than task families.
@@ -37,3 +43,8 @@ than task families.
 
 Name two other identities—user, repository, time window, document source—that
 might need grouping in a real evaluation. What claim does each split support?
+
+Write down the corpus version, grouping key, split procedure, model state,
+decoding policy, metric, and random seed or deterministic tie-breaking rule.
+Another person should be able to recreate the score and determine exactly
+which generalisation claim it does—and does not—support.

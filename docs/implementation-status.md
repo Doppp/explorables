@@ -32,13 +32,22 @@ Updated: 28 July 2026
   RoPE-style positional rotation, causal multi-head attention, a pre-norm
   residual/SwiGLU block, next-token target alignment, four interactive lessons,
   and four protected exercises.
+- Implemented the final v0.2 foundation increment: prefill and autoregressive
+  decoding, equivalent cached and uncached attention, explicit cache memory and
+  work accounting, and a deterministic tiny Transformer capstone with gradient
+  checks, decreasing loss, generation, intermediate traces, and testable
+  masking, shape, residual, and evaluation failures.
+- Completed all thirteen `AI from First Principles` v0.2 lessons and connected
+  the inference result to decoding policy and claim-aligned evaluation.
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. The first two `AI from First Principles`
-v0.2 implementation increments are complete. The next course increment adds
-autoregressive inference, KV caching, and the small Transformer capstone.
-External DNS and learner-study evidence also remain.
+The v0.1 runtime MVP remains verified. `AI from First Principles` v0.2 is
+implemented and passes its automated milestone verification. The next planned
+course increment is the `Open Frontier Models` architecture vertical slice:
+model anatomy, Multi-head Latent Attention, sparse Mixture-of-Experts, and
+efficient or hybrid attention. External DNS and learner-study evidence also
+remain.
 
 ## Decisions
 
@@ -73,10 +82,10 @@ npm view typescript@7 version          7.0.2
 npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
-pnpm check                              pass (format, lint, TS7, 18 suites/51 tests, validators)
-pnpm course:test                        pass (12 model suites/38 tests; 12 starter/reference pairs)
+pnpm check                              pass (format, lint, TS7, 20 suites/60 tests, validators)
+pnpm course:test                        pass (14 model suites/47 tests; 14 starter/reference pairs)
 pnpm build                              pass (9 package entries, both courses, static site)
-pnpm test:browser                       pass (4 tests; sandbox, Transformer failures, axe, 720px)
+pnpm test:browser                       pass (5 tests; sandbox, inference/capstone failures, axe, 720px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
 generated course smoke                  pass (validate, 2 tests, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)

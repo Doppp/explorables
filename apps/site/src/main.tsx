@@ -125,7 +125,7 @@ function App() {
 
         <section className="section course-feature" id="course">
           <div>
-            <p className="kicker">Course 001 · twelve foundation lessons</p>
+            <p className="kicker">Course 001 · thirteen foundation lessons</p>
             <h2>
               AI from
               <br />
@@ -154,6 +154,7 @@ function App() {
               ["08", "Multi-head attention", "Independent mixtures and projections"],
               ["09", "Transformer block", "RMSNorm, residuals, and SwiGLU"],
               ["10", "Next-token training", "Shifted targets, loss, and updates"],
+              ["11", "Autoregressive inference", "Prefill, decoding, and KV caching"],
               ["12", "Sampling", "Temperature, top-k, and top-p"],
               ["13", "Evaluation leakage", "Splits, contamination, and trust"],
             ].map(([number, title, detail]) => (

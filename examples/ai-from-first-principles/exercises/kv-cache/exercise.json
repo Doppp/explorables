@@ -1,0 +1,10 @@
+{
+  "id": "incremental-kv-cache",
+  "title": "Implement incremental KV caching",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/kv-cache/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 35,
+  "centralFiles": ["starter/cache.ts"],
+  "protectedPaths": ["solution"]
+}

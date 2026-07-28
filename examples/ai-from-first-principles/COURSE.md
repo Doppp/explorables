@@ -1,7 +1,7 @@
 ---
 id: ai-from-first-principles
 title: AI from First Principles
-version: 0.2.0-transformer.1
+version: 0.2.0-inference.1
 summary: See, implement, and debug the foundations behind modern language models.
 license: CC-BY-4.0
 audience:
@@ -10,7 +10,7 @@ audience:
 prerequisites:
   - basic TypeScript
   - algebra and arrays
-estimatedHours: 12
+estimatedHours: 15
 repository: https://github.com/Doppp/explorables
 language: en
 tags:
@@ -35,5 +35,6 @@ tests. The coding agent is your tutor and debugger, not your substitute.
 8. [Multi-head attention](lessons/08-multi-head-attention.md)
 9. [The Transformer block](lessons/09-transformer-block.md)
 10. [Next-token training](lessons/10-next-token-training.md)
-11. [Sampling and generation](lessons/12-sampling.md)
-12. [Evaluation leakage](lessons/13-evaluation-leakage.md)
+11. [Autoregressive inference and KV caching](lessons/11-autoregressive-inference-kv-caching.md)
+12. [Sampling and generation](lessons/12-sampling.md)
+13. [Evaluation leakage](lessons/13-evaluation-leakage.md)

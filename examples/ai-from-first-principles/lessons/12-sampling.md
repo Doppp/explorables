@@ -13,6 +13,11 @@ objectives:
 A model produces logits, not a finished answer. A decoding policy reshapes and
 truncates their distribution before selecting a token.
 
+The previous lesson's cached and uncached paths produce the same logits. The
+policy in this lesson is applied after either path; sampling changes how a
+token is selected, while caching must not change the distribution being
+sampled.
+
 > **Predict:** As temperature approaches zero, which token dominates? Does a
 > top-p threshold of 0.8 always keep the same number of tokens?
 
@@ -35,4 +40,6 @@ The starter accumulates tokens before sorting them.
 ## Explain and transfer
 
 Why can lowering temperature and lowering top-p both reduce variety while
-producing different distributions?
+producing different distributions? To compare two cache implementations, why
+would a greedy or seeded decoding policy be more informative than unrelated
+random samples?
