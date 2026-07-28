@@ -125,7 +125,7 @@ function App() {
 
         <section className="section course-feature" id="course">
           <div>
-            <p className="kicker">Course 001 · eight foundation lessons</p>
+            <p className="kicker">Course 001 · twelve foundation lessons</p>
             <h2>
               AI from
               <br />
@@ -149,9 +149,13 @@ function App() {
               ["03", "Linear layers", "Vectors, matrices, shapes, and projections"],
               ["04", "Losses and optimisers", "Cross-entropy and parameter updates"],
               ["05", "BPE tokenisation", "Pair counts and merge rules"],
-              ["06", "Self-attention", "Queries, keys, masks, and weights"],
-              ["07", "Sampling", "Temperature, top-k, and top-p"],
-              ["08", "Evaluation leakage", "Splits, contamination, and trust"],
+              ["06", "Embeddings and position", "Lookup tables and RoPE intuition"],
+              ["07", "Self-attention", "Queries, keys, masks, and weights"],
+              ["08", "Multi-head attention", "Independent mixtures and projections"],
+              ["09", "Transformer block", "RMSNorm, residuals, and SwiGLU"],
+              ["10", "Next-token training", "Shifted targets, loss, and updates"],
+              ["12", "Sampling", "Temperature, top-k, and top-p"],
+              ["13", "Evaluation leakage", "Splits, contamination, and trust"],
             ].map(([number, title, detail]) => (
               <li key={number}>
                 <span>{number}</span>

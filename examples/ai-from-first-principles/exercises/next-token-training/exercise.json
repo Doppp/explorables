@@ -1,0 +1,10 @@
+{
+  "id": "shifted-next-token-training",
+  "title": "Implement shifted next-token training",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/next-token-training/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 45,
+  "centralFiles": ["starter/training.ts"],
+  "protectedPaths": ["solution"]
+}

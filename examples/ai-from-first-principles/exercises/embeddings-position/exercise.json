@@ -1,0 +1,10 @@
+{
+  "id": "embedding-lookup-rope",
+  "title": "Implement embedding lookup and pair rotation",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/embeddings-position/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 40,
+  "centralFiles": ["starter/embeddings.ts"],
+  "protectedPaths": ["solution"]
+}

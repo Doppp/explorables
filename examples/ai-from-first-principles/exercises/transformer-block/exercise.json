@@ -1,0 +1,10 @@
+{
+  "id": "rmsnorm-residual-sublayer",
+  "title": "Implement RMSNorm and a residual sublayer",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/transformer-block/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 35,
+  "centralFiles": ["starter/block.ts"],
+  "protectedPaths": ["solution"]
+}

@@ -9,9 +9,9 @@ database, analytics, hosted executor, or LMS.
 
 The reference course is
 [AI from First Principles](examples/ai-from-first-principles). Its current
-eight-lesson foundation covers gradient descent, backpropagation, linear
-layers, losses and optimisers, BPE, self-attention, sampling, and evaluation
-leakage.
+twelve-lesson foundation builds from gradients and linear layers through
+embeddings, multi-head attention, a Transformer block, next-token training,
+sampling, and evaluation.
 
 ## Quick start
 

@@ -28,14 +28,17 @@ Updated: 28 July 2026
 - Implemented the first v0.2 foundation milestone: shape-aware linear
   projections, stable cross-entropy, clipping, SGD, momentum, AdamW, two
   interactive lessons, and two protected exercises.
+- Implemented the second v0.2 foundation increment: embedding lookup,
+  RoPE-style positional rotation, causal multi-head attention, a pre-norm
+  residual/SwiGLU block, next-token target alignment, four interactive lessons,
+  and four protected exercises.
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. The first `AI from First Principles`
-v0.2 expansion milestone is implemented and verified. The next course
-milestone adds embeddings, positional information, multi-head attention, the
-complete Transformer block, and next-token training. External DNS and
-learner-study evidence also remain.
+The v0.1 runtime MVP remains verified. The first two `AI from First Principles`
+v0.2 implementation increments are complete. The next course increment adds
+autoregressive inference, KV caching, and the small Transformer capstone.
+External DNS and learner-study evidence also remain.
 
 ## Decisions
 
@@ -70,14 +73,11 @@ npm view typescript@7 version          7.0.2
 npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
-pnpm check                              pass (format, lint, TS7, 22 unit tests, validators)
-pnpm course:test                        pass (6 model suites; each starter fails/reference passes)
+pnpm check                              pass (format, lint, TS7, 18 suites/51 tests, validators)
+pnpm course:test                        pass (12 model suites/38 tests; 12 starter/reference pairs)
 pnpm build                              pass (9 package entries, both courses, static site)
-pnpm test:browser                       pass (sandbox interaction, navigation, axe, 720px)
+pnpm test:browser                       pass (4 tests; sandbox, Transformer failures, axe, 720px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
-foundation model tests                  pass (8 suites, 21 tests)
-foundation exercise verification        pass (8 starters fail, 8 references pass)
-foundation browser tests                pass (3 tests, new failure and training states)
 generated course smoke                  pass (validate, 2 tests, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass

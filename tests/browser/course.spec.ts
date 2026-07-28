@@ -8,7 +8,7 @@ test("renders all lessons and a restricted interactive iframe", async ({ page })
   ).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Course lessons" }).getByRole("link"),
-  ).toHaveCount(8);
+  ).toHaveCount(12);
   const iframe = page.locator("iframe").first();
   await expect(iframe).toHaveAttribute("sandbox", "allow-scripts");
   await expect(iframe).not.toHaveAttribute("sandbox", /allow-same-origin/);
@@ -66,6 +66,66 @@ test("new foundation lessons expose recoverable failures and training state", as
   await expect(page.getByRole("status")).toContainText("simulation-completed");
 });
 
+test("Transformer foundation lessons expose their core invariants", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("link", { name: "Embeddings and positional information" })
+    .click();
+  let frame = page.frameLocator("iframe").first();
+  await expect(
+    frame.getByRole("heading", {
+      name: "Look up a token, then rotate its coordinates",
+    }),
+  ).toBeVisible();
+  await frame.getByRole("slider", { name: "Position", exact: true }).fill("7");
+  await frame
+    .getByRole("checkbox", {
+      name: "Add position to every coordinate (broken)",
+    })
+    .check();
+  await expect(
+    frame.getByText(/Adding the position changes the vector norm/),
+  ).toBeVisible();
+
+  await page.getByRole("link", { name: "Multi-head attention" }).click();
+  frame = page.frameLocator("iframe").first();
+  await frame
+    .getByRole("checkbox", {
+      name: "Reuse head 1 features for both heads (broken)",
+    })
+    .check();
+  await expect(
+    frame.getByText(/Both heads now receive the same feature slice/),
+  ).toBeVisible();
+
+  await page.getByRole("link", { name: "The Transformer block" }).click();
+  frame = page.frameLocator("iframe").first();
+  await frame
+    .getByRole("checkbox", {
+      name: "Replace instead of add residuals (broken)",
+    })
+    .check();
+  await expect(frame.getByText(/removes the identity path/)).toBeVisible();
+
+  await page.getByRole("link", { name: "Next-token training" }).click();
+  frame = page.frameLocator("iframe").first();
+  await expect(
+    frame.getByRole("heading", { name: "Shift the targets, then train" }),
+  ).toBeVisible();
+  await frame.getByRole("button", { name: "Take one training step" }).click();
+  await expect(page.getByRole("status")).toContainText("simulation-completed");
+  await frame
+    .getByRole("checkbox", {
+      name: "Use the current token as its own target (broken)",
+    })
+    .check();
+  await expect(
+    frame.getByText(/identity-biased model appears accurate/i),
+  ).toBeVisible();
+});
+
 test("course shell passes axe and fits a narrow preview pane", async ({ page }) => {
   await page.setViewportSize({ width: 720, height: 900 });
   await page.goto("/");
@@ -90,4 +150,16 @@ test("course shell passes axe and fits a narrow preview pane", async ({ page }) 
       (documentElement) => documentElement.scrollWidth > documentElement.clientWidth,
     );
   expect(frameOverflow).toBe(false);
+
+  await page.getByRole("link", { name: "Next-token training" }).click();
+  const trainingFrame = page.frameLocator("iframe").first();
+  await expect(
+    trainingFrame.getByRole("heading", { name: "Shift the targets, then train" }),
+  ).toBeVisible();
+  const trainingOverflow = await trainingFrame
+    .locator("html")
+    .evaluate(
+      (documentElement) => documentElement.scrollWidth > documentElement.clientWidth,
+    );
+  expect(trainingOverflow).toBe(false);
 });
