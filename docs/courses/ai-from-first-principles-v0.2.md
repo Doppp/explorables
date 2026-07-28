@@ -107,13 +107,13 @@ components implemented during the course. It must:
 The capstone is a conceptual reference implementation, not a production
 training framework or performance benchmark.
 
-## Boundary with Open Frontier Models
+## Boundary with the frontier course family
 
-The advanced course may assume only the outcomes listed in this brief. Each
-advanced lesson must link its baseline mechanism to a specific foundation
-lesson and capstone artifact. If a frontier lesson requires an unlisted
-concept, that concept must be added here or taught explicitly as part of the
-advanced lesson.
+The shared frontier core and every model-specific course may assume only the
+outcomes listed in this brief. Each advanced lesson must link its baseline
+mechanism to a specific foundation lesson and capstone artifact. If a frontier
+lesson requires an unlisted concept, that concept must be taught in the shared
+core or explicitly within that model course.
 
 ## Acceptance criteria
 

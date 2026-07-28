@@ -13,6 +13,12 @@ thirteen-lesson foundation builds from gradients and linear layers through a
 trained tiny Transformer, cached autoregressive generation, sampling, and
 claim-aligned evaluation.
 
+The accepted [model-learning roadmap](docs/course-roadmap.md) continues through
+`Open Frontier Models: Shared Techniques`, then separate `Inside DeepSeek`,
+`Inside Kimi`, `Inside Qwen`, `Inside MiniMax`, and `Inside GLM` courses. Each
+model course uses pinned primary sources and a controlled reconstruction rather
+than treating one umbrella survey as a substitute for studying the lab.
+
 ## Quick start
 
 Requirements: Node.js 24 LTS and pnpm 11.

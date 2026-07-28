@@ -23,8 +23,9 @@ Updated: 28 July 2026
 - Verified a freshly scaffolded course validates, tests, and builds.
 - Added source-position diagnostics, error-isolation/security tests, axe checks,
   and normal/narrow browser checks.
-- Accepted the two-stage learning path from `AI from First Principles` v0.2 to
-  `Open Frontier Models`.
+- Accepted the model-learning path from `AI from First Principles` v0.2 through
+  a shared `Open Frontier Models` core to separate DeepSeek, Kimi, Qwen,
+  MiniMax, and GLM courses.
 - Implemented the first v0.2 foundation milestone: shape-aware linear
   projections, stable cross-entropy, clipping, SGD, momentum, AdamW, two
   interactive lessons, and two protected exercises.
@@ -44,10 +45,10 @@ Updated: 28 July 2026
 
 The v0.1 runtime MVP remains verified. `AI from First Principles` v0.2 is
 implemented and passes its automated milestone verification. The next planned
-course increment is the `Open Frontier Models` architecture vertical slice:
-model anatomy, Multi-head Latent Attention, sparse Mixture-of-Experts, and
-efficient or hybrid attention. External DNS and learner-study evidence also
-remain.
+increment is `Open Frontier Models: Shared Techniques`, followed by separate
+DeepSeek, Kimi, Qwen, MiniMax, and GLM courses. The immediate work is the
+shared-core source freeze and its five research/comparison lessons. External
+DNS and learner-study evidence also remain.
 
 ## Decisions
 

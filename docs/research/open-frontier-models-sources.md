@@ -1,4 +1,4 @@
-# Open Frontier Models candidate source register
+# Open frontier course-family candidate source register
 
 Status: candidate sources for planning
 Checked: 28 July 2026
@@ -21,6 +21,10 @@ The commit recorded below is the official repository head observed during
 planning. It is evidence of what was reviewed, not a promise to track that
 branch.
 
+This register feeds several independent courses. It does not make a source
+eligible everywhere: each course must copy its selected rows into an immutable
+course-local manifest and complete the selection gates before implementation.
+
 ## Candidate artifacts
 
 | Case study | Candidate teaching use | Official repository and reviewed head | Repository licence signal | Release decision |
@@ -32,6 +36,17 @@ branch.
 | MiniMax M1 | Hybrid attention and long-context reasoning | [`MiniMax-AI/MiniMax-M1`](https://github.com/MiniMax-AI/MiniMax-M1) at `2abb4f45a9df4154b4bde024d51874bd127edcee` | GitHub reports Apache-2.0 for the repository | Candidate; verify model-weight terms separately |
 | Qwen 3 | Dense/MoE comparison and hybrid reasoning | [`QwenLM/Qwen3`](https://github.com/QwenLM/Qwen3) at `7a2f61ffc7a20d47efcd2bf97f6f2bf52729042e` | GitHub does not report a repository SPDX identifier | Candidate; select exact model size and model-card licence before implementation |
 | GLM 4.5 | MoE, agentic models, and hybrid reasoning | [`zai-org/GLM-4.5`](https://github.com/zai-org/GLM-4.5) at `170f20b2c10659008fdbc909d478bc2a75bc3627` | GitHub reports Apache-2.0 for the repository | Candidate; select exact base/instruct artifact and verify weight terms |
+
+## Course routing
+
+| Course | Candidate sources | Required freeze decision |
+| --- | --- | --- |
+| Open Frontier Models: Shared Techniques | Small configuration and artifact excerpts from several rows | Select only examples whose reuse terms support the shared teaching fixtures |
+| Inside DeepSeek | DeepSeek V3 and R1 | Pin exact report/card revisions and separate architecture, reasoning, code, and weight claims |
+| Inside Kimi | Kimi K2 and Kimi Linear | Resolve K2 repository/weight terms and pin the optimisation and attention sources |
+| Inside Qwen | Qwen 3 | Select exact dense and MoE sizes plus base/instruction cards and licences |
+| Inside MiniMax | MiniMax M1 | Pin the hybrid-attention report, code revision, weights, and long-context protocol |
+| Inside GLM | GLM 4.5 | Select exact base/instruction artifacts and pin agentic evaluation protocols |
 
 ## Selection gates
 

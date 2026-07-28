@@ -1,149 +1,280 @@
-# Course roadmap
+# Model-learning course roadmap
 
-Status: accepted; implementation in progress
+Status: accepted; foundation complete and frontier family planned
 Planning date: 28 July 2026
 
 ## Purpose
 
-The next curriculum increment should turn the current six-lesson
-`AI from First Principles` vertical slice into the foundation for a second,
-advanced course:
+`AI from First Principles` is the common foundation for a family of advanced
+courses about open-weight frontier-model research:
 
 ```text
 AI from First Principles
 Build, train, run, and evaluate a small Transformer
                          |
                          v
-Open Frontier Models
-Reconstruct selected frontier-model techniques at small scale
+Open Frontier Models: Shared Techniques
+Read artifacts, compare systems, and reproduce claims
+             /-----------+-----------+-----------+-----------\
+            v            v           v           v            v
+   Inside DeepSeek  Inside Kimi  Inside Qwen  Inside MiniMax  Inside GLM
 ```
 
-The two courses must form one learning path. The advanced course must name the
-foundation artifact it extends and must not silently assume mathematics,
-Transformer components, training objectives, or inference systems that the
-foundation course does not teach.
+The shared core teaches research and comparison methods once. Each model course
+then reconstructs techniques associated with one lab and pinned model release.
+This makes the labs first-class subjects without copying prerequisite material
+or turning model branding into the organising principle for shared concepts.
 
-## Course promises
+## Course family
 
-### AI from First Principles v0.2
+### 1. AI from First Principles v0.2
+
+Status: implementation and automated verification complete.
 
 By the end, a learner can explain, implement, train, run, and evaluate a small
-autoregressive Transformer. The existing v0.1 lessons remain the validated
-vertical slice while the missing foundations are added in independently
-reviewable milestones.
+autoregressive Transformer.
 
-Detailed scope: [courses/ai-from-first-principles-v0.2.md](courses/ai-from-first-principles-v0.2.md).
+Detailed scope:
+[courses/ai-from-first-principles-v0.2.md](courses/ai-from-first-principles-v0.2.md).
 
-### Open Frontier Models v0.1
+### 2. Open Frontier Models: Shared Techniques v0.1
 
-By the end, a learner can modify the foundation Transformer with small,
-testable versions of techniques documented by open-weight frontier-model
-projects, measure their trade-offs, and state what the experiment does and
-does not reproduce.
+Prerequisite: `AI from First Principles` v0.2.
 
-Detailed scope: [courses/open-frontier-models.md](courses/open-frontier-models.md).
+By the end, a learner can inspect open-weight model artifacts, normalise
+configurations, account for parameters and costs, run controlled comparisons,
+and produce a reproducible claim dossier. Named models appear as examples, but
+their distinctive algorithms are taught in the lab-specific courses.
+
+Detailed scope:
+[courses/open-frontier-models.md](courses/open-frontier-models.md).
+
+### 3. Inside DeepSeek v0.1
+
+Prerequisites: the foundation course and shared frontier core.
+
+Reconstruct selected DeepSeek architecture, routing, numerical, systems, and
+reasoning techniques at small scale.
+
+Detailed scope: [courses/inside-deepseek.md](courses/inside-deepseek.md).
+
+### 4. Inside Kimi v0.1
+
+Prerequisites: the foundation course and shared frontier core.
+
+Reconstruct selected Kimi sparse-model, matrix-optimisation, and
+efficient-attention techniques at small scale.
+
+Detailed scope: [courses/inside-kimi.md](courses/inside-kimi.md).
+
+### 5. Inside Qwen v0.1
+
+Prerequisites: the foundation course and shared frontier core.
+
+Study a pinned Qwen family through dense/MoE comparisons, reasoning controls,
+and reproducible adaptation experiments.
+
+Detailed scope: [courses/inside-qwen.md](courses/inside-qwen.md).
+
+### 6. Inside MiniMax v0.1
+
+Prerequisites: the foundation course and shared frontier core.
+
+Reconstruct selected MiniMax hybrid-attention, long-context, and reasoning
+techniques at small scale.
+
+Detailed scope: [courses/inside-minimax.md](courses/inside-minimax.md).
+
+### 7. Inside GLM v0.1
+
+Prerequisites: the foundation course and shared frontier core.
+
+Reconstruct selected GLM sparse-model, hybrid-reasoning, and agentic-evaluation
+techniques at small scale.
+
+Detailed scope: [courses/inside-glm.md](courses/inside-glm.md).
+
+## Planned course packages
+
+| Course ID | Working directory | Planned lessons |
+| --- | --- | ---: |
+| `ai-from-first-principles` | `examples/ai-from-first-principles` | 13 complete |
+| `open-frontier-models` | `examples/open-frontier-models` | 5 |
+| `inside-deepseek` | `examples/inside-deepseek` | 6 |
+| `inside-kimi` | `examples/inside-kimi` | 5 |
+| `inside-qwen` | `examples/inside-qwen` | 5 |
+| `inside-minimax` | `examples/inside-minimax` | 5 |
+| `inside-glm` | `examples/inside-glm` | 5 |
+
+These are separate course packages with separate `COURSE.md` files. They share
+the runtime and may reuse stable tested utilities; they do not share one lesson
+navigation tree or release number.
+
+## Dependency rules
+
+- Every frontier course starts from the versioned tiny Transformer produced by
+  `AI from First Principles`.
+- Every lab-specific course may assume the shared core's artifact-reading,
+  accounting, experiment-manifest, and claim-labelling skills.
+- A model course may not silently assume a mechanism taught only by another
+  model course. It must teach the mechanism locally or declare that course as
+  an optional extension.
+- Shared mechanisms are linked rather than copied. Lab courses concentrate on
+  how a pinned release combines, modifies, or motivates them.
+- Each course owns its lessons, exercises, capstone, source manifest, and
+  version. Learners may take model courses independently after the two common
+  prerequisites.
 
 ## Shared constraints
 
 - Keep plain Markdown and the existing `explorable` and `exercise` directives.
 - Require no account, API, backend, network access, GPU, or model-weight
-  download.
+  download for completion.
 - Run course JavaScript only in the existing sandboxed iframe boundary.
 - Use deterministic toy models, seeded randomness, fixed datasets, explicit
   tolerances, and stable tie-breaking.
-- Keep exercise execution deliberate and separate from lesson rendering.
-- Preserve the predict, manipulate, implement, debug, and explain teaching
-  loop.
-- Use primary research artifacts and record immutable source provenance.
-- Say `open-weight` unless the code, weights, data, and licences support a
-  stronger openness claim.
-- Label research claims as `reported`, `reproduced`, or `inferred`.
+- Preserve the predict, manipulate, implement, debug, explain, and transfer
+  teaching loop.
+- Use primary research artifacts and immutable source provenance.
+- Say `open-weight` unless code, weights, data, and licences support a stronger
+  claim.
+- Label technical claims as `reported`, `reproduced`, or `inferred`.
+- Never present a toy reconstruction as reproduction of full-model capability.
 
 ## Delivery sequence
 
-### Milestone 0 — design and research freeze
+### Milestone 0 — runtime and foundation
 
-- Approve both course promises and the prerequisite map.
-- Select the exact model releases used as case studies.
-- Complete code- and weight-licence review for selected artifacts.
-- Pin papers, repositories, commits, model cards, and evaluation protocols.
-- Confirm that no course-format or runtime change is required.
+Status: complete.
 
-### Milestone 1 — mathematical foundation
+- Deliver the v0.1 runtime and authoring format.
+- Complete the thirteen-lesson foundation course and tiny Transformer.
+- Verify deterministic training, generation, caching, evaluation, sandboxing,
+  accessibility, and clean builds.
 
-- Add vectors, matrices, linear layers, cross-entropy, and optimiser lessons.
-- Establish course-local tensor, matrix, probability, and training-chart
-  primitives.
-- Verify the interaction and accessibility conventions with real lessons.
+### Milestone 1 — course-family and source freeze
 
-### Milestone 2 — complete Transformer baseline
+- Accept the shared-core and model-course boundaries.
+- Map every advanced prerequisite to the foundation or shared core.
+- Select the exact releases used by the first implementation increments.
+- Pin reports, repositories, commits, model cards, and evaluation protocols.
+- Complete separate code, weight, data, and figure licence review.
+- Create one immutable source manifest per course before its first technical
+  lesson is implemented.
 
-- Add embeddings, positional information, multi-head attention, the complete
-  Transformer block, and next-token training.
-- Add autoregressive inference and KV caching.
-- Complete and verify the small Transformer capstone.
+### Milestone 2 — shared frontier core
 
-### Milestone 3 — frontier architecture vertical slice
+- Implement artifact and licence reading, configuration normalisation,
+  parameter/cost accounting, controlled comparison, and research reproduction.
+- Produce a machine-checkable experiment manifest and model dossier.
+- Establish the common baseline and reporting format used by every model
+  course.
 
-- Add model anatomy, Multi-head Latent Attention, sparse Mixture-of-Experts, and
-  efficient/hybrid attention.
-- Verify that every advanced prerequisite resolves to a foundation lesson and
-  artifact.
+### Milestone 3 — Inside DeepSeek
 
-### Milestone 4 — frontier training and systems
+- Implement the first complete lab-specific course.
+- Use pinned DeepSeek releases to teach selected attention, expert-routing,
+  numerical/training-system, and reasoning techniques.
+- Complete a DeepSeek-specific controlled-reconstruction capstone.
+- Use this course to validate the boundary between shared and lab-specific
+  material before implementing the remaining courses.
 
-- Add routing stability, matrix-aware optimisation, low precision, and
-  parallel training systems.
+### Milestone 4 — Inside Kimi
 
-### Milestone 5 — post-training and research
+- Add sparse-model and matrix-aware optimisation experiments.
+- Add efficient or recurrent attention experiments from the pinned Kimi
+  sources.
+- Complete a Kimi-specific controlled-reconstruction capstone.
 
-- Add reasoning post-training, agentic tool use, and research reproduction.
-- Complete the comparative frontier-model capstone.
+### Milestone 5 — Inside Qwen
 
-### Milestone 6 — external validation
+- Compare pinned dense and sparse family members without conflating size,
+  active parameters, or evaluation protocol.
+- Teach documented reasoning controls and a reproducible adaptation or
+  inference experiment.
+- Complete a Qwen-specific controlled-reconstruction capstone.
+
+### Milestone 6 — Inside MiniMax
+
+- Add hybrid-attention and long-context cost/recall experiments.
+- Teach the documented reasoning and training choices supported by the pinned
+  source set.
+- Complete a MiniMax-specific controlled-reconstruction capstone.
+
+### Milestone 7 — Inside GLM
+
+- Add sparse architecture and hybrid-reasoning experiments.
+- Separate model capability from agent scaffolding and tool-environment
+  evaluation.
+- Complete a GLM-specific controlled-reconstruction capstone.
+
+### Milestone 8 — external validation and releases
 
 - Conduct technical, licence, accessibility, and clean-checkout reviews.
-- Ask at least five target learners to complete one foundation lesson and one
-  frontier lesson.
-- Record setup failures, conceptual gaps, and misleading interactions.
-- Tag versioned course releases only after the evidence is complete.
+- Ask at least five target learners to complete one foundation lesson, one
+  shared-core lesson, and one model-specific lesson.
+- Record setup failures, transition gaps, stale-source risks, and misleading
+  interactions.
+- Give each course an explicit maintenance policy.
+- Tag versioned course releases only after its evidence is complete.
 
 ## Pull-request sequence
 
-Implementation should not be one large pull request.
+Completed foundation increments:
 
-1. `course/ai-foundations-math`: mathematical foundation.
-2. `course/ai-foundations-transformer`: complete Transformer mechanics.
-3. `course/ai-foundations-inference`: inference, evaluation, and capstone.
-4. `course/open-frontier-architectures`: first advanced vertical slice.
-5. `course/open-frontier-training`: optimisation, precision, and systems.
-6. `course/open-frontier-post-training`: reasoning, agents, reproduction, and
+1. `course/ai-foundations-math`
+2. `course/ai-foundations-transformer`
+3. `course/ai-foundations-inference`
+
+Planned frontier increments:
+
+4. `course/open-frontier-core`: shared research and comparison foundation.
+5. `course/inside-deepseek-architecture`: anatomy, latent attention, and sparse
+   experts.
+6. `course/inside-deepseek-training`: routing, numerical systems, reasoning,
+   and capstone.
+7. `course/inside-kimi`: sparse models, matrix-aware optimisation, efficient
+   attention, and capstone.
+8. `course/inside-qwen`: family comparison, reasoning controls, adaptation,
+   and capstone.
+9. `course/inside-minimax`: hybrid attention, long context, reasoning, and
    capstone.
+10. `course/inside-glm`: sparse models, agentic evaluation, reasoning, and
+    capstone.
+11. `course/frontier-family-validation`: cross-course checks, learner evidence,
+    maintenance policies, and release preparation.
 
-Each branch should start from the updated `master` after its dependency merges.
-Each pull request must validate independently and leave the applicable course
-in a coherent state.
+Each branch starts from updated `master` after its dependencies merge. A course
+may be split into more pull requests when its source freeze reveals a larger
+coherent scope; no PR should mix unrelated lab courses.
 
 ## Promotion of shared components
 
 Interactive primitives begin course-local. A primitive may move into a shared
 package only after at least three real lesson uses demonstrate a stable API.
 The component gallery should cover promoted components, accessibility states,
-and failure states. This avoids creating a speculative visual framework before
-the lessons establish what should be shared.
+and failure states.
+
+Shared prose is not copied between courses. Courses link to prerequisites and
+reuse tested model utilities only when doing so preserves an explicit,
+versioned educational contract.
 
 ## Initiative definition of done
 
-- Course 1 teaches every prerequisite used by Course 2.
-- Course 1 produces a working small Transformer baseline.
-- Course 2 modifies that baseline using documented frontier techniques.
+- The foundation course produces the working baseline used by every advanced
+  course.
+- The shared core teaches every cross-cutting research and comparison skill
+  assumed by model courses.
+- DeepSeek, Kimi, Qwen, MiniMax, and GLM each have a distinct runnable course,
+  pinned source manifest, exercises, and controlled-reconstruction capstone.
 - Every lesson has an explorable, exercise, intentional failure, explanation
   prompt, text alternative, and primary-source references where applicable.
 - All required work runs locally without accounts, APIs, GPUs, or weight
   downloads.
-- Both courses validate, test, and build from a clean checkout under Node 24
+- Every course validates, tests, and builds from a clean checkout under Node 24
   and pnpm 11.
-- Codex and Claude Code Desktop tutor both courses through the same
+- Codex and Claude Code Desktop tutor every course through the same
   host-neutral format.
-- Learner evidence shows that the transition between courses is understandable.
-- Both courses have versioned releases and explicit maintenance policies.
+- Learner evidence shows that transitions from foundation to shared core to a
+  model-specific course are understandable.
+- Every course has a versioned release and explicit source/maintenance policy.
