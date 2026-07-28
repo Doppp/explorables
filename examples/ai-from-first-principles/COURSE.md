@@ -1,7 +1,7 @@
 ---
 id: ai-from-first-principles
 title: AI from First Principles
-version: 0.2.0-foundations.1
+version: 0.2.0-transformer.1
 summary: See, implement, and debug the foundations behind modern language models.
 license: CC-BY-4.0
 audience:
@@ -10,7 +10,7 @@ audience:
 prerequisites:
   - basic TypeScript
   - algebra and arrays
-estimatedHours: 8
+estimatedHours: 12
 repository: https://github.com/Doppp/explorables
 language: en
 tags:
@@ -30,6 +30,10 @@ tests. The coding agent is your tutor and debugger, not your substitute.
 3. [Vectors, matrices, and linear layers](lessons/03-vectors-matrices-linear-layers.md)
 4. [Losses and optimisers](lessons/04-losses-optimisers.md)
 5. [BPE tokenisation](lessons/05-bpe-tokenisation.md)
-6. [Self-attention](lessons/07-self-attention.md)
-7. [Sampling and generation](lessons/12-sampling.md)
-8. [Evaluation leakage](lessons/13-evaluation-leakage.md)
+6. [Embeddings and positional information](lessons/06-embeddings-positional-information.md)
+7. [Self-attention](lessons/07-self-attention.md)
+8. [Multi-head attention](lessons/08-multi-head-attention.md)
+9. [The Transformer block](lessons/09-transformer-block.md)
+10. [Next-token training](lessons/10-next-token-training.md)
+11. [Sampling and generation](lessons/12-sampling.md)
+12. [Evaluation leakage](lessons/13-evaluation-leakage.md)

@@ -1,0 +1,10 @@
+{
+  "id": "causal-multi-head-attention",
+  "title": "Implement causal multi-head attention",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/multi-head-attention/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 50,
+  "centralFiles": ["starter/attention.ts"],
+  "protectedPaths": ["solution"]
+}
