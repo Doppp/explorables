@@ -1,0 +1,10 @@
+{
+  "id": "stable-loss-momentum",
+  "title": "Implement stable loss and a momentum update",
+  "language": "typescript",
+  "starter": "starter",
+  "testCommand": "pnpm exec vitest run exercises/losses-optimisers/tests --config vitest.exercise.config.ts",
+  "estimatedMinutes": 45,
+  "centralFiles": ["starter/training.ts"],
+  "protectedPaths": ["solution"]
+}

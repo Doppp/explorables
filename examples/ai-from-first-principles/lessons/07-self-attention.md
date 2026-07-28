@@ -1,7 +1,7 @@
 ---
 id: self-attention
 title: Self-attention
-order: 4
+order: 7
 objectives:
   - compute scaled query-key scores
   - interpret softmax rows as mixing weights

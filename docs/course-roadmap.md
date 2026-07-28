@@ -1,6 +1,6 @@
 # Course roadmap
 
-Status: proposed
+Status: accepted; implementation in progress
 Planning date: 28 July 2026
 
 ## Purpose

@@ -1,7 +1,7 @@
 ---
 id: sampling
 title: Sampling and generation
-order: 5
+order: 12
 objectives:
   - relate logits, temperature, and probabilities
   - compare top-k with nucleus sampling

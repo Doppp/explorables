@@ -125,7 +125,7 @@ function App() {
 
         <section className="section course-feature" id="course">
           <div>
-            <p className="kicker">Course 001 · six-lesson MVP</p>
+            <p className="kicker">Course 001 · eight foundation lessons</p>
             <h2>
               AI from
               <br />
@@ -146,10 +146,12 @@ function App() {
             {[
               ["01", "Gradient descent", "Loss, gradients, and step size"],
               ["02", "Backpropagation", "Forward values and local gradients"],
-              ["03", "BPE tokenisation", "Pair counts and merge rules"],
-              ["04", "Self-attention", "Queries, keys, masks, and weights"],
-              ["05", "Sampling", "Temperature, top-k, and top-p"],
-              ["06", "Evaluation leakage", "Splits, contamination, and trust"],
+              ["03", "Linear layers", "Vectors, matrices, shapes, and projections"],
+              ["04", "Losses and optimisers", "Cross-entropy and parameter updates"],
+              ["05", "BPE tokenisation", "Pair counts and merge rules"],
+              ["06", "Self-attention", "Queries, keys, masks, and weights"],
+              ["07", "Sampling", "Temperature, top-k, and top-p"],
+              ["08", "Evaluation leakage", "Splits, contamination, and trust"],
             ].map(([number, title, detail]) => (
               <li key={number}>
                 <span>{number}</span>

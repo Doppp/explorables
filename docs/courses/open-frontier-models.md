@@ -1,6 +1,6 @@
 # Open Frontier Models course brief
 
-Status: proposed v0.1
+Status: accepted; awaits the foundation prerequisite
 Working title: **Open Frontier Models: Inside DeepSeek, Kimi, Qwen, MiniMax,
 and GLM**
 Prerequisite: `AI from First Principles` v0.2

@@ -1,7 +1,7 @@
 ---
 id: evaluation-leakage
 title: Evaluation leakage
-order: 6
+order: 13
 objectives:
   - distinguish examples from independent task families
   - identify contamination across a train-test boundary

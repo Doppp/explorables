@@ -7,10 +7,11 @@ through plain Markdown, sandboxed TypeScript interactions, real exercises, and
 a coding-agent tutor. A course is a normal folder. It needs no account,
 database, analytics, hosted executor, or LMS.
 
-The v0.1 reference course is
-[AI from First Principles](examples/ai-from-first-principles): six compact
-lessons covering gradient descent, backpropagation, BPE, self-attention,
-sampling, and evaluation leakage.
+The reference course is
+[AI from First Principles](examples/ai-from-first-principles). Its current
+eight-lesson foundation covers gradient descent, backpropagation, linear
+layers, losses and optimisers, BPE, self-attention, sampling, and evaluation
+leakage.
 
 ## Quick start
 
@@ -70,7 +71,7 @@ directives: `explorable` and `exercise`. See the complete
 - `apps/site`: static landing page for `explorables.ai`
 - `apps/dev-preview`: local course shell
 - `examples/minimal-course`: smallest complete course
-- `examples/ai-from-first-principles`: six-lesson reference course
+- `examples/ai-from-first-principles`: expanding reference course
 - `templates/basic-course`: `explorables new` source
 - `docs/architecture.md`: trust boundaries and package responsibilities
 
