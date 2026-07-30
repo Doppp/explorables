@@ -2,6 +2,11 @@
 id: gradient-descent
 title: Gradient descent
 order: 1
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Run the gradient-step experiment", completion: explorable-event, instanceId: gradient-stepper, event: simulation-completed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - interpret a gradient as local slope
   - predict how learning rate changes convergence
@@ -15,7 +20,7 @@ We want the parameter θ to reach the minimum of `L(θ) = (θ − 3)²`.
 > **Predict:** Starting at θ = −4, will a learning rate of 1.1 converge,
 > oscillate, or diverge? Write down your reason before taking a step.
 
-:::explorable{src="../explorables/gradient-descent/index.ts" title="Gradient descent loss curve and stepper" height="470"}
+:::explorable{src="../explorables/gradient-descent/index.ts" title="Gradient descent loss curve and stepper" height="470" id="gradient-stepper"}
 The curve is a bowl with its minimum at θ = 3. Each step subtracts the learning
 rate times the gradient. Rates below 1 move toward the minimum; a rate above 1
 can cross the bowl with increasing distance. The controls expose θ, loss,

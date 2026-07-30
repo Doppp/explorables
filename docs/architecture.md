@@ -81,6 +81,25 @@ existing repository directory and shows its declared test command. Execution is
 an explicit learner or host action. Tutor policy protects central and solution
 paths; tests enforce outcomes without progress tracking.
 
+## Guided course state
+
+Guidance is an opt-in course-format feature. The schema describes course-level
+mode policy and ordered lesson checkpoints. The validator rejects guided
+lessons without checkpoints, duplicate checkpoint IDs, and event checkpoints
+that reference an absent explorable instance.
+
+The runtime reducer owns the active lesson, completed checkpoints, explicit
+skips, mode, and question parking lot. State is serialized under a
+course/version/schema-scoped `localStorage` key when the course enables local
+persistence. Parsing filters unknown lessons and checkpoints and resets stale
+course versions. Courses without `guidance` keep unrestricted navigation.
+
+Only an explicit learner action or an exact `(instanceId, event)` sandbox
+message can complete a checkpoint. Sandboxed modules retain the same
+permissions and cannot access the parent document's state. Exercises remain
+deliberate learner or host actions; the runtime's learner acknowledgment is not
+automated grading.
+
 ## Hosts
 
 Codex reads the canonical `AGENTS.md`. Claude Code Desktop reads a thin

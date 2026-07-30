@@ -2,6 +2,11 @@
 id: autoregressive-inference-kv-caching
 title: Autoregressive inference and KV caching
 order: 11
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the KV-cache trace", completion: explorable-event, instanceId: kv-cache-lab, event: parameter-changed }
+  - { id: implement, title: "Attempt both exercises and run their tests", completion: learner }
+  - { id: explain, title: "Explain equivalence and one failure mode", completion: learner }
 objectives:
   - distinguish prompt prefill from token-by-token decoding
   - explain which attention values a KV cache reuses
@@ -19,7 +24,7 @@ key and value at every step gives the right answer while repeating work.
 > full recomputation or a KV cache? Should correct caching change the model's
 > output?
 
-:::explorable{src="../explorables/kv-cache/index.ts" title="Prefill and KV-cache decoding laboratory" height="680"}
+:::explorable{src="../explorables/kv-cache/index.ts" title="Prefill and KV-cache decoding laboratory" height="680" id="kv-cache-lab"}
 Choose the prompt and total sequence lengths. The trace separates prefill from
 decode steps and compares full recomputation with cached projection work and
 memory. A broken mode discards prior keys and values, reducing memory by
@@ -55,7 +60,7 @@ The final capstone combines the course's token embeddings, causal attention,
 residual stream, RMS normalisation, next-token loss, parameter updates, greedy
 generation, and cached decoding in one deterministic model.
 
-:::explorable{src="../explorables/tiny-transformer/index.ts" title="Tiny Transformer training and generation capstone" height="760"}
+:::explorable{src="../explorables/tiny-transformer/index.ts" title="Tiny Transformer training and generation capstone" height="760" id="tiny-transformer-capstone"}
 Train a one-layer language model on a fixed cyclic corpus. Inspect its loss,
 generated tokens, cached-versus-uncached result, and final hidden state. Broken
 residual and evaluation modes reveal why a plausible result may not support

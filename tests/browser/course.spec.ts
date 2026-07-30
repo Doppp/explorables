@@ -1,14 +1,20 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-test("renders all lessons and a restricted interactive iframe", async ({ page }) => {
+async function enterExploreMode(page: Page) {
+  await page.getByRole("button", { name: "Switch to Explore mode" }).click();
+  await page.getByRole("button", { name: "Enter Explore mode" }).click();
+}
+
+test("guides progress, records interaction, and resumes locally", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("navigation", { name: "Course lessons" }).getByRole("link"),
-  ).toHaveCount(13);
+  await expect(page.getByText("Mode: Guided")).toBeVisible();
+  await expect(page.getByText("0 of 4")).toBeVisible();
+  await expect(page.getByText("🔒 Backpropagation")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Backpropagation →" })).toBeDisabled();
   const iframe = page.locator("iframe").first();
   await expect(iframe).toHaveAttribute("sandbox", "allow-scripts");
   await expect(iframe).not.toHaveAttribute("sandbox", /allow-same-origin/);
@@ -17,19 +23,82 @@ test("renders all lessons and a restricted interactive iframe", async ({ page })
     frame.getByRole("heading", { name: "Walk the loss curve" }),
   ).toBeVisible();
   await frame.getByRole("button", { name: "Take one step" }).click();
+  await expect(page.getByText("0 of 4")).toBeVisible();
+  await expect(
+    page
+      .getByRole("listitem")
+      .filter({ hasText: "Attempt the exercise and run its tests" })
+      .getByRole("button", { name: "Mark complete" }),
+  ).toBeDisabled();
+  await page
+    .getByRole("listitem")
+    .filter({ hasText: "Record your prediction" })
+    .getByRole("button", { name: "Mark complete" })
+    .click();
+  await frame.getByRole("button", { name: "Take one step" }).click();
   await expect(
     page.getByRole("status").filter({ hasText: "simulation-completed" }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Backpropagation" }).click();
+  await expect(page.getByText("2 of 4")).toBeVisible();
+  for (const title of [
+    "Attempt the exercise and run its tests",
+    "Explain the result and one failure mode",
+  ]) {
+    await page
+      .getByRole("listitem")
+      .filter({ hasText: title })
+      .getByRole("button", { name: "Mark complete" })
+      .click();
+  }
+  await page.getByRole("button", { name: "Backpropagation →" }).click();
   await expect(
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
   ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Backpropagation", level: 1 }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "✓ Gradient descent" })).toBeVisible();
+});
+
+test("recovers locked deep links and supports parking, skipping, explore, and reset", async ({
+  page,
+}) => {
+  await page.goto("/#/sampling");
+  await expect(
+    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+  ).toBeVisible();
+  await expect(page.getByText(/That lesson is still ahead/)).toBeVisible();
+  await page.getByText("Question parking lot (0)").click();
+  await page.getByLabel("Question to revisit").fill("How does MoE routing work?");
+  await page.getByRole("button", { name: "Park question" }).click();
+  await expect(page.getByText("Question parking lot (1)")).toBeVisible();
+  await page.getByRole("button", { name: "Skip lesson" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Backpropagation", level: 1 }),
+  ).toBeVisible();
+  await enterExploreMode(page);
+  await page.getByRole("link", { name: "Sampling and generation" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Sampling and generation", level: 1 }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Return to Guided mode" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Backpropagation", level: 1 }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Reset local progress" }).click();
+  await page.getByRole("button", { name: "Reset progress", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+  ).toBeVisible();
+  await expect(page.getByText("Question parking lot (0)")).toBeVisible();
 });
 
 test("new foundation lessons expose recoverable failures and training state", async ({
   page,
 }) => {
   await page.goto("/");
+  await enterExploreMode(page);
   await page
     .getByRole("link", { name: "Vectors, matrices, and linear layers" })
     .click();
@@ -74,6 +143,7 @@ test("Transformer foundation lessons expose their core invariants", async ({
   page,
 }) => {
   await page.goto("/");
+  await enterExploreMode(page);
   await page
     .getByRole("link", { name: "Embeddings and positional information" })
     .click();
@@ -136,6 +206,7 @@ test("inference and capstone preserve cache equivalence and expose invalid claim
   page,
 }) => {
   await page.goto("/");
+  await enterExploreMode(page);
   await page
     .getByRole("link", { name: "Autoregressive inference and KV caching" })
     .click();
@@ -194,6 +265,7 @@ test("course shell passes axe and fits a narrow preview pane", async ({ page }) 
   const results = await new AxeBuilder({ page }).exclude("iframe").analyze();
   expect(results.violations).toEqual([]);
 
+  await enterExploreMode(page);
   await page.getByRole("link", { name: "Losses and optimisers" }).click();
   const frame = page.frameLocator("iframe").first();
   await expect(

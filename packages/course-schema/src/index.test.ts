@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   courseFrontmatterSchema,
+  checkpointSchema,
   explorableAttributesSchema,
   lessonFrontmatterSchema,
 } from "./index.ts";
@@ -29,5 +30,32 @@ describe("course schemas", () => {
       height: 420,
       title: "Interactive explorable",
     });
+  });
+
+  it("parses opt-in guidance and both checkpoint completion mechanisms", () => {
+    expect(
+      courseFrontmatterSchema.parse({
+        id: "guided-course",
+        title: "Guided course",
+        version: "0.1.0",
+        summary: "A guided course.",
+        license: "CC-BY-4.0",
+        guidance: {},
+      }).guidance,
+    ).toEqual({
+      defaultMode: "guided",
+      allowExploreMode: true,
+      allowSkipping: true,
+      persistLocally: true,
+    });
+    expect(
+      checkpointSchema.parse({
+        id: "experiment",
+        title: "Run the experiment",
+        completion: "explorable-event",
+        instanceId: "workbench",
+        event: "simulation-completed",
+      }),
+    ).toMatchObject({ completion: "explorable-event" });
   });
 });

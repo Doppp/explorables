@@ -2,6 +2,11 @@
 id: losses-optimisers
 title: Losses and optimisers
 order: 4
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Take a training step", completion: explorable-event, instanceId: optimiser-lab, event: simulation-completed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - relate logits, probabilities, targets, and cross-entropy
   - explain stable softmax and global gradient clipping
@@ -20,7 +25,7 @@ An optimiser then converts the loss gradient into a parameter update.
 > dog logit increases? What happens if the same `+1000` offset is added to every
 > logit?
 
-:::explorable{src="../explorables/losses-optimisers/index.ts" title="Linear classifier loss and optimiser arena" height="690"}
+:::explorable{src="../explorables/losses-optimisers/index.ts" title="Linear classifier loss and optimiser arena" height="690" id="optimiser-lab"}
 Train a three-class linear classifier using SGD, momentum, or AdamW. The arena
 shows logits, probabilities, cross-entropy, gradient and update norms, optimiser
 state, and loss history. A shared logit offset demonstrates stable softmax;

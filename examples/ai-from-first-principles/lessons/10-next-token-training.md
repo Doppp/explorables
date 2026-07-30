@@ -2,6 +2,11 @@
 id: next-token-training
 title: Next-token training
 order: 10
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Take a next-token training step", completion: explorable-event, instanceId: next-token-lab, event: simulation-completed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - align each input position with the token one step to its right
   - average stable cross-entropy across valid sequence positions
@@ -22,7 +27,7 @@ that window.
 > against correctly shifted next-token targets or incorrectly unshifted
 > targets?
 
-:::explorable{src="../explorables/next-token-training/index.ts" title="Shifted next-token training laboratory" height="720"}
+:::explorable{src="../explorables/next-token-training/index.ts" title="Shifted next-token training laboratory" height="720" id="next-token-lab"}
 Train a small token-transition model on a visible sequence. The table aligns
 each input with its next-token target, probability, and cross-entropy before
 accumulating gradients into one update. A broken unshifted mode labels every

@@ -1,7 +1,7 @@
 ---
 id: ai-from-first-principles
 title: AI from First Principles
-version: 0.2.0-inference.1
+version: 0.3.0-guided.1
 summary: See, implement, and debug the foundations behind modern language models.
 license: CC-BY-4.0
 audience:
@@ -16,6 +16,11 @@ language: en
 tags:
   - machine-learning
   - language-models
+guidance:
+  defaultMode: guided
+  allowExploreMode: true
+  allowSkipping: true
+  persistLocally: true
 ---
 
 # AI from First Principles

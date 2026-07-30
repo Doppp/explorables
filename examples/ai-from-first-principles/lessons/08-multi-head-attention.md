@@ -2,6 +2,11 @@
 id: multi-head-attention
 title: Multi-head attention
 order: 8
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the attention heads", completion: explorable-event, instanceId: multi-head-workbench, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - project and split a residual-stream vector into attention heads
   - compute an independent causal attention distribution per head
@@ -22,7 +27,7 @@ width.
 > If both heads accidentally reuse the first feature slice, what information is
 > lost?
 
-:::explorable{src="../explorables/multi-head-attention/index.ts" title="Two-head causal attention workbench" height="850"}
+:::explorable{src="../explorables/multi-head-attention/index.ts" title="Two-head causal attention workbench" height="850" id="multi-head-workbench"}
 Edit three four-dimensional token vectors and compare the two causal attention
 matrices. Each head receives a different two-dimensional slice before the
 outputs are concatenated. A broken switch sends the first slice to both heads,

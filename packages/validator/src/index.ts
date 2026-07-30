@@ -183,6 +183,47 @@ async function validateParsedCourse(loaded: LoadedCourse): Promise<Diagnostic[]>
     }
     ids.set(lesson.frontmatter.id, lesson.file);
 
+    const checkpointIds = new Set<string>();
+    const explorableIds = new Set(
+      lesson.explorables.map((explorable) => explorable.instanceId),
+    );
+    if (
+      loaded.frontmatter.guidance &&
+      (lesson.frontmatter.checkpoints?.length ?? 0) === 0
+    ) {
+      diagnostics.push(
+        diagnostic(
+          lesson.file,
+          "missing-guided-checkpoints",
+          "A guided course lesson must declare at least one checkpoint.",
+        ),
+      );
+    }
+    for (const checkpoint of lesson.frontmatter.checkpoints ?? []) {
+      if (checkpointIds.has(checkpoint.id)) {
+        diagnostics.push(
+          diagnostic(
+            lesson.file,
+            "duplicate-checkpoint-id",
+            `Checkpoint id "${checkpoint.id}" is repeated in this lesson.`,
+          ),
+        );
+      }
+      checkpointIds.add(checkpoint.id);
+      if (
+        checkpoint.completion === "explorable-event" &&
+        !explorableIds.has(checkpoint.instanceId)
+      ) {
+        diagnostics.push(
+          diagnostic(
+            lesson.file,
+            "unknown-checkpoint-explorable",
+            `Checkpoint "${checkpoint.id}" references missing explorable instance "${checkpoint.instanceId}".`,
+          ),
+        );
+      }
+    }
+
     for (const explorable of lesson.explorables) {
       if (!explorable.fallbackHtml.trim()) {
         diagnostics.push(

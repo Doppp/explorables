@@ -2,6 +2,11 @@
 id: transformer-block
 title: The Transformer block
 order: 9
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the residual stream", completion: explorable-event, instanceId: transformer-block-trace, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - trace a pre-norm residual stream through attention and an MLP
   - distinguish RMSNorm from mean-centred normalisation
@@ -25,7 +30,7 @@ x → RMSNorm → attention → + x → RMSNorm → SwiGLU MLP → + → output
 > correct residual block return? What happens if each sublayer replaces its
 > input instead of adding to it?
 
-:::explorable{src="../explorables/transformer-block/index.ts" title="Pre-norm Transformer block trace" height="780"}
+:::explorable{src="../explorables/transformer-block/index.ts" title="Pre-norm Transformer block trace" height="780" id="transformer-block-trace"}
 Trace one four-dimensional token representation through RMSNorm, an attention
 update, the first residual addition, a SwiGLU MLP, and the second residual
 addition. Change the attention update scale or deliberately replace residuals

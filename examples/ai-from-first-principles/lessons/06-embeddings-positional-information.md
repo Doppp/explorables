@@ -2,6 +2,11 @@
 id: embeddings-positional-information
 title: Embeddings and positional information
 order: 6
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate token position", completion: explorable-event, instanceId: embedding-position, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - map token identifiers to learned embedding vectors
   - compare token vectors using cosine similarity
@@ -21,7 +26,7 @@ same token at two sequence positions.
 > produce different rows? What property of a vector should a pure rotation
 > preserve?
 
-:::explorable{src="../explorables/embeddings-position/index.ts" title="Token embedding and positional rotation workbench" height="610"}
+:::explorable{src="../explorables/embeddings-position/index.ts" title="Token embedding and positional rotation workbench" height="610" id="embedding-position"}
 Choose tokens, compare their learned vectors, and move one token through
 sequence positions. A RoPE-style coordinate-pair rotation changes direction
 while preserving vector norm. A deliberately broken scalar positional offset

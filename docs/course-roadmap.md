@@ -152,7 +152,14 @@ Status: complete.
 - Verify deterministic training, generation, caching, evaluation, sandboxing,
   accessibility, and clean builds.
 
-### Milestone 1 — course-family and source freeze
+### Milestone 1 — guided course delivery
+
+- Add reusable opt-in checkpoints, ordered navigation, explicit skip/Explore
+  controls, local resume state, and tutor focus rules.
+- Apply the complete guided loop to all thirteen foundation lessons.
+- Preserve unrestricted navigation for existing courses that do not opt in.
+
+### Milestone 2 — course-family and source freeze
 
 - Accept the shared-core and model-course boundaries.
 - Map every advanced prerequisite to the foundation or shared core.
@@ -162,7 +169,7 @@ Status: complete.
 - Create one immutable source manifest per course before its first technical
   lesson is implemented.
 
-### Milestone 2 — shared frontier core
+### Milestone 3 — shared frontier core
 
 - Implement artifact and licence reading, configuration normalisation,
   parameter/cost accounting, controlled comparison, and research reproduction.
@@ -170,7 +177,7 @@ Status: complete.
 - Establish the common baseline and reporting format used by every model
   course.
 
-### Milestone 3 — Inside DeepSeek
+### Milestone 4 — Inside DeepSeek
 
 - Implement the first complete lab-specific course.
 - Use pinned DeepSeek releases to teach selected attention, expert-routing,
@@ -179,14 +186,14 @@ Status: complete.
 - Use this course to validate the boundary between shared and lab-specific
   material before implementing the remaining courses.
 
-### Milestone 4 — Inside Kimi
+### Milestone 5 — Inside Kimi
 
 - Add sparse-model and matrix-aware optimisation experiments.
 - Add efficient or recurrent attention experiments from the pinned Kimi
   sources.
 - Complete a Kimi-specific controlled-reconstruction capstone.
 
-### Milestone 5 — Inside Qwen
+### Milestone 6 — Inside Qwen
 
 - Compare pinned dense and sparse family members without conflating size,
   active parameters, or evaluation protocol.
@@ -194,21 +201,21 @@ Status: complete.
   inference experiment.
 - Complete a Qwen-specific controlled-reconstruction capstone.
 
-### Milestone 6 — Inside MiniMax
+### Milestone 7 — Inside MiniMax
 
 - Add hybrid-attention and long-context cost/recall experiments.
 - Teach the documented reasoning and training choices supported by the pinned
   source set.
 - Complete a MiniMax-specific controlled-reconstruction capstone.
 
-### Milestone 7 — Inside GLM
+### Milestone 8 — Inside GLM
 
 - Add sparse architecture and hybrid-reasoning experiments.
 - Separate model capability from agent scaffolding and tool-environment
   evaluation.
 - Complete a GLM-specific controlled-reconstruction capstone.
 
-### Milestone 8 — external validation and releases
+### Milestone 9 — external validation and releases
 
 - Conduct technical, licence, accessibility, and clean-checkout reviews.
 - Ask at least five target learners to complete one foundation lesson, one
@@ -228,16 +235,17 @@ Completed foundation increments:
 
 Planned frontier increments:
 
-4. `course/open-frontier-core`: shared research and comparison foundation.
-5. `course/inside-deepseek-architecture`: anatomy, latent attention, and sparse
+4. `feature/guided-course-mode`: runtime guidance and foundation checkpoints.
+5. `course/open-frontier-core`: shared research and comparison foundation.
+6. `course/inside-deepseek-architecture`: anatomy, latent attention, and sparse
    experts.
-6. `course/inside-deepseek-training`: routing, numerical systems, reasoning,
+7. `course/inside-deepseek-training`: routing, numerical systems, reasoning,
    and capstone.
-7. `course/inside-kimi`: sparse models, matrix-aware optimisation, efficient
+8. `course/inside-kimi`: sparse models, matrix-aware optimisation, efficient
    attention, and capstone.
-8. `course/inside-qwen`: family comparison, reasoning controls, adaptation,
+9. `course/inside-qwen`: family comparison, reasoning controls, adaptation,
    and capstone.
-9. `course/inside-minimax`: hybrid attention, long context, reasoning, and
+10. `course/inside-minimax`: hybrid attention, long context, reasoning, and
    capstone.
 10. `course/inside-glm`: sparse models, agentic evaluation, reasoning, and
     capstone.
