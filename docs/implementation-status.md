@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 28 July 2026
+Updated: 30 July 2026
 
 ## Completed
 
@@ -40,15 +40,25 @@ Updated: 28 July 2026
   masking, shape, residual, and evaluation failures.
 - Completed all thirteen `AI from First Principles` v0.2 lessons and connected
   the inference result to decoding policy and claim-aligned evaluation.
+- Implemented reusable opt-in Guided Course Mode with ordered learner and
+  explorable-event checkpoints, locked future navigation, deep-link recovery,
+  explicit skipping, confirmed Explore mode, reset, a question parking lot,
+  and versioned browser-only resume state.
+- Applied four ordered checkpoints and focus-aware tutor policy to all thirteen
+  `AI from First Principles` lessons without changing sandbox permissions or
+  automatic exercise execution.
+- Kept courses without guidance backward-compatible and added schema, reducer,
+  validator, browser, accessibility, persistence, and recovery coverage.
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. `AI from First Principles` v0.2 is
-implemented and passes its automated milestone verification. The next planned
-increment is `Open Frontier Models: Shared Techniques`, followed by separate
-DeepSeek, Kimi, Qwen, MiniMax, and GLM courses. The immediate work is the
-shared-core source freeze and its five research/comparison lessons. External
-DNS and learner-study evidence also remain.
+The v0.1 runtime MVP remains verified. `AI from First Principles`
+`0.3.0-guided.1` is implemented and passes its automated milestone
+verification. The next planned increment is `Open Frontier Models: Shared
+Techniques`, followed by separate DeepSeek, Kimi, Qwen, MiniMax, and GLM
+courses. The immediate work is the shared-core source freeze and its five
+research/comparison lessons. External DNS and learner-study evidence also
+remain.
 
 ## Decisions
 
@@ -83,10 +93,10 @@ npm view typescript@7 version          7.0.2
 npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
-pnpm check                              pass (format, lint, TS7, 20 suites/60 tests, validators)
+pnpm check                              pass (format, lint, TS7, 21 suites/66 tests, validators)
 pnpm course:test                        pass (14 model suites/47 tests; 14 starter/reference pairs)
 pnpm build                              pass (9 package entries, both courses, static site)
-pnpm test:browser                       pass (5 tests; sandbox, inference/capstone failures, axe, 720px)
+pnpm test:browser                       pass (6 tests; guided flow, sandbox, persistence, inference/capstone failures, axe, 720px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
 generated course smoke                  pass (validate, 2 tests, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)

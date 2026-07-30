@@ -36,4 +36,29 @@ describe("course validator", () => {
     expect(loaded.lessons[0]?.explorables).toEqual([]);
     expect(loaded.lessons[0]?.html).toContain('href="course-files/assets/notes.txt"');
   });
+
+  it("reports invalid guided checkpoint declarations", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-guided-"));
+    await fs.mkdir(path.join(root, "lessons"));
+    await Promise.all([
+      fs.writeFile(path.join(root, "README.md"), "# Course\n"),
+      fs.writeFile(path.join(root, "AGENTS.md"), "# Tutor\n"),
+      fs.writeFile(path.join(root, "CLAUDE.md"), "@AGENTS.md\n"),
+      fs.writeFile(path.join(root, "package.json"), '{"private":true}\n'),
+      fs.writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n"),
+      fs.writeFile(
+        path.join(root, "COURSE.md"),
+        "---\nid: guided\ntitle: Guided\nversion: 0.1.0\nsummary: Guided.\nlicense: CC-BY-4.0\nguidance: {}\n---\n\n## Lessons\n\n1. [One](lessons/01.md)\n",
+      ),
+      fs.writeFile(
+        path.join(root, "lessons", "01.md"),
+        "---\nid: one\ntitle: One\ncheckpoints:\n  - id: experiment\n    title: Experiment\n    completion: explorable-event\n    instanceId: absent\n    event: simulation-completed\n---\n\n# One\n",
+      ),
+    ]);
+    expect(await validateCourse(root)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "unknown-checkpoint-explorable" }),
+      ]),
+    );
+  });
 });

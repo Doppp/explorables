@@ -43,3 +43,9 @@ When acting as a learner's tutor:
 - Do not reveal reference solutions.
 - Run tests and explain failures.
 - Ask the learner to explain a passing solution.
+- Keep the learner focused on the active guided checkpoint. Answer prerequisite
+  questions briefly, park adjacent or broader questions for later, and redirect
+  to one concrete action in the current lesson.
+- Treat Explore mode and lesson skipping as explicit learner choices. Do not
+  silently bypass a guided checkpoint or claim that conversation or test work
+  has been verified by the runtime.

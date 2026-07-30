@@ -1,8 +1,8 @@
 # explorables: Open Explorable Course Runtime
 ## Product Requirements, Technical Specification, and Course Authoring Guide
 
-**Status:** Draft v0.1  
-**Date:** 21 July 2026  
+**Status:** Draft v0.2
+**Date:** 30 July 2026
 **Product name:** `explorables`  
 **Supported initial hosts:** Codex and Claude Code Desktop  
 **Public site:** `https://explorables.ai`  
@@ -1098,6 +1098,8 @@ The `explorables` runtime performs only the following:
 8. Serve static assets.
 9. Validate the course package.
 10. Provide development errors with file and line references.
+11. For courses that opt in, present guided checkpoints, ordered navigation,
+    explicit skip/Explore controls, and local resume state.
 
 It does not teach the subject itself. The course content and Codex instructions do that.
 
@@ -1137,22 +1139,31 @@ It does not teach the subject itself. The course content and Codex instructions 
                     Codex or Claude Code Desktop browser/preview
 ```
 
-## 13.3 No database
+## 13.3 Guided mode and local state
 
-The runtime holds only transient UI state.
+Courses may opt into Guided Course Mode in `COURSE.md`. A guided lesson declares
+ordered checkpoints completed either by an explicit learner acknowledgment or
+by a named event from a named explorable instance. The runtime does not
+auto-run exercises and does not claim to verify a learner's conversation,
+understanding, or test result.
 
-A later optional local resume file may be introduced:
+Guided mode keeps future lessons visible but locked until the active lesson is
+completed or explicitly skipped. When enabled by the course, the learner may
+enter Explore mode after a clear confirmation and access lessons freely.
+Returning to Guided mode restores the prior guided position.
 
-```text
-.explorables/local-state.json
-```
+Optional resume state is stored in the main document's browser `localStorage`,
+never inside an explorable iframe. It is:
 
-It must be:
-
-- Disabled by default
-- Local only
-- Listed in `.gitignore`
+- Opt-in per course
+- Namespaced by course ID, course version, schema version, and browser profile
+- Local only, resettable, and resilient to malformed or stale values
 - Non-essential to course completion
+- Free of accounts, analytics, remote synchronization, and server-side state
+
+The local state may contain checkpoint IDs, skips, the active lesson, mode, and
+a learner-authored question parking lot. It must not contain exercise solutions
+or hidden assessment data.
 
 ---
 
@@ -2356,6 +2367,7 @@ The MVP succeeds when:
 ## Phase 2 — Reference course
 
 - Complete foundational AI course
+- Guided Course Mode with explicit checkpoint and Explore/skip controls
 - Shared visual component library
 - More exercise templates
 - Contribution documentation
@@ -2384,7 +2396,6 @@ The second course will reveal which abstractions are genuinely reusable.
 
 Only after demand is clear:
 
-- Local resume state
 - Audio assets
 - Hosted course previews
 - Cloud exercise runners

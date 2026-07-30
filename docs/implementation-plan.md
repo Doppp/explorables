@@ -112,3 +112,20 @@ PRD criterion requiring five target learners to complete two lessons needs
 human participation. DNS records also require control of the external DNS
 provider. These do not reduce the local implementation scope; exact outstanding
 evidence or DNS actions are recorded in `docs/implementation-status.md`.
+
+## Milestone 6 — guided course mode
+
+Deliverables:
+
+- Opt-in course and lesson schemas for guidance policy and checkpoints.
+- Validated manual and explorable-event checkpoint completion.
+- Ordered navigation with deep-link recovery, explicit skip and Explore mode,
+  a local question parking lot, reset, and versioned browser-only resume state.
+- `AI from First Principles` checkpoint metadata and tutor focus policy across
+  all thirteen lessons.
+- Backward compatibility for courses without guidance and no changes to iframe
+  permissions or deliberate exercise execution.
+
+Exit check: complete a guided learner path, verify lock/skip/Explore/reset and
+reload behavior, pass axe at normal and narrow widths, validate both example
+courses, and run the full repository build and test suite.

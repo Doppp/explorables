@@ -2,6 +2,11 @@
 id: backpropagation
 title: Backpropagation
 order: 2
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the computation graph", completion: explorable-event, instanceId: backprop-graph, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - separate forward values from local derivatives
   - apply the chain rule through a small graph
@@ -16,7 +21,7 @@ forward value of `z` while multiplying local derivatives backward.
 > **Predict:** If `x = 2`, `w = −1`, and `b = 3`, is `dy/dw` positive or
 > negative? Decide before revealing the gradients.
 
-:::explorable{src="../explorables/backpropagation/index.ts" title="Forward and backward computation graph" height="500"}
+:::explorable{src="../explorables/backpropagation/index.ts" title="Forward and backward computation graph" height="500" id="backprop-graph"}
 Edit x, w, and b. The graph shows forward values and the backward gradients
 `dy/dz = 2z`, `dz/dw = x`, and `dy/dw = (dy/dz)(dz/dw)`. A “drop chain-rule
 factor” switch deliberately shows the common wrong gradient.

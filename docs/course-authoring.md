@@ -57,6 +57,49 @@ Required fields are `id`, `title`, `version`, `summary`, and `license`. IDs use
 lowercase kebab-case. Lesson `id` and `title` are required; `order`,
 `objectives`, and `prerequisites` are optional.
 
+### Optional guided course mode
+
+Add `guidance` to `COURSE.md` to opt in:
+
+```yaml
+guidance:
+  defaultMode: guided
+  allowExploreMode: true
+  allowSkipping: true
+  persistLocally: true
+```
+
+Courses without this object retain unrestricted navigation. Guided courses must
+give every lesson at least one checkpoint. A learner checkpoint is an explicit
+acknowledgment; an explorable checkpoint completes only after an exact event
+from an exact stable explorable `id`:
+
+```yaml
+checkpoints:
+  - id: predict
+    title: Record your prediction
+    completion: learner
+  - id: experiment
+    title: Run the queue experiment
+    completion: explorable-event
+    instanceId: queue-simulator
+    event: simulation-completed
+  - id: implement
+    title: Attempt the exercise and run its tests
+    completion: learner
+  - id: explain
+    title: Explain the result and one failure mode
+    completion: learner
+```
+
+The matching directive must declare `id="queue-simulator"` and emit
+`simulation-completed` only after a meaningful learner interaction. Never emit
+the completion event during initial render. Use a learner checkpoint for
+exercise work: the runtime deliberately does not run or grade exercises.
+
+Local persistence is browser-profile-only and resettable. It is not suitable
+for assessment evidence, identity, analytics, or cross-device progress.
+
 ## 4. Write a lesson
 
 Lessons should remain useful on GitHub. A strong sequence is encounter,

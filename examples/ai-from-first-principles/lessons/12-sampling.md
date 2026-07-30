@@ -2,6 +2,11 @@
 id: sampling
 title: Sampling and generation
 order: 12
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Sample from the distribution", completion: explorable-event, instanceId: sampling-lab, event: simulation-completed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - relate logits, temperature, and probabilities
   - compare top-k with nucleus sampling
@@ -21,7 +26,7 @@ sampled.
 > **Predict:** As temperature approaches zero, which token dominates? Does a
 > top-p threshold of 0.8 always keep the same number of tokens?
 
-:::explorable{src="../explorables/sampling/index.ts" title="Temperature, top-k, and top-p sampler" height="560"}
+:::explorable{src="../explorables/sampling/index.ts" title="Temperature, top-k, and top-p sampler" height="560" id="sampling-lab"}
 Edit four logits, then change temperature, top-k, and top-p. Probability bars
 show the surviving normalised distribution. A broken top-p ordering keeps
 tokens in vocabulary order instead of probability order.

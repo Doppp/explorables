@@ -20,7 +20,30 @@ export const courseFrontmatterSchema = z.object({
   repository: z.string().url().optional(),
   language: z.string().min(2).optional(),
   tags: z.array(z.string().min(1)).optional(),
+  guidance: z
+    .object({
+      defaultMode: z.enum(["guided", "explore"]).default("guided"),
+      allowExploreMode: z.boolean().default(true),
+      allowSkipping: z.boolean().default(true),
+      persistLocally: z.boolean().default(true),
+    })
+    .optional(),
 });
+
+export const checkpointSchema = z.discriminatedUnion("completion", [
+  z.object({
+    id,
+    title: z.string().min(1),
+    completion: z.literal("learner"),
+  }),
+  z.object({
+    id,
+    title: z.string().min(1),
+    completion: z.literal("explorable-event"),
+    instanceId: id,
+    event: z.string().min(1),
+  }),
+]);
 
 export const lessonFrontmatterSchema = z.object({
   id,
@@ -28,6 +51,7 @@ export const lessonFrontmatterSchema = z.object({
   order: z.number().int().positive().optional(),
   objectives: z.array(z.string().min(1)).optional(),
   prerequisites: z.array(z.string().min(1)).optional(),
+  checkpoints: z.array(checkpointSchema).optional(),
 });
 
 export const explorableAttributesSchema = z.object({
@@ -60,6 +84,20 @@ export type LessonFrontmatter = z.infer<typeof lessonFrontmatterSchema>;
 export type ExplorableAttributes = z.infer<typeof explorableAttributesSchema>;
 export type ExerciseAttributes = z.infer<typeof exerciseAttributesSchema>;
 export type ExerciseManifest = z.infer<typeof exerciseManifestSchema>;
+export type Checkpoint = z.infer<typeof checkpointSchema>;
+export type Guidance = NonNullable<CourseFrontmatter["guidance"]>;
+
+export interface GuidedCourseStateV1 {
+  schemaVersion: 1;
+  courseId: string;
+  courseVersion: string;
+  mode: "guided" | "explore";
+  activeLessonId: string;
+  completedCheckpoints: Record<string, string[]>;
+  skippedLessons: string[];
+  parkedQuestions: string[];
+  updatedAt: string;
+}
 
 export interface SourcePosition {
   file: string;

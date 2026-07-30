@@ -2,6 +2,11 @@
 id: bpe-tokenisation
 title: BPE tokenisation
 order: 5
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Run one BPE merge", completion: explorable-event, instanceId: bpe-workbench, event: simulation-completed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - count adjacent token pairs
   - apply one BPE merge consistently
@@ -16,7 +21,7 @@ is simple; its behaviour comes from applying each learned merge everywhere.
 > **Predict:** In `low lower lowest`, which pair is most frequent before any
 > merge? How many occurrences do you count?
 
-:::explorable{src="../explorables/bpe/index.ts" title="Step-by-step BPE merge workbench" height="520"}
+:::explorable{src="../explorables/bpe/index.ts" title="Step-by-step BPE merge workbench" height="520" id="bpe-workbench"}
 Words begin as character tokens plus an end marker. The workbench lists pair
 counts, highlights the most frequent pair, and applies one merge at a time. A
 deliberate “first occurrence only” mode demonstrates an inconsistent merge.

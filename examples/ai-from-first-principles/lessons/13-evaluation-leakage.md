@@ -2,6 +2,11 @@
 id: evaluation-leakage
 title: Evaluation leakage
 order: 13
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the evaluation split", completion: explorable-event, instanceId: leakage-lab, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "State the supported claim and one failure mode", completion: learner }
 objectives:
   - distinguish examples from independent task families
   - identify contamination across a train-test boundary
@@ -18,7 +23,7 @@ task family has several lightly rewritten variants.
 > higher accuracy for a memorising system? Which result better estimates a new
 > family?
 
-:::explorable{src="../explorables/leakage/index.ts" title="Evaluation leakage split laboratory" height="570"}
+:::explorable{src="../explorables/leakage/index.ts" title="Evaluation leakage split laboratory" height="570" id="leakage-lab"}
 The laboratory assigns task variants to train or test. With leakage enabled,
 variants from the same family cross the boundary and a memoriser appears
 accurate. Grouped splitting keeps families intact and exposes generalisation.

@@ -2,6 +2,11 @@
 id: self-attention
 title: Self-attention
 order: 7
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the attention matrix", completion: explorable-event, instanceId: attention-workbench, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - compute scaled query-key scores
   - interpret softmax rows as mixing weights
@@ -16,7 +21,7 @@ used to mix values.
 > **Predict:** With a causal mask on, can token 2 assign any weight to token 3?
 > Predict what happens if masking is applied after softmax instead.
 
-:::explorable{src="../explorables/attention/index.ts" title="Self-attention score and weight matrices" height="610"}
+:::explorable{src="../explorables/attention/index.ts" title="Self-attention score and weight matrices" height="610" id="attention-workbench"}
 Edit three one-dimensional query and key values. The workbench shows scaled
 scores and row-wise softmax weights. The causal mask replaces future scores
 with negative infinity before softmax; a broken after-softmax toggle leaves

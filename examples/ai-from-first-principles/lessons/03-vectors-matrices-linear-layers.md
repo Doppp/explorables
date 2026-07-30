@@ -2,6 +2,11 @@
 id: vectors-matrices-linear-layers
 title: Vectors, matrices, and linear layers
 order: 3
+checkpoints:
+  - { id: predict, title: "Record your prediction", completion: learner }
+  - { id: experiment, title: "Manipulate the linear projection", completion: explorable-event, instanceId: linear-projection, event: parameter-changed }
+  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
+  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
 objectives:
   - track shapes through a matrix-vector product
   - interpret each weight row as one output feature
@@ -19,7 +24,7 @@ products: each row of `W` combines the same input vector into one output value.
 > must `x` have, and how many values will appear in `y`? If you transpose `W`,
 > can the same multiplication still work?
 
-:::explorable{src="../explorables/linear-layers/index.ts" title="Shape-aware linear projection workbench" height="560"}
+:::explorable{src="../explorables/linear-layers/index.ts" title="Shape-aware linear projection workbench" height="560" id="linear-projection"}
 Edit a three-value input, two weight rows, and two biases. The workbench expands
 each output into its individual products and displays every tensor shape.
 Transposing the weights deliberately produces an incompatible shape and an
