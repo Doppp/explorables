@@ -38,6 +38,13 @@ Implement stable softmax and causal masking. The starter masks probabilities
 without renormalising.
 :::
 
+## In real models
+
+This full softmax-attention path is the comparison baseline for MLA, linear
+attention, DeltaNet, KDA, and other efficient variants. Those mechanisms are
+meaningful only when we can state what information, memory growth, or retrieval
+behavior changed relative to this baseline.
+
 ## Explain and transfer
 
 What information leak appears during next-token training if future positions

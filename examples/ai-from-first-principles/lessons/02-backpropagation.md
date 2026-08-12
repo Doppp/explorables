@@ -37,6 +37,13 @@ Return the forward values and gradients for every input. The starter omits one
 chain-rule factor.
 :::
 
+## In real models
+
+Every dense projection, attention path, expert router, gate, and residual path
+in a production language model depends on the same chain rule. Later model
+case studies isolate one architectural change at a time so its gradient path
+can be checked instead of treating the released system as a black box.
+
 ## Explain and transfer
 
 Why is caching `z` useful during the backward pass? Which cached values would

@@ -194,6 +194,24 @@ However, a `explorables` course is still a normal web project. The same course c
 
 The course format must not require private Codex or Claude APIs.
 
+## 3.8 Optional local course collections
+
+A repository may contain `explorables.library.json` to present an ordered local
+learning path across multiple self-contained course packages. The manifest is
+an explicit allowlist of relative course roots; it is not a hosted catalogue,
+filesystem scan, marketplace, or remote installer.
+
+The collection interface may also show clearly labelled planned courses so the
+curriculum path is visible. Planned entries cannot be opened. Every available
+course remains independently valid and runnable with its own `COURSE.md`, Agent
+Plugin manifest, portable skill, host adapters, exercises, and version.
+
+The model-learning collection is structured as a vendor-neutral foundation, a
+shared frontier-research course, and separately versioned model-family case
+studies. Foundation lessons may include brief real-model connections in
+ordinary Markdown; release-specific reconstruction belongs in the appropriate
+case-study course.
+
 ---
 
 # 4. Goals and non-goals
@@ -2548,6 +2566,9 @@ See how it works. Build it yourself.
 - [ ] Explorable failures do not crash the whole course.
 - [ ] Exercise links open the correct repository directory.
 - [ ] Development errors include source file and line information.
+- [ ] A local collection can list and open explicitly configured course roots.
+- [ ] Planned collection entries are visibly unavailable and cannot be opened.
+- [ ] Standalone course start and build behavior remains supported.
 
 ## Agent hosts
 

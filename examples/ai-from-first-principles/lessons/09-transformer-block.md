@@ -52,6 +52,13 @@ transformation, and add its update to the untouched input. The starter
 mean-centres like LayerNorm and returns only the transformation result.
 :::
 
+## In real models
+
+Frontier models modify both branches of this block with sparse experts,
+alternative attention, gates, and different normalization placement. Kimi K3's
+Attention Residuals also change how later depth retrieves earlier residual
+states, making this ordinary residual stream the necessary baseline.
+
 ## Explain and transfer
 
 Why is an unchanged residual path useful for gradient flow through many blocks?

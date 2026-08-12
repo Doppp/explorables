@@ -37,6 +37,13 @@ Implement deterministic pair counting and a non-overlapping merge. The starter
 counts only one occurrence per word.
 :::
 
+## In real models
+
+Real releases publish a tokenizer and vocabulary alongside the weights because
+token IDs are part of the model contract. Configuration comparisons must not
+treat vocabulary size, byte handling, or special-token conventions as
+incidental metadata.
+
 ## Explain and transfer
 
 Why can two tokenisers trained on the same text learn different vocabularies

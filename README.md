@@ -31,7 +31,9 @@ pnpm course
 ```
 
 Open the printed `http://127.0.0.1:4173` URL in the Codex built-in browser, a
-normal browser, or Claude Code Desktop Preview. In either coding host, ask:
+normal browser, or Claude Code Desktop Preview. The local library shows the
+foundation, shared research-skills course, and planned model specializations.
+Select an available course, then ask either coding host:
 
 > Start the course.
 
@@ -59,6 +61,11 @@ pnpm course:test
 pnpm course:build
 pnpm test:browser
 ```
+
+`explorables start <path>` automatically recognizes either a standalone course
+containing `COURSE.md` or a local collection containing
+`explorables.library.json`. Run `pnpm course:foundation` to bypass the library
+and open the reference course directly.
 
 ## Author a course
 

@@ -257,3 +257,51 @@ Before publishing, test keyboard use and narrow layout, inspect the text-only
 fallback on GitHub, run from a clean checkout, declare licences for prose/code
 and third-party assets, then tag an immutable release. External compatible
 courses are unreviewed unless explicitly accepted by a catalogue review.
+
+## 9. Assemble a local course collection
+
+A repository containing several independent course packages may add
+`explorables.library.json` at its root. The manifest orders learning tracks and
+explicitly allowlists available course directories:
+
+```json
+{
+  "schemaVersion": 1,
+  "title": "Systems learning path",
+  "summary": "Start with foundations, then choose a specialization.",
+  "tracks": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "summary": "Build the common baseline.",
+      "courses": [
+        { "status": "available", "path": "courses/foundations" },
+        {
+          "status": "planned",
+          "id": "advanced-systems",
+          "title": "Advanced Systems",
+          "summary": "A future specialization."
+        }
+      ]
+    }
+  ]
+}
+```
+
+Available paths must be relative, remain inside the collection root, and point
+to independently valid courses. Their title, summary, version, lesson count,
+duration, and tags come from `COURSE.md`. Planned entries are visibly disabled
+and need enough metadata to explain the future course without implying it is
+installed.
+
+The normal commands recognize either kind of root:
+
+```bash
+pnpm exec explorables validate path/to/collection
+pnpm exec explorables start path/to/collection
+pnpm exec explorables build path/to/collection
+```
+
+Collections do not scan the filesystem, clone repositories, install
+dependencies, or replace the plugin manifest and tutoring policy inside each
+course.

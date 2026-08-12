@@ -42,6 +42,13 @@ Implement temperature scaling and top-p truncation with stable normalisation.
 The starter accumulates tokens before sorting them.
 :::
 
+## In real models
+
+Release evaluations specify temperature, top-p, reasoning settings, trial
+counts, and harness behavior because decoding policy changes observed results.
+A model-family case study therefore treats sampling configuration as part of
+the experimental protocol, not as an afterthought.
+
 ## Explain and transfer
 
 Why can lowering temperature and lowering top-p both reduce variety while

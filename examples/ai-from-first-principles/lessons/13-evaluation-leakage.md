@@ -44,6 +44,13 @@ Implement a deterministic grouped split. The starter shuffles examples rather
 than task families.
 :::
 
+## In real models
+
+Frontier-model tables combine model weights, prompts, tools, harnesses,
+sampling, and benchmark versions. The shared research course turns those
+release artifacts into explicit evidence, while each specialization labels
+claims as reported, reproduced, or inferred.
+
 ## Explain and transfer
 
 Name two other identities—user, repository, time window, document source—that

@@ -144,3 +144,22 @@ Deliverables:
 
 Exit check: both example courses and a newly scaffolded course validate as
 Agent Plugins v1 packages, then pass the full repository check and build.
+
+## Milestone 8 — local course library and case-study path
+
+Deliverables:
+
+- Optional validated `explorables.library.json` with ordered tracks, contained
+  available-course paths, and honest planned-course metadata.
+- Local and static collection routes with course-scoped data/assets, safe deep
+  links, standalone-course compatibility, and isolated guided progress.
+- Accessible normal/narrow library UI for the foundation, shared research core,
+  and model-family specializations.
+- Real-model connection sections across all thirteen foundation lessons while
+  keeping release-specific reconstruction in separate planned courses.
+- Updated PRD, architecture, roadmap, source register, status, and ADR.
+
+Exit check: collection and standalone validation/build pass; browser tests
+cover selection, planned states, deep links, guidance, sandboxing, narrow
+layout, and axe; the full repository check and build pass under Node 24 and
+pnpm 11.

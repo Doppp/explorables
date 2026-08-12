@@ -43,6 +43,13 @@ matching bias. The starter treats weight columns as outputs and therefore uses
 the wrong orientation.
 :::
 
+## In real models
+
+Transformer query, key, value, output, gate, and expert projections are all
+structured uses of this operation. Sparse and latent-expert architectures
+change which matrices run and at what width; they do not remove the need to
+track shapes and parameter counts precisely.
+
 ## Explain and transfer
 
 Why does the number of weight rows determine the output width? A Transformer

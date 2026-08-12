@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "title": "explorables model-learning path",
+  "summary": "Build a language model from first principles, learn to evaluate frontier-model evidence, then choose a model-family specialization.",
+  "tracks": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "summary": "Build, train, run, and evaluate a small decoder-only Transformer.",
+      "courses": [
+        {
+          "status": "available",
+          "path": "examples/ai-from-first-principles",
+          "featured": true
+        }
+      ]
+    },
+    {
+      "id": "research-skills",
+      "title": "Research skills",
+      "summary": "Learn to inspect real releases and make controlled, source-grounded comparisons.",
+      "courses": [
+        {
+          "status": "planned",
+          "id": "open-frontier-models",
+          "title": "Open Frontier Models: Shared Techniques",
+          "summary": "Read artifacts, normalize configurations, account for costs, and reproduce bounded claims.",
+          "estimatedHours": 6,
+          "tags": ["open-weight", "research", "evaluation"]
+        }
+      ]
+    },
+    {
+      "id": "specializations",
+      "title": "Model specializations",
+      "summary": "Reconstruct distinctive mechanisms from pinned model-family releases.",
+      "courses": [
+        {
+          "status": "planned",
+          "id": "inside-kimi",
+          "title": "Inside Kimi: From K2 and Kimi Linear to K3",
+          "summary": "Trace fixed-state attention through DeltaNet and KDA into Kimi K3's hybrid architecture.",
+          "estimatedHours": 10,
+          "tags": ["kimi-k3", "linear-attention", "moe"],
+          "featured": true
+        },
+        {
+          "status": "planned",
+          "id": "inside-deepseek",
+          "title": "Inside DeepSeek",
+          "summary": "Reconstruct selected latent-attention, sparse-routing, and reasoning techniques.",
+          "tags": ["deepseek", "mla", "moe"]
+        },
+        {
+          "status": "planned",
+          "id": "inside-qwen",
+          "title": "Inside Qwen",
+          "summary": "Compare pinned dense and sparse releases, reasoning controls, and adaptation choices.",
+          "tags": ["qwen", "moe", "reasoning"]
+        },
+        {
+          "status": "planned",
+          "id": "inside-minimax",
+          "title": "Inside MiniMax",
+          "summary": "Study hybrid attention, long-context behavior, and supported reasoning choices.",
+          "tags": ["minimax", "hybrid-attention", "long-context"]
+        },
+        {
+          "status": "planned",
+          "id": "inside-glm",
+          "title": "Inside GLM",
+          "summary": "Separate sparse architecture, hybrid reasoning, and agentic evaluation effects.",
+          "tags": ["glm", "reasoning", "agents"]
+        }
+      ]
+    }
+  ]
+}
