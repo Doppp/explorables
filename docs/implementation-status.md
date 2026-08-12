@@ -122,6 +122,6 @@ pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass
 GitHub Pages API                         pass (workflow source, public, CNAME configured)
 GitHub Actions run 29851928963           pass (current actions; build, checks, artifact, deploy)
-clean temporary SSH clone                pass (frozen install, check, course:test, full build)
+clean temporary SSH clone                pass (feature branch; frozen install, check, collection/standalone/site build)
 DNS A / AAAA / www CNAME                no records returned (external blocker)
 ```
