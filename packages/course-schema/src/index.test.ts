@@ -42,6 +42,18 @@ describe("course schemas", () => {
         description: "Start a course when the learner asks to begin.",
       }),
     ).toMatchObject({ name: "start-course" });
+    expect(
+      agentSkillFrontmatterSchema.parse({
+        name: "a".repeat(64),
+        description: "A skill whose name is at the specification limit.",
+      }),
+    ).toMatchObject({ name: "a".repeat(64) });
+    expect(() =>
+      agentSkillFrontmatterSchema.parse({
+        name: "a".repeat(65),
+        description: "A skill whose name exceeds the specification limit.",
+      }),
+    ).toThrow("must be at most 64 characters");
   });
 
   it("rejects unstable identifiers", () => {

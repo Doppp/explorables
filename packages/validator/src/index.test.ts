@@ -135,4 +135,31 @@ describe("course validator", () => {
       ]),
     );
   });
+
+  it("rejects Agent Skill names longer than 64 characters", async () => {
+    const root = path.resolve(import.meta.dirname, "../../../examples/minimal-course");
+    const temporary = await fs.mkdtemp(
+      path.join(os.tmpdir(), "explorables-plugin-skill-name-"),
+    );
+    const skillName = "a".repeat(65);
+    const skillDirectory = path.join(temporary, "skills", skillName);
+    await fs.cp(root, temporary, { recursive: true });
+    await fs.mkdir(skillDirectory);
+    await Promise.all([
+      fs.writeFile(path.join(temporary, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n"),
+      fs.writeFile(
+        path.join(skillDirectory, "SKILL.md"),
+        `---\nname: ${skillName}\ndescription: Invalid overlong Agent Skill name.\n---\n\nInstructions.\n`,
+      ),
+    ]);
+
+    expect(await validateCourse(temporary)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "invalid-agent-skill",
+          message: expect.stringContaining("must be at most 64 characters"),
+        }),
+      ]),
+    );
+  });
 });

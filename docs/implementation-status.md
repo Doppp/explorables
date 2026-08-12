@@ -101,7 +101,7 @@ npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
 Agent Skills validation                pass (template and both first-party courses)
-pnpm check                              pass (format, lint, TS7, 22 suites/70 tests, plugin/course validators)
+pnpm check                              pass (format, lint, TS7, 22 suites/71 tests, plugin/course validators)
 pnpm course:test                        pass (14 model suites/47 tests; 14 starter/reference pairs)
 pnpm build                              pass (9 package entries, both courses, static site)
 pnpm test:browser                       pass (6 tests; guided flow, sandbox, persistence, inference/capstone failures, axe, 720px)

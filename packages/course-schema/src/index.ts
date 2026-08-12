@@ -5,6 +5,8 @@ const id = z
   .min(1)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "must use lowercase kebab-case");
 
+const agentSkillName = id.max(64, "must be at most 64 characters");
+
 export const AGENT_PLUGINS_SCHEMA_URL =
   "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json";
 
@@ -44,7 +46,7 @@ export const agentPluginManifestSchema = z
 
 export const agentSkillFrontmatterSchema = z
   .object({
-    name: id,
+    name: agentSkillName,
     description: z.string().min(1).max(1024),
     license: z.string().optional(),
     compatibility: z.string().min(1).max(500).optional(),
