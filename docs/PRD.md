@@ -1,8 +1,8 @@
 # explorables: Open Explorable Course Runtime
 ## Product Requirements, Technical Specification, and Course Authoring Guide
 
-**Status:** Draft v0.2
-**Date:** 30 July 2026
+**Status:** Draft v0.3
+**Date:** 12 August 2026
 **Product name:** `explorables`  
 **Supported initial hosts:** Codex and Claude Code Desktop  
 **Public site:** `https://explorables.ai`  
@@ -25,6 +25,7 @@ A course is a normal folder containing:
 - TypeScript explorable modules
 - Optional programming exercises and tests
 - Static assets
+- An Agent Plugins v1 manifest and portable `start-course` Agent Skill
 - An `AGENTS.md` file that tells Codex how to act as the course tutor
 
 A learner clones or downloads the folder, opens it in Codex or Claude Code Desktop, and says:
@@ -114,11 +115,18 @@ A text alternative describing the explorable.
 :::
 ```
 
-## 3.4 Host-neutral instructions with thin agent adapters
+## 3.4 Portable Agent Plugin packaging with thin host adapters
 
-A per-course `SKILL.md` is not required.
+Every distributable `explorables` course conforms to Agent Plugins v1. The
+course root contains `plugin.json`, and `skills/start-course/SKILL.md` provides
+the portable entry workflow using the Agent Skills format. Agent Plugins is a
+packaging and discovery layer; it does not replace `COURSE.md`, the runtime, or
+the explorable sandbox.
 
-`explorables` keeps the canonical teaching policy in `AGENTS.md`. Codex reads that file directly. Claude Code Desktop reads `CLAUDE.md`, so a `explorables` course includes a very small `CLAUDE.md` that imports or mirrors the canonical instructions and adds Claude-specific launch guidance.
+`explorables` keeps the canonical teaching policy in `AGENTS.md`. The portable
+skill reads and follows that policy rather than duplicating it. Codex can still
+read `AGENTS.md` directly. Claude Code Desktop reads the thin `CLAUDE.md`
+adapter and may also discover the portable skill when its plugin support allows.
 
 The canonical instructions define:
 
@@ -129,7 +137,9 @@ The canonical instructions define:
 - Which assignments it must not solve for the learner
 - How to run tests
 
-Optional Codex or Claude skills can be added later for explicit commands such as `start-course`, but skills are distribution adapters rather than part of the core course specification.
+The plugin manifest and portable skill are required distribution adapters for
+first-party and newly scaffolded courses. Client-specific extensions remain
+optional and must not fork course content or teaching policy.
 
 ## 3.5 No backend is required
 
@@ -284,7 +294,10 @@ They open the folder in Codex or Claude Code Desktop and type:
 
 > Start the course.
 
-Codex reads `AGENTS.md`; Claude Code Desktop reads `CLAUDE.md`. The host runs the documented start command and opens the local course URL in its built-in browser or preview pane.
+A conforming Agent Plugins client discovers `plugin.json` and the portable
+`start-course` skill. Codex can also read `AGENTS.md` directly, while Claude
+Code Desktop uses `CLAUDE.md`. The host runs the documented start command and
+opens the local course URL in its built-in browser or preview pane.
 
 A direct terminal path also exists:
 
@@ -449,8 +462,12 @@ my-course/
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── COURSE.md
+├── plugin.json
 ├── package.json
 ├── pnpm-lock.yaml
+├── skills/
+│   └── start-course/
+│       └── SKILL.md
 └── lessons/
     └── 01-introduction.md
 ```
@@ -463,17 +480,19 @@ my-course/
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── COURSE.md
+├── plugin.json
 ├── LICENSE
 ├── package.json
 ├── pnpm-lock.yaml
 ├── tsconfig.json
 ├── explorables.config.ts
 │
+├── skills/
+│   └── start-course/
+│       └── SKILL.md
+│
 ├── .claude/
-│   ├── launch.json
-│   └── skills/
-│       └── start-course/
-│           └── SKILL.md
+│   └── launch.json
 │
 ├── lessons/
 │   ├── 01-introduction.md
@@ -607,18 +626,20 @@ Official courses should include a Claude preview configuration:
 
 The exact schema must be verified against the current Claude Code Desktop documentation during implementation.
 
-### Optional Claude skill
+### Portable start-course skill
 
-A course may include:
+Every course includes:
 
 ```text
-.claude/
-└── skills/
+skills/
     └── start-course/
         └── SKILL.md
 ```
 
-This provides an explicit `/start-course` command but is not required by the `explorables` format.
+This Agent Skills component is discovered from the fixed Agent Plugins v1
+location. It resolves the plugin root, reads `AGENTS.md` and `COURSE.md`, starts
+the runtime, and applies the canonical policy. It must remain concise and must
+not duplicate lesson content or protected solutions.
 
 ## 8.6 `COURSE.md`
 
@@ -1394,6 +1415,10 @@ It defines:
 - Protected solution paths
 - Test instructions
 
+Every course also includes a root Agent Plugins v1 `plugin.json` and a portable
+`skills/start-course/SKILL.md`. The skill delegates teaching policy to
+`AGENTS.md`; the manifest supplies portable identity and discovery metadata.
+
 ## 16.2 Codex adapter
 
 Codex uses `AGENTS.md` directly.
@@ -1408,7 +1433,8 @@ When asked to start the course, Codex should:
 6. Ask the learner to interact with the page rather than summarising the entire course.
 7. Move into exercise files only when referenced by the current lesson.
 
-An optional Codex skill may be added later for an explicit `start-course` workflow, but it is not required.
+Codex may activate the portable `start-course` skill or use `AGENTS.md`
+directly. Both paths must produce the same course behavior.
 
 ## 16.3 Claude Code Desktop adapter
 
@@ -1430,7 +1456,9 @@ When asked to start the course, Claude Code Desktop should:
 5. Use file and terminal panes for exercises.
 6. Apply the same tutoring restrictions as Codex.
 
-An optional `.claude/skills/start-course/SKILL.md` may provide an explicit slash command.
+Claude may activate the same portable `skills/start-course/SKILL.md` when its
+Agent Plugins integration supports it; `.claude/launch.json` remains a thin
+preview adapter.
 
 ## 16.4 Host-neutral continuation
 
@@ -1636,8 +1664,12 @@ my-course/
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── COURSE.md
+├── plugin.json
 ├── package.json
 ├── explorables.config.ts
+├── skills/
+│   └── start-course/
+│       └── SKILL.md
 ├── .claude/
 │   └── launch.json
 ├── lessons/
@@ -1794,7 +1826,8 @@ The lesson references the directory, not individual files.
 
 ## 18.8 Configure coding-agent tutoring
 
-Edit the canonical `AGENTS.md`, then keep `CLAUDE.md` as a thin adapter.
+Edit the canonical `AGENTS.md`, then keep `skills/start-course/SKILL.md` and
+`CLAUDE.md` as thin adapters.
 
 Specify:
 
@@ -2306,6 +2339,7 @@ The first runtime release should support:
 - Structural validation
 - Basic accessibility checks
 - `AGENTS.md` and `CLAUDE.md` course templates
+- Agent Plugins v1 manifest and portable `start-course` Agent Skill
 - Claude Code Desktop preview configuration
 - Course scaffolding CLI
 - Static `apps/site` landing page
@@ -2384,10 +2418,10 @@ Build a substantially different course such as:
 
 The second course will reveal which abstractions are genuinely reusable.
 
-## Phase 4 — Optional distribution adapters
+## Phase 4 — Distribution and additional adapters
 
-- Codex skill package
-- Codex plugin
+- Agent Plugin registry or marketplace integration
+- Client-specific extensions only where portable components are insufficient
 - Static site export
 - Normal-browser course player
 - Course registry UI
@@ -2517,6 +2551,8 @@ See how it works. Build it yourself.
 
 ## Agent hosts
 
+- [ ] The course root contains a valid Agent Plugins v1 `plugin.json`.
+- [ ] A conforming client can discover a valid `skills/start-course/SKILL.md`.
 - [ ] Opening the repository in Codex exposes useful `AGENTS.md` guidance.
 - [ ] Opening the repository in Claude Code Desktop exposes useful `CLAUDE.md` guidance.
 - [ ] “Start the course” launches the runtime in both supported hosts.
@@ -2596,6 +2632,12 @@ These references informed the platform choices current as of July 2026:
 
 - Codex plugins:  
   https://learn.chatgpt.com/docs/plugins
+
+- Agent Plugins v1 specification:
+  https://agent-plugins.org/specification
+
+- Agent Skills specification:
+  https://agentskills.io/specification
 
 - Claude Code overview and Desktop setup:  
   https://docs.anthropic.com/en/docs/claude-code/overview  

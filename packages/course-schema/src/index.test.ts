@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
-  courseFrontmatterSchema,
+  AGENT_PLUGINS_SCHEMA_URL,
+  agentPluginManifestSchema,
+  agentSkillFrontmatterSchema,
   checkpointSchema,
+  courseFrontmatterSchema,
   explorableAttributesSchema,
   lessonFrontmatterSchema,
 } from "./index.ts";
@@ -17,6 +20,28 @@ describe("course schemas", () => {
         license: "CC-BY-4.0",
       }),
     ).toMatchObject({ id: "small-course" });
+  });
+
+  it("validates Agent Plugins v1 manifests and Agent Skill metadata", () => {
+    expect(
+      agentPluginManifestSchema.parse({
+        $schema: AGENT_PLUGINS_SCHEMA_URL,
+        name: "example.course",
+        version: "0.1.0",
+      }),
+    ).toMatchObject({ name: "example.course" });
+    expect(() =>
+      agentPluginManifestSchema.parse({
+        $schema: AGENT_PLUGINS_SCHEMA_URL,
+        name: "invalid--plugin",
+      }),
+    ).toThrow();
+    expect(
+      agentSkillFrontmatterSchema.parse({
+        name: "start-course",
+        description: "Start a course when the learner asks to begin.",
+      }),
+    ).toMatchObject({ name: "start-course" });
   });
 
   it("rejects unstable identifiers", () => {

@@ -14,6 +14,8 @@ is committed and pushed to `master` after its checks pass.
 - Course JavaScript runs only in sandboxed iframes with network access denied.
 - `AGENTS.md` is canonical; `CLAUDE.md` and `.claude/launch.json` are thin
   adapters.
+- Course roots conform to Agent Plugins v1; `skills/start-course/SKILL.md` is a
+  portable thin adapter to `AGENTS.md`.
 - The public site is a static Vite build deployed from `master` by GitHub Pages.
 
 ## Milestone 0 — repository and design record
@@ -129,3 +131,16 @@ Deliverables:
 Exit check: complete a guided learner path, verify lock/skip/Explore/reset and
 reload behavior, pass axe at normal and narrow widths, validate both example
 courses, and run the full repository build and test suite.
+
+## Milestone 7 — portable Agent Plugin packaging
+
+Deliverables:
+
+- Root Agent Plugins v1 manifests for first-party courses and the course
+  template.
+- Portable `start-course` Agent Skills that delegate to canonical `AGENTS.md`.
+- Manifest, identity/version, skill discovery, and Agent Skills validation.
+- Updated scaffold, architecture, authoring documentation, and ADR.
+
+Exit check: both example courses and a newly scaffolded course validate as
+Agent Plugins v1 packages, then pass the full repository check and build.

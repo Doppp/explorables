@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "minimal-course",
+  "version": "0.1.0",
+  "description": "A minimal interactive explorables course demonstrating the portable course format.",
+  "repository": "https://github.com/Doppp/explorables",
+  "license": "MIT AND CC-BY-4.0",
+  "keywords": ["course", "education", "explorables"]
+}

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "{{COURSE_ID}}",
+  "version": "0.1.0",
+  "description": "An interactive explorables course: {{COURSE_NAME}}.",
+  "license": "MIT AND CC-BY-4.0",
+  "keywords": ["course", "education", "explorables"]
+}

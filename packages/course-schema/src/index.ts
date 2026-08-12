@@ -5,6 +5,54 @@ const id = z
   .min(1)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "must use lowercase kebab-case");
 
+export const AGENT_PLUGINS_SCHEMA_URL =
+  "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json";
+
+const pluginName = z
+  .string()
+  .min(1)
+  .max(64)
+  .regex(
+    /^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/,
+    "must use lowercase letters, numbers, hyphens, or periods and start and end with a letter or number",
+  )
+  .refine((value) => !value.includes("--") && !value.includes(".."), {
+    message: "must not contain consecutive hyphens or periods",
+  });
+
+export const agentPluginManifestSchema = z
+  .object({
+    $schema: z.literal(AGENT_PLUGINS_SCHEMA_URL),
+    name: pluginName,
+    version: z.string().optional(),
+    description: z.string().optional(),
+    author: z
+      .object({
+        name: z.string().optional(),
+        email: z.string().optional(),
+        url: z.string().optional(),
+      })
+      .strict()
+      .optional(),
+    homepage: z.string().optional(),
+    repository: z.string().optional(),
+    license: z.string().optional(),
+    keywords: z.array(z.string()).optional(),
+    extensions: z.record(z.string(), z.object({}).catchall(z.unknown())).optional(),
+  })
+  .strict();
+
+export const agentSkillFrontmatterSchema = z
+  .object({
+    name: id,
+    description: z.string().min(1).max(1024),
+    license: z.string().optional(),
+    compatibility: z.string().min(1).max(500).optional(),
+    metadata: z.record(z.string(), z.string()).optional(),
+    "allowed-tools": z.string().optional(),
+  })
+  .strict();
+
 export const courseFrontmatterSchema = z.object({
   id,
   title: z.string().min(1),
@@ -86,6 +134,8 @@ export type ExerciseAttributes = z.infer<typeof exerciseAttributesSchema>;
 export type ExerciseManifest = z.infer<typeof exerciseManifestSchema>;
 export type Checkpoint = z.infer<typeof checkpointSchema>;
 export type Guidance = NonNullable<CourseFrontmatter["guidance"]>;
+export type AgentPluginManifest = z.infer<typeof agentPluginManifestSchema>;
+export type AgentSkillFrontmatter = z.infer<typeof agentSkillFrontmatterSchema>;
 
 export interface GuidedCourseStateV1 {
   schemaVersion: 1;

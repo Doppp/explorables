@@ -4,6 +4,32 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadCourse, validateCourse } from "./index.ts";
 
+const pluginManifest = (name: string, version = "0.1.0") =>
+  JSON.stringify({
+    $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+    name,
+    version,
+  });
+
+const startCourseSkill = `---
+name: start-course
+description: Start and tutor this course when a learner asks to begin or continue it.
+---
+
+Read ../../AGENTS.md and follow it.
+`;
+
+async function writePluginFiles(root: string, name: string): Promise<void> {
+  await fs.mkdir(path.join(root, "skills", "start-course"), { recursive: true });
+  await Promise.all([
+    fs.writeFile(path.join(root, "plugin.json"), pluginManifest(name)),
+    fs.writeFile(
+      path.join(root, "skills", "start-course", "SKILL.md"),
+      startCourseSkill,
+    ),
+  ]);
+}
+
 describe("course validator", () => {
   it("validates the minimal first-party course", async () => {
     const root = path.resolve(import.meta.dirname, "../../../examples/minimal-course");
@@ -15,6 +41,7 @@ describe("course validator", () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-markdown-only-"));
     await fs.mkdir(path.join(root, "lessons"));
     await fs.mkdir(path.join(root, "assets"));
+    await writePluginFiles(root, "markdown-only");
     await Promise.all([
       fs.writeFile(path.join(root, "README.md"), "# Course\n"),
       fs.writeFile(path.join(root, "AGENTS.md"), "# Tutor\n"),
@@ -40,6 +67,7 @@ describe("course validator", () => {
   it("reports invalid guided checkpoint declarations", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-guided-"));
     await fs.mkdir(path.join(root, "lessons"));
+    await writePluginFiles(root, "guided");
     await Promise.all([
       fs.writeFile(path.join(root, "README.md"), "# Course\n"),
       fs.writeFile(path.join(root, "AGENTS.md"), "# Tutor\n"),
@@ -58,6 +86,52 @@ describe("course validator", () => {
     expect(await validateCourse(root)).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ code: "unknown-checkpoint-explorable" }),
+      ]),
+    );
+  });
+
+  it("rejects an invalid Agent Plugin manifest", async () => {
+    const root = path.resolve(import.meta.dirname, "../../../examples/minimal-course");
+    const temporary = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-plugin-"));
+    await fs.cp(root, temporary, { recursive: true });
+    await fs.writeFile(
+      path.join(temporary, "pnpm-lock.yaml"),
+      "lockfileVersion: '9.0'\n",
+    );
+    await fs.writeFile(
+      path.join(temporary, "plugin.json"),
+      pluginManifest("Different_Name"),
+    );
+    expect(await validateCourse(temporary)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "invalid-plugin-manifest" }),
+      ]),
+    );
+  });
+
+  it("rejects Agent Skill paths that escape the plugin root", async () => {
+    const root = path.resolve(import.meta.dirname, "../../../examples/minimal-course");
+    const temporary = await fs.mkdtemp(
+      path.join(os.tmpdir(), "explorables-plugin-path-"),
+    );
+    const outside = await fs.mkdtemp(
+      path.join(os.tmpdir(), "explorables-outside-skill-"),
+    );
+    await fs.cp(root, temporary, { recursive: true });
+    await fs.writeFile(
+      path.join(temporary, "pnpm-lock.yaml"),
+      "lockfileVersion: '9.0'\n",
+    );
+    await fs.writeFile(path.join(outside, "SKILL.md"), startCourseSkill);
+    await fs.rm(path.join(temporary, "skills", "start-course"), { recursive: true });
+    await fs.symlink(outside, path.join(temporary, "skills", "start-course"));
+
+    expect(await validateCourse(temporary)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "invalid-agent-skill",
+          message: expect.stringContaining("outside the Agent Plugin root"),
+        }),
       ]),
     );
   });

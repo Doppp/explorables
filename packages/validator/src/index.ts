@@ -1,10 +1,13 @@
+import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import {
-  courseFrontmatterSchema,
-  exerciseManifestSchema,
+  agentPluginManifestSchema,
+  agentSkillFrontmatterSchema,
   type CourseFrontmatter,
+  courseFrontmatterSchema,
   type Diagnostic,
+  exerciseManifestSchema,
   type ParsedLesson,
   type RuntimeCourse,
   type RuntimeExplorable,
@@ -25,6 +28,8 @@ const requiredFiles = [
   "CLAUDE.md",
   "COURSE.md",
   "package.json",
+  "plugin.json",
+  "skills/start-course/SKILL.md",
 ];
 
 async function exists(file: string): Promise<boolean> {
@@ -34,6 +39,20 @@ async function exists(file: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function isContained(root: string, target: string): Promise<boolean> {
+  const [realRoot, realTarget] = await Promise.all([
+    fs.realpath(root),
+    fs.realpath(target),
+  ]);
+  const relative = path.relative(realRoot, realTarget);
+  return (
+    relative === "" ||
+    (relative !== ".." &&
+      !path.isAbsolute(relative) &&
+      !relative.startsWith(`..${path.sep}`))
+  );
 }
 
 function diagnostic(
@@ -342,6 +361,115 @@ async function validateParsedCourse(loaded: LoadedCourse): Promise<Diagnostic[]>
   return diagnostics;
 }
 
+async function validateAgentPlugin(
+  root: string,
+  course: CourseFrontmatter,
+): Promise<Diagnostic[]> {
+  const diagnostics: Diagnostic[] = [];
+  const manifestFile = path.join(root, "plugin.json");
+
+  try {
+    if (!(await isContained(root, manifestFile))) {
+      throw new Error("plugin.json resolves outside the Agent Plugin root.");
+    }
+    const manifest = agentPluginManifestSchema.parse(
+      JSON.parse(await fs.readFile(manifestFile, "utf8")),
+    );
+    if (manifest.name !== course.id) {
+      diagnostics.push(
+        diagnostic(
+          manifestFile,
+          "plugin-name-mismatch",
+          `Agent Plugin name "${manifest.name}" must match course id "${course.id}".`,
+        ),
+      );
+    }
+    if (manifest.version !== course.version) {
+      diagnostics.push(
+        diagnostic(
+          manifestFile,
+          "plugin-version-mismatch",
+          `Agent Plugin version "${manifest.version ?? "(missing)"}" must match course version "${course.version}".`,
+        ),
+      );
+    }
+  } catch (error) {
+    diagnostics.push(
+      diagnostic(manifestFile, "invalid-plugin-manifest", messageFor(error)),
+    );
+  }
+
+  const skillsRoot = path.join(root, "skills");
+  let entries: Dirent<string>[];
+  try {
+    if (!(await isContained(root, skillsRoot))) {
+      throw new Error("skills resolves outside the Agent Plugin root.");
+    }
+    entries = await fs.readdir(skillsRoot, { withFileTypes: true });
+  } catch (error) {
+    diagnostics.push(
+      diagnostic(skillsRoot, "invalid-plugin-skills", messageFor(error)),
+    );
+    return diagnostics;
+  }
+
+  for (const entry of entries) {
+    const skillDirectory = path.join(skillsRoot, entry.name);
+    const skillFile = path.join(skillDirectory, "SKILL.md");
+    try {
+      if (
+        !(await fs.stat(skillDirectory)).isDirectory() ||
+        !(await exists(skillFile))
+      ) {
+        continue;
+      }
+      if (!(await isContained(root, skillFile))) {
+        throw new Error(
+          `Skill "${entry.name}" resolves outside the Agent Plugin root.`,
+        );
+      }
+      if (!(await fs.stat(skillFile)).isFile()) {
+        throw new Error(
+          `Skill "${entry.name}" does not contain a regular SKILL.md file.`,
+        );
+      }
+      const skill = matter(await fs.readFile(skillFile, "utf8"));
+      const frontmatter = agentSkillFrontmatterSchema.parse(skill.data);
+      if (frontmatter.name !== entry.name) {
+        diagnostics.push(
+          diagnostic(
+            skillFile,
+            "skill-name-mismatch",
+            `Agent Skill name "${frontmatter.name}" must match directory "${entry.name}".`,
+          ),
+        );
+      }
+      if (!skill.content.trim()) {
+        diagnostics.push(
+          diagnostic(
+            skillFile,
+            "empty-agent-skill",
+            "Agent Skill instructions must not be empty.",
+          ),
+        );
+      }
+      if (entry.name === "start-course" && !skill.content.includes("../../AGENTS.md")) {
+        diagnostics.push(
+          diagnostic(
+            skillFile,
+            "missing-canonical-policy-reference",
+            "The start-course skill must delegate to ../../AGENTS.md.",
+          ),
+        );
+      }
+    } catch (error) {
+      diagnostics.push(diagnostic(skillFile, "invalid-agent-skill", messageFor(error)));
+    }
+  }
+
+  return diagnostics;
+}
+
 export async function validateCourse(coursePath: string): Promise<Diagnostic[]> {
   const root = path.resolve(coursePath);
   const diagnostics: Diagnostic[] = [];
@@ -380,6 +508,7 @@ export async function validateCourse(coursePath: string): Promise<Diagnostic[]> 
     return diagnostics;
   }
   diagnostics.push(...(await validateParsedCourse(loaded)));
+  diagnostics.push(...(await validateAgentPlugin(root, loaded.frontmatter)));
   if (diagnostics.some((item) => item.severity === "error")) return diagnostics;
 
   try {

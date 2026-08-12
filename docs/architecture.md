@@ -100,12 +100,20 @@ permissions and cannot access the parent document's state. Exercises remain
 deliberate learner or host actions; the runtime's learner acknowledgment is not
 automated grading.
 
-## Hosts
+## Agent Plugin packaging and hosts
 
-Codex reads the canonical `AGENTS.md`. Claude Code Desktop reads a thin
+Each distributable course root is an Agent Plugins v1 package. Root
+`plugin.json` declares portable identity and `skills/start-course/SKILL.md` is
+the single portable component. The skill locates the course root, reads
+`AGENTS.md` and `COURSE.md`, starts `pnpm course`, and then follows the active
+lesson. No MCP server is needed because the existing CLI and local files supply
+the workflow without another process or permission surface.
+
+`AGENTS.md` remains the canonical host-neutral tutoring policy. Codex can read
+it directly or activate the portable skill. Claude Code Desktop retains a thin
 `CLAUDE.md` adapter and the officially supported `.claude/launch.json` preview
-configuration. Both start `pnpm course`, open localhost, read the same files,
-and run the same tests. No runtime package calls private host APIs.
+configuration. Both open localhost, read the same files, and run the same
+tests. No runtime package calls private host APIs.
 
 ## Deployment
 

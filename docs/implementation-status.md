@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 30 July 2026
+Updated: 12 August 2026
 
 ## Completed
 
@@ -49,16 +49,20 @@ Updated: 30 July 2026
   automatic exercise execution.
 - Kept courses without guidance backward-compatible and added schema, reducer,
   validator, browser, accessibility, persistence, and recovery coverage.
+- Refactored first-party courses and the course scaffold into Agent Plugins v1
+  packages with root manifests and portable `start-course` Agent Skills.
+- Added manifest, identity/version alignment, skill discovery/frontmatter, and
+  canonical-policy delegation checks to course validation.
 
 ## Current work
 
 The v0.1 runtime MVP remains verified. `AI from First Principles`
 `0.3.0-guided.1` is implemented and passes its automated milestone
-verification. The next planned increment is `Open Frontier Models: Shared
-Techniques`, followed by separate DeepSeek, Kimi, Qwen, MiniMax, and GLM
-courses. The immediate work is the shared-core source freeze and its five
-research/comparison lessons. External DNS and learner-study evidence also
-remain.
+verification. The Agent Plugins v1 packaging milestone is also complete. The
+next planned increment is `Open Frontier Models: Shared Techniques`, followed
+by separate DeepSeek, Kimi, Qwen, MiniMax, and GLM courses. The immediate work
+is the shared-core source freeze and its five research/comparison lessons.
+External DNS and learner-study evidence also remain.
 
 ## Decisions
 
@@ -68,6 +72,9 @@ remain.
 - The existing Claude preview schema is current; no ADR is needed.
 - The landing page uses the repository's mandated React/Vite stack and GitHub
   Pages rather than introducing a second site framework or hosted service.
+- Agent Plugins v1 is an additive portable packaging layer. `AGENTS.md` remains
+  the canonical policy, and no MCP server is added because the local CLI and
+  host capabilities already cover course startup and tutoring.
 
 ## Known external evidence
 
@@ -93,12 +100,13 @@ npm view typescript@7 version          7.0.2
 npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
-pnpm check                              pass (format, lint, TS7, 21 suites/66 tests, validators)
+Agent Skills validation                pass (template and both first-party courses)
+pnpm check                              pass (format, lint, TS7, 22 suites/70 tests, plugin/course validators)
 pnpm course:test                        pass (14 model suites/47 tests; 14 starter/reference pairs)
 pnpm build                              pass (9 package entries, both courses, static site)
 pnpm test:browser                       pass (6 tests; guided flow, sandbox, persistence, inference/capstone failures, axe, 720px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
-generated course smoke                  pass (validate, 2 tests, static build)
+generated course smoke                  pass (Agent Plugin manifest/skill, validate, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass
 GitHub Pages API                         pass (workflow source, public, CNAME configured)

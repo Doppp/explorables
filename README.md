@@ -2,7 +2,7 @@
 
 **See how it works. Build it yourself.**
 
-`explorables` is an open course format and local runtime for technical learning
+`explorables` is an Agent Plugins v1-compatible open course format and local runtime for technical learning
 through plain Markdown, sandboxed TypeScript interactions, real exercises, and
 a coding-agent tutor. A course is a normal folder. It needs no account,
 database, analytics, hosted executor, or LMS.
@@ -35,9 +35,10 @@ normal browser, or Claude Code Desktop Preview. In either coding host, ask:
 
 > Start the course.
 
-Codex reads `AGENTS.md` directly. Claude Code Desktop uses the thin `CLAUDE.md`
-adapter and `.claude/launch.json`; both operate on the same host-neutral course
-files and tests.
+Agent Plugins-compatible clients discover the portable `start-course` skill.
+Codex can also read `AGENTS.md` directly, while Claude Code Desktop uses the
+thin `CLAUDE.md` adapter and `.claude/launch.json`; every path operates on the
+same host-neutral course files and tests.
 
 ## CLI
 
@@ -67,8 +68,9 @@ pnpm install
 pnpm --dir examples/my-course validate
 ```
 
-A course begins with `COURSE.md`, ordinary lesson Markdown, and only two custom
-directives: `explorable` and `exercise`. See the complete
+A course is a self-contained Agent Plugin with root `plugin.json`, a portable
+`skills/start-course/SKILL.md`, `COURSE.md`, ordinary lesson Markdown, and only
+two custom directives: `explorable` and `exercise`. See the complete
 [course authoring guide](docs/course-authoring.md).
 
 ## Repository map

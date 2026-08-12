@@ -110,7 +110,9 @@ Follow these unless the PRD explicitly says otherwise:
 - Codex reads `AGENTS.md` directly.
 - Claude Code Desktop uses `CLAUDE.md` plus `.claude/launch.json`.
 - `CLAUDE.md` must remain a thin adapter to the canonical policy.
-- Optional Codex or Claude skills are out of explorables unless necessary for the MVP.
+- Every course root is an Agent Plugins v1 package with `plugin.json` and a
+  portable `skills/start-course/SKILL.md` Agent Skill.
+- Portable skills remain thin adapters to the canonical `AGENTS.md` policy.
 - Community explorable code must not execute in the main course document context.
 - Explorables must run in sandboxed iframes with a restrictive content security policy and no network access by default.
 
@@ -200,6 +202,7 @@ The root repository should also expose convenient pnpm commands for development,
 ### Codex
 
 - Use root `AGENTS.md` as the canonical repository instructions.
+- Support the portable Agent Plugins v1 manifest and `start-course` skill.
 - Verify the local course can be started and opened in the Codex built-in browser.
 - Do not depend on private Codex browser APIs.
 
@@ -209,11 +212,13 @@ The root repository should also expose convenient pnpm commands for development,
 - Add `.claude/launch.json` for starting the explorables preview.
 - Verify the local course can be started and opened in Claude Code Desktop's Browser or Preview pane.
 - If current Claude documentation requires a different launch schema, verify it from official Anthropic documentation and record the adjustment in an ADR.
-- An optional `.claude/skills/start-course/SKILL.md` may be scaffolded only if it clearly improves the entry flow without becoming a core format requirement.
+- Do not duplicate the portable `start-course` skill under `.claude/skills`.
 
 ### Portability
 
 The course format, runtime, lessons, explorables, and exercises must remain independent of either host.
+Agent Plugins v1 is the portable packaging layer; do not encode the course as a
+client-specific plugin manifest.
 
 ## Required landing page
 

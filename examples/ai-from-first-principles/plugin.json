@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ai-from-first-principles",
+  "version": "0.3.0-guided.1",
+  "description": "An interactive course for learning modern AI and language-model foundations through prediction, experimentation, implementation, and debugging.",
+  "repository": "https://github.com/Doppp/explorables",
+  "license": "MIT AND CC-BY-4.0",
+  "keywords": ["ai", "course", "education", "explorables", "language-models"]
+}

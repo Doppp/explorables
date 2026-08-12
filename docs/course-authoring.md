@@ -20,13 +20,15 @@ pnpm install --frozen-lockfile
 pnpm exec explorables start examples/my-course
 ```
 
-The generated course contains both thin host adapters, one lesson, one
+The generated course is an Agent Plugins v1 package containing a portable
+`start-course` skill, both thin legacy host adapters, one lesson, one
 explorable, one exercise, and validation/test scripts.
 
 ## 3. Course structure
 
 Required files are `README.md`, `AGENTS.md`, `CLAUDE.md`, `COURSE.md`,
-`package.json`, and a pnpm lockfile (the monorepo examples use the root lock).
+`plugin.json`, `skills/start-course/SKILL.md`, `package.json`, and a pnpm
+lockfile (the monorepo examples use the root lock).
 Recommended content directories are:
 
 ```text
@@ -223,13 +225,20 @@ Keep tasks focused and deterministic. Include an edge case or intentional
 failure that makes the learner inspect the model. Official-course reference
 solutions remain protected and are used only by CI to prove test validity.
 
-## 7. Configure both hosts
+## 7. Configure the portable plugin and host adapters
 
 Put launch and tutoring policy in `AGENTS.md`. It must prohibit solving central
 starter files before an attempt and revealing protected paths. `CLAUDE.md`
 should contain `@AGENTS.md` plus only Preview-specific guidance.
 `.claude/launch.json` uses schema version `0.0.1`, runs `pnpm course`, and names
 the preview port. Do not put lesson content in host adapters.
+
+Keep `plugin.json` at the course root and target the canonical Agent Plugins v1
+schema. Its `name` and `version` must match `COURSE.md`. Put portable startup
+instructions in `skills/start-course/SKILL.md`; its `name` must match the
+`start-course` directory, and it should read `../../AGENTS.md` rather than copy
+the tutoring policy. MCP is optional in Agent Plugins v1 and is not needed for
+an explorables course.
 
 ## 8. Validate and publish
 
@@ -239,9 +248,10 @@ pnpm exec explorables test path/to/course
 pnpm exec explorables build path/to/course
 ```
 
-Validation checks schemas, IDs, links, directive attributes, source/config
-files, exercise manifests, licences/text alternatives, and explorable
-compilation. Diagnostics use `file:line:column`.
+Validation checks the Agent Plugin manifest and discovered Agent Skills plus
+course schemas, IDs, links, directive attributes, source/config files,
+exercise manifests, licences/text alternatives, and explorable compilation.
+Diagnostics use `file:line:column`.
 
 Before publishing, test keyboard use and narrow layout, inspect the text-only
 fallback on GitHub, run from a clean checkout, declare licences for prose/code
