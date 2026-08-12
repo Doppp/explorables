@@ -62,8 +62,9 @@ Detailed scope: [courses/inside-deepseek.md](courses/inside-deepseek.md).
 
 Prerequisites: the foundation course and shared frontier core.
 
-Reconstruct selected Kimi sparse-model, matrix-optimisation, and
-efficient-attention techniques at small scale.
+Reconstruct selected Kimi K2, Kimi Linear, and Kimi K3 sparse-model,
+matrix-optimisation, recurrent-attention, and hybrid-architecture techniques at
+small scale.
 
 Detailed scope: [courses/inside-kimi.md](courses/inside-kimi.md).
 
@@ -101,7 +102,7 @@ Detailed scope: [courses/inside-glm.md](courses/inside-glm.md).
 | `ai-from-first-principles` | `examples/ai-from-first-principles` | 13 complete |
 | `open-frontier-models` | `examples/open-frontier-models` | 5 |
 | `inside-deepseek` | `examples/inside-deepseek` | 6 |
-| `inside-kimi` | `examples/inside-kimi` | 5 |
+| `inside-kimi` | `examples/inside-kimi` | 8 |
 | `inside-qwen` | `examples/inside-qwen` | 5 |
 | `inside-minimax` | `examples/inside-minimax` | 5 |
 | `inside-glm` | `examples/inside-glm` | 5 |
@@ -189,8 +190,12 @@ Status: complete.
 ### Milestone 5 — Inside Kimi
 
 - Add sparse-model and matrix-aware optimisation experiments.
-- Add efficient or recurrent attention experiments from the pinned Kimi
-  sources.
+- Trace the pinned lineage from Kimi Linear's fixed-state attention through
+  delta updates, chunkwise parallelism, gating, and KDA.
+- Add a Kimi K3 architecture lesson covering its hybrid KDA/gated-MLA pattern,
+  Stable LatentMoE, SiTU-GLU, and Attention Residuals.
+- Separate locally reconstructed mechanisms from native multimodality,
+  quantisation-aware training, production kernels, scale, and benchmark claims.
 - Complete a Kimi-specific controlled-reconstruction capstone.
 
 ### Milestone 6 — Inside Qwen
