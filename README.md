@@ -19,12 +19,40 @@ The accepted [model-learning roadmap](docs/course-roadmap.md) continues through
 model course uses pinned primary sources and a controlled reconstruction rather
 than treating one umbrella survey as a substitute for studying the lab.
 
-## Quick start
+## Start with Codex
+
+The simplest learner experience uses **Codex in the ChatGPT desktop app**. Open
+Codex, start a local coding workspace, and paste this prompt:
+
+> Install and start the explorables course from
+> https://github.com/Doppp/explorables.
+>
+> Create a new `explorables` folder in my Documents folder. If that folder
+> already exists, do not overwrite it; ask me what to do. Clone the repository
+> using HTTPS, read its `AGENTS.md`, and follow its instructions. Check for
+> Node.js 24 and pnpm 11, but ask before installing or changing system
+> software. Install the locked dependencies with `pnpm install
+> --frozen-lockfile`, run `pnpm course`, and open the printed local URL. Then
+> help me choose and start a course. Act as the course tutor: ask me to predict,
+> let me attempt exercises, run tests, and give the smallest useful hint before
+> showing more.
+
+Codex will ask for permission before running some commands or accessing a
+folder. Review and approve the actions needed to clone the public repository,
+install its dependencies, and start the local course. It should stop and ask
+instead of replacing an existing folder or installing missing system software.
+
+The course interface, files, exercises, tests, and progress run locally. An
+internet connection is still needed for the Codex tutor, the initial repository
+download, and dependency installation. No separate API key, hosted course
+server, or explorables account is required.
+
+## Manual quick start
 
 Requirements: Node.js 24 LTS and pnpm 11.
 
 ```bash
-git clone git@github.com:Doppp/explorables.git
+git clone https://github.com/Doppp/explorables.git
 cd explorables
 pnpm install --frozen-lockfile
 pnpm course
@@ -33,7 +61,7 @@ pnpm course
 Open the printed `http://127.0.0.1:4173` URL in the Codex built-in browser, a
 normal browser, or Claude Code Desktop Preview. The local library shows the
 foundation, shared research-skills course, and planned model specializations.
-Select an available course, then ask either coding host:
+Select an available course, then ask the coding host:
 
 > Start the course.
 
