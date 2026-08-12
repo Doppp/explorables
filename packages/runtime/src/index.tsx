@@ -2,6 +2,7 @@ import type {
   Checkpoint,
   GuidedCourseStateV1,
   RuntimeCourse,
+  RuntimeCourseCollection,
   RuntimeLesson,
 } from "@explorables/course-schema";
 import { mountSandbox, type SandboxController } from "@explorables/sandbox/client";
@@ -30,22 +31,29 @@ const LessonArticle = memo(function LessonArticle({ html }: { html: string }) {
   );
 });
 
-function hashLessonId(first: string): string {
-  return window.location.hash.replace(/^#\/?/, "") || first;
+function hashLessonId(first: string, routePrefix = ""): string {
+  const route = window.location.hash.replace(/^#\/?/, "");
+  if (!routePrefix) return route || first;
+  return route.startsWith(routePrefix)
+    ? route.slice(routePrefix.length) || first
+    : first;
 }
 
-function useHashLesson(course: RuntimeCourse): [string, (id: string) => void] {
+function useHashLesson(
+  course: RuntimeCourse,
+  routePrefix = "",
+): [string, (id: string) => void] {
   const first = course.lessons[0]?.frontmatter.id ?? "";
-  const [lessonId, setLessonId] = useState(() => hashLessonId(first));
+  const [lessonId, setLessonId] = useState(() => hashLessonId(first, routePrefix));
   useEffect(() => {
-    const onHash = () => setLessonId(hashLessonId(first));
+    const onHash = () => setLessonId(hashLessonId(first, routePrefix));
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, [first]);
+  }, [first, routePrefix]);
   return [
     lessonId,
     (id) => {
-      window.location.hash = `/${id}`;
+      window.location.hash = `/${routePrefix}${id}`;
     },
   ];
 }
@@ -136,10 +144,12 @@ function GuidedTools({
   course,
   state,
   dispatch,
+  routePrefix,
 }: {
   course: RuntimeCourse;
   state: GuidedCourseStateV1;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+  routePrefix: string;
 }) {
   const [question, setQuestion] = useState("");
   const [confirmation, setConfirmation] = useState<"explore" | "reset" | null>(null);
@@ -154,7 +164,7 @@ function GuidedTools({
   const reset = () => {
     window.localStorage.removeItem(guidedStorageKey(course));
     dispatch({ type: "reset", state: createGuidedState(course) });
-    window.location.hash = `/${course.lessons[0]?.frontmatter.id ?? ""}`;
+    window.location.hash = `/${routePrefix}${course.lessons[0]?.frontmatter.id ?? ""}`;
     setConfirmation(null);
   };
 
@@ -192,7 +202,7 @@ function GuidedTools({
           type="button"
           onClick={() => {
             dispatch({ type: "set-mode", mode: "guided" });
-            window.location.hash = `/${state.activeLessonId}`;
+            window.location.hash = `/${routePrefix}${state.activeLessonId}`;
           }}
         >
           Return to Guided mode
@@ -253,7 +263,15 @@ function GuidedTools({
   );
 }
 
-function Lesson({ course }: { course: RuntimeCourse }) {
+function Lesson({
+  course,
+  routePrefix = "",
+  onBack,
+}: {
+  course: RuntimeCourse;
+  routePrefix?: string;
+  onBack?: () => void;
+}) {
   const guidance = course.frontmatter.guidance;
   const [state, dispatch] = useReducer(guidedCourseReducer, course, (currentCourse) =>
     parseGuidedState(
@@ -265,7 +283,7 @@ function Lesson({ course }: { course: RuntimeCourse }) {
   );
   const stateRef = useRef(state);
   stateRef.current = state;
-  const [requestedLessonId, navigate] = useHashLesson(course);
+  const [requestedLessonId, navigate] = useHashLesson(course, routePrefix);
   const [navigationNotice, setNavigationNotice] = useState<string | null>(null);
 
   useEffect(() => {
@@ -396,9 +414,15 @@ function Lesson({ course }: { course: RuntimeCourse }) {
   return (
     <div className="course-layout">
       <aside className="course-sidebar">
-        <a className="brand" href="#/">
-          explorables
-        </a>
+        {onBack ? (
+          <button className="brand brand-button" type="button" onClick={onBack}>
+            ← All courses
+          </button>
+        ) : (
+          <a className="brand" href="#/">
+            explorables
+          </a>
+        )}
         <p className="course-title">{course.frontmatter.title}</p>
         <nav aria-label="Course lessons">
           <ol>
@@ -416,7 +440,7 @@ function Lesson({ course }: { course: RuntimeCourse }) {
                           ? "page"
                           : undefined
                       }
-                      href={`#/${item.frontmatter.id}`}
+                      href={`#/${routePrefix}${item.frontmatter.id}`}
                     >
                       {complete ? "✓ " : ""}
                       {item.frontmatter.title}
@@ -429,7 +453,12 @@ function Lesson({ course }: { course: RuntimeCourse }) {
             })}
           </ol>
         </nav>
-        <GuidedTools course={course} state={state} dispatch={dispatch} />
+        <GuidedTools
+          course={course}
+          state={state}
+          dispatch={dispatch}
+          routePrefix={routePrefix}
+        />
       </aside>
       <main id="lesson" className="lesson" tabIndex={-1}>
         {navigationNotice ? (
@@ -491,11 +520,95 @@ function Lesson({ course }: { course: RuntimeCourse }) {
   );
 }
 
-export function CourseApp() {
+function courseIdFromHash(): string | null {
+  const route = window.location.hash.replace(/^#\/?/, "");
+  const match = route.match(/^courses\/([^/]+)(?:\/|$)/);
+  return match?.[1] ? decodeURIComponent(match[1]) : null;
+}
+
+function LibraryHome({ collection }: { collection: RuntimeCourseCollection }) {
+  return (
+    <main id="library" className="course-library">
+      <header className="library-hero">
+        <a className="brand" href="#/courses">
+          explorables
+        </a>
+        <p className="eyebrow library-eyebrow">Local course library</p>
+        <h1 className="library-title">{collection.title}</h1>
+        <p>{collection.summary}</p>
+        <p className="local-note">
+          Courses, exercises, and progress stay on this computer. Planned courses are
+          shown so the learning path is visible without pretending they are available.
+        </p>
+      </header>
+      {collection.tracks.map((track, trackIndex) => (
+        <section className="library-track" key={track.id} aria-labelledby={track.id}>
+          <div className="track-heading">
+            <span aria-hidden="true">{trackIndex + 1}</span>
+            <div>
+              <h2 className="track-title" id={track.id}>
+                {track.title}
+              </h2>
+              <p className="track-summary">{track.summary}</p>
+            </div>
+          </div>
+          <div className="course-grid">
+            {track.courses.map((course) => (
+              <article
+                className={`course-card${course.featured ? " featured-course" : ""}`}
+                key={course.id}
+              >
+                <div className="course-card-heading">
+                  <p className="course-status">
+                    {course.status === "available" ? "Available locally" : "Planned"}
+                  </p>
+                  {course.version ? <small>v{course.version}</small> : null}
+                </div>
+                <h3>{course.title}</h3>
+                <p>{course.summary}</p>
+                <p className="course-meta">
+                  {[
+                    course.lessonCount ? `${course.lessonCount} lessons` : undefined,
+                    course.estimatedHours
+                      ? `about ${course.estimatedHours} hours`
+                      : undefined,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+                {course.tags.length ? (
+                  <ul className="course-tags" aria-label="Topics">
+                    {course.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                ) : null}
+                {course.status === "available" ? (
+                  <a
+                    className="course-action"
+                    href={`#/courses/${encodeURIComponent(course.id)}`}
+                  >
+                    Open course
+                  </a>
+                ) : (
+                  <span className="planned-label">Not yet available</span>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </main>
+  );
+}
+
+function CollectionCourse({ courseId }: { courseId: string }) {
   const [course, setCourse] = useState<RuntimeCourse | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    fetch("./course.json")
+    setCourse(null);
+    setError(null);
+    fetch(`./courses/${encodeURIComponent(courseId)}/course.json`)
       .then((response) => {
         if (!response.ok) throw new Error(`Course request failed (${response.status})`);
         return response.json() as Promise<RuntimeCourse>;
@@ -504,11 +617,14 @@ export function CourseApp() {
       .catch((reason: unknown) =>
         setError(reason instanceof Error ? reason.message : String(reason)),
       );
-  }, []);
+  }, [courseId]);
   if (error)
     return (
       <main className="fatal-error" role="alert">
         Could not load the course: {error}
+        <p>
+          <a href="#/courses">Return to the course library</a>
+        </p>
       </main>
     );
   if (!course)
@@ -517,5 +633,72 @@ export function CourseApp() {
         Loading course…
       </main>
     );
-  return <Lesson course={course} />;
+  return (
+    <Lesson
+      course={course}
+      routePrefix={`courses/${encodeURIComponent(courseId)}/lessons/`}
+      onBack={() => {
+        window.location.hash = "/courses";
+      }}
+    />
+  );
+}
+
+function CollectionApp({ collection }: { collection: RuntimeCourseCollection }) {
+  const [courseId, setCourseId] = useState(courseIdFromHash);
+  useEffect(() => {
+    const onHash = () => setCourseId(courseIdFromHash());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  const knownCourse = collection.tracks
+    .flatMap((track) => track.courses)
+    .find((course) => course.id === courseId && course.status === "available");
+  if (!courseId) return <LibraryHome collection={collection} />;
+  if (!knownCourse)
+    return (
+      <main className="fatal-error" role="alert">
+        That course is not available in this local collection.
+        <p>
+          <a href="#/courses">Return to the course library</a>
+        </p>
+      </main>
+    );
+  return <CollectionCourse key={courseId} courseId={courseId} />;
+}
+
+export function CourseApp() {
+  const [course, setCourse] = useState<RuntimeCourse | null>(null);
+  const [collection, setCollection] = useState<RuntimeCourseCollection | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const load = async () => {
+      const libraryResponse = await fetch("./explorables-library.json");
+      const contentType = libraryResponse.headers.get("content-type") ?? "";
+      if (libraryResponse.ok && contentType.includes("application/json")) {
+        setCollection((await libraryResponse.json()) as RuntimeCourseCollection);
+        return;
+      }
+      const courseResponse = await fetch("./course.json");
+      if (!courseResponse.ok)
+        throw new Error(`Course request failed (${courseResponse.status})`);
+      setCourse((await courseResponse.json()) as RuntimeCourse);
+    };
+    load().catch((reason: unknown) =>
+      setError(reason instanceof Error ? reason.message : String(reason)),
+    );
+  }, []);
+  if (error)
+    return (
+      <main className="fatal-error" role="alert">
+        Could not load explorables: {error}
+      </main>
+    );
+  if (collection) return <CollectionApp collection={collection} />;
+  if (course) return <Lesson course={course} />;
+  return (
+    <main className="loading" aria-busy="true">
+      Loading explorables…
+    </main>
+  );
 }

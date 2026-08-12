@@ -50,6 +50,13 @@ apply the accumulated transition-matrix gradient. The starter uses each token
 as its own target.
 :::
 
+## In real models
+
+Scaling the model or changing its attention and expert blocks does not change
+the causal target shift demonstrated here. Release reports may add
+post-training objectives, but architecture comparisons must first preserve the
+base language-model objective and masking contract.
+
 ## Explain and transfer
 
 Why must causal masking and shifted targets both be correct? If masking leaks a

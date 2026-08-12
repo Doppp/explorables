@@ -115,6 +115,35 @@ it directly or activate the portable skill. Claude Code Desktop retains a thin
 configuration. Both open localhost, read the same files, and run the same
 tests. No runtime package calls private host APIs.
 
+## Local course collections
+
+A standalone course remains the unit of distribution and Agent Plugin
+discovery. A repository may additionally contain `explorables.library.json` to
+present an explicit local learning path across several course packages.
+
+```text
+explorables.library.json
+        │ validate relative paths and course IDs
+        ▼
+local library index
+        │ select an available course
+        ▼
+/courses/:courseId/course.json
+/courses/:courseId/course-files/*
+        │
+        ▼
+the same course runtime and iframe sandbox
+```
+
+The manifest is an allowlist, not a directory scan. Available entries derive
+metadata from their contained `COURSE.md`; planned entries are
+presentation-only and cannot be opened. Collection routing never grants a
+course access outside its own root. The standalone `/course.json` and
+`/course-files/*` contract is preserved.
+
+See [ADR 0005](decisions/0005-local-course-library.md) for the curriculum and
+distribution boundary.
+
 ## Deployment
 
 The local course runtime is never deployed. Only `apps/site/dist` is uploaded

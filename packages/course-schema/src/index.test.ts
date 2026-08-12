@@ -4,6 +4,7 @@ import {
   agentPluginManifestSchema,
   agentSkillFrontmatterSchema,
   checkpointSchema,
+  courseCollectionSchema,
   courseFrontmatterSchema,
   explorableAttributesSchema,
   lessonFrontmatterSchema,
@@ -94,5 +95,30 @@ describe("course schemas", () => {
         event: "simulation-completed",
       }),
     ).toMatchObject({ completion: "explorable-event" });
+  });
+
+  it("parses available and planned collection entries", () => {
+    const collection = courseCollectionSchema.parse({
+      schemaVersion: 1,
+      title: "Model learning",
+      summary: "A local course collection.",
+      tracks: [
+        {
+          id: "foundations",
+          title: "Foundations",
+          summary: "Build the baseline.",
+          courses: [
+            { status: "available", path: "examples/foundation" },
+            {
+              status: "planned",
+              id: "inside-kimi",
+              title: "Inside Kimi",
+              summary: "Reconstruct the Kimi lineage.",
+            },
+          ],
+        },
+      ],
+    });
+    expect(collection.tracks[0]?.courses).toHaveLength(2);
   });
 });

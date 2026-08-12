@@ -53,16 +53,24 @@ Updated: 12 August 2026
   packages with root manifests and portable `start-course` Agent Skills.
 - Added manifest, identity/version alignment, skill discovery/frontmatter, and
   canonical-policy delegation checks to course validation.
+- Added an optional, explicit local course collection with ordered learning
+  tracks, safe contained paths, planned-course cards, course-scoped routes and
+  static artifacts, accessible selection, deep links, and standalone-course
+  compatibility.
+- Connected all thirteen foundation lessons to real-model mechanisms in
+  ordinary Markdown while preserving shared research skills and pinned model
+  reconstructions as separate courses.
 
 ## Current work
 
 The v0.1 runtime MVP remains verified. `AI from First Principles`
-`0.3.0-guided.1` is implemented and passes its automated milestone
-verification. The Agent Plugins v1 packaging milestone is also complete. The
-next planned increment is `Open Frontier Models: Shared Techniques`, followed
-by separate DeepSeek, Kimi, Qwen, MiniMax, and GLM courses. The immediate work
-is the shared-core source freeze and its five research/comparison lessons.
-External DNS and learner-study evidence also remain.
+`0.3.0-guided.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local
+course-library milestone are implemented. The library presents the shared
+frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as
+planned rather than runnable. The next implementation increment remains the
+shared-core source freeze and its five research/comparison lessons, followed by
+the pinned model-specific courses. External DNS and learner-study evidence also
+remain.
 
 ## Decisions
 
@@ -75,6 +83,9 @@ External DNS and learner-study evidence also remain.
 - Agent Plugins v1 is an additive portable packaging layer. `AGENTS.md` remains
   the canonical policy, and no MCP server is added because the local CLI and
   host capabilities already cover course startup and tutoring.
+- The library manifest is a local allowlist, not a hosted catalogue, remote
+  installer, or filesystem scan. Standalone courses remain the distributable
+  Agent Plugin boundary.
 
 ## Known external evidence
 
@@ -101,10 +112,10 @@ npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
 Agent Skills validation                pass (template and both first-party courses)
-pnpm check                              pass (format, lint, TS7, 22 suites/71 tests, plugin/course validators)
+pnpm check                              pass (format, lint, TS7, 22 suites/74 tests, collection/plugin/course validators)
 pnpm course:test                        pass (14 model suites/47 tests; 14 starter/reference pairs)
-pnpm build                              pass (9 package entries, both courses, static site)
-pnpm test:browser                       pass (6 tests; guided flow, sandbox, persistence, inference/capstone failures, axe, 720px)
+pnpm build                              pass (9 package entries, collection, standalone course, static site)
+pnpm test:browser                       pass (8 tests; library, safe routes, guided flow, sandbox, persistence, failures, axe, 720px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
 generated course smoke                  pass (Agent Plugin manifest/skill, validate, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)

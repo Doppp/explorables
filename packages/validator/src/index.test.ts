@@ -2,7 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadCourse, validateCourse } from "./index.ts";
+import {
+  loadCourse,
+  loadCourseCollection,
+  validateCourse,
+  validateCourseCollection,
+} from "./index.ts";
 
 const pluginManifest = (name: string, version = "0.1.0") =>
   JSON.stringify({
@@ -161,5 +166,40 @@ describe("course validator", () => {
         }),
       ]),
     );
+  });
+
+  it("loads an explicit collection without exposing local course paths", async () => {
+    const root = path.resolve(import.meta.dirname, "../../..");
+    const collection = await loadCourseCollection(root);
+    expect(collection.runtime.tracks[0]?.courses[0]).toMatchObject({
+      id: "ai-from-first-principles",
+      status: "available",
+      lessonCount: 13,
+    });
+    expect(JSON.stringify(collection.runtime)).not.toContain(root);
+    expect(await validateCourseCollection(root)).toEqual([]);
+  });
+
+  it("rejects collection paths outside the collection root", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-library-"));
+    await fs.writeFile(
+      path.join(root, "explorables.library.json"),
+      JSON.stringify({
+        schemaVersion: 1,
+        title: "Unsafe",
+        summary: "An unsafe collection.",
+        tracks: [
+          {
+            id: "unsafe",
+            title: "Unsafe",
+            summary: "Must fail.",
+            courses: [{ status: "available", path: "../outside" }],
+          },
+        ],
+      }),
+    );
+    expect(await validateCourseCollection(root)).toEqual([
+      expect.objectContaining({ code: "invalid-course-collection" }),
+    ]);
   });
 });

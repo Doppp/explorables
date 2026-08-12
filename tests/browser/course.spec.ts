@@ -6,8 +6,68 @@ async function enterExploreMode(page: Page) {
   await page.getByRole("button", { name: "Enter Explore mode" }).click();
 }
 
-test("guides progress, records interaction, and resumes locally", async ({ page }) => {
+async function openFoundation(page: Page) {
   await page.goto("/");
+  await page.getByRole("link", { name: "Open course" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+  ).toBeVisible();
+}
+
+test("presents the local learning path and planned specializations honestly", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 720, height: 900 });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", {
+      name: "explorables model-learning path",
+      level: 1,
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Research skills" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Model specializations" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Inside Kimi: From K2 and Kimi Linear to K3",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Not yet available")).toHaveCount(6);
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  );
+  expect(overflow).toBe(false);
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+  await page.getByRole("link", { name: "Open course" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "All courses" }).click();
+  await expect(
+    page.getByRole("heading", {
+      name: "explorables model-learning path",
+      level: 1,
+    }),
+  ).toBeVisible();
+});
+
+test("rejects unknown collection courses and escaped asset requests", async ({
+  request,
+}) => {
+  const unknown = await request.get("/courses/not-installed/course.json");
+  expect(unknown.status()).toBe(404);
+  const escaped = await request.get(
+    "/courses/ai-from-first-principles/course-files/%2e%2e%2f%2e%2e%2fpackage.json",
+  );
+  expect(escaped.status()).not.toBe(200);
+});
+
+test("guides progress, records interaction, and resumes locally", async ({ page }) => {
+  await openFoundation(page);
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
@@ -64,7 +124,7 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
 test("recovers locked deep links and supports parking, skipping, explore, and reset", async ({
   page,
 }) => {
-  await page.goto("/#/sampling");
+  await page.goto("/#/courses/ai-from-first-principles/lessons/sampling");
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
@@ -97,7 +157,7 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
 test("new foundation lessons expose recoverable failures and training state", async ({
   page,
 }) => {
-  await page.goto("/");
+  await openFoundation(page);
   await enterExploreMode(page);
   await page
     .getByRole("link", { name: "Vectors, matrices, and linear layers" })
@@ -142,7 +202,7 @@ test("new foundation lessons expose recoverable failures and training state", as
 test("Transformer foundation lessons expose their core invariants", async ({
   page,
 }) => {
-  await page.goto("/");
+  await openFoundation(page);
   await enterExploreMode(page);
   await page
     .getByRole("link", { name: "Embeddings and positional information" })
@@ -205,7 +265,7 @@ test("Transformer foundation lessons expose their core invariants", async ({
 test("inference and capstone preserve cache equivalence and expose invalid claims", async ({
   page,
 }) => {
-  await page.goto("/");
+  await openFoundation(page);
   await enterExploreMode(page);
   await page
     .getByRole("link", { name: "Autoregressive inference and KV caching" })
@@ -254,7 +314,7 @@ test("inference and capstone preserve cache equivalence and expose invalid claim
 
 test("course shell passes axe and fits a narrow preview pane", async ({ page }) => {
   await page.setViewportSize({ width: 720, height: 900 });
-  await page.goto("/");
+  await openFoundation(page);
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();

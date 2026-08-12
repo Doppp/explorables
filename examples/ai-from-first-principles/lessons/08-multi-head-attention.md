@@ -47,6 +47,13 @@ softmax, mix values, and concatenate the head outputs in their original order.
 The starter interleaves features, omits scaling, and masks after normalisation.
 :::
 
+## In real models
+
+Production architectures vary how heads share or compress keys and values.
+Grouped-query attention and multi-head latent attention reduce memory or
+projection cost while preserving multiple learned query paths; later case
+studies measure those trade-offs rather than comparing names alone.
+
 ## Explain and transfer
 
 Why must concatenation preserve a stable head order? What role does the output

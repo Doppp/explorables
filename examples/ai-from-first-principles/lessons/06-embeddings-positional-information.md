@@ -49,6 +49,13 @@ using its position-dependent frequency. The starter returns table references
 and adds the position to every coordinate.
 :::
 
+## In real models
+
+Modern decoder models often replace learned absolute position vectors with
+rotary or other relative-position mechanisms. The implementation changes, but
+the architectural question remains the same: how does token identity acquire
+usable information about order and distance?
+
 ## Explain and transfer
 
 Why must embedding lookup return the same token vector wherever it appears?

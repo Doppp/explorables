@@ -72,6 +72,13 @@ Implement the capstone's shifted examples, causal attention with a residual
 path, and language-model-head gradient.
 :::
 
+## In real models
+
+KV-cache growth is one reason recent architectures investigate compressed or
+fixed-size recurrent state. Kimi Linear and Kimi K3 trade some full-attention
+layers for KDA state updates, then retain periodic softmax retrieval where a
+fixed-capacity memory would lose important context.
+
 ## Explain and transfer
 
 Why is cached decoding an equivalence-preserving optimisation, while truncating

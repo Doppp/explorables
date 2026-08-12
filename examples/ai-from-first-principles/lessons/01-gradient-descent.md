@@ -37,6 +37,13 @@ Implement loss, gradient, and a guarded update step. The starter intentionally
 uses the gradient sign incorrectly.
 :::
 
+## In real models
+
+Frontier-model training still reduces loss through parameter updates, even when
+the optimiser, parameter groups, schedules, clipping, and distributed system
+are far more elaborate. The planned Kimi case study starts from this invariant
+before comparing AdamW with a Muon-inspired matrix update.
+
 ## Explain and transfer
 
 Why does multiplying every gradient by a constant resemble changing the

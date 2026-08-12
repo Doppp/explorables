@@ -80,6 +80,39 @@ export const courseFrontmatterSchema = z.object({
     .optional(),
 });
 
+export const collectionTrackSchema = z.object({
+  id,
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  courses: z
+    .array(
+      z.discriminatedUnion("status", [
+        z.object({
+          status: z.literal("available"),
+          path: z.string().min(1),
+          featured: z.boolean().optional(),
+        }),
+        z.object({
+          status: z.literal("planned"),
+          id,
+          title: z.string().min(1),
+          summary: z.string().min(1),
+          estimatedHours: z.number().positive().optional(),
+          tags: z.array(z.string().min(1)).optional(),
+          featured: z.boolean().optional(),
+        }),
+      ]),
+    )
+    .min(1),
+});
+
+export const courseCollectionSchema = z.object({
+  schemaVersion: z.literal(1),
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  tracks: z.array(collectionTrackSchema).min(1),
+});
+
 export const checkpointSchema = z.discriminatedUnion("completion", [
   z.object({
     id,
@@ -138,6 +171,34 @@ export type Checkpoint = z.infer<typeof checkpointSchema>;
 export type Guidance = NonNullable<CourseFrontmatter["guidance"]>;
 export type AgentPluginManifest = z.infer<typeof agentPluginManifestSchema>;
 export type AgentSkillFrontmatter = z.infer<typeof agentSkillFrontmatterSchema>;
+export type CourseCollection = z.infer<typeof courseCollectionSchema>;
+export type CollectionTrack = z.infer<typeof collectionTrackSchema>;
+
+export interface RuntimeCourseCard {
+  id: string;
+  title: string;
+  summary: string;
+  version?: string;
+  estimatedHours?: number;
+  lessonCount?: number;
+  tags: string[];
+  status: "available" | "planned";
+  featured: boolean;
+}
+
+export interface RuntimeCollectionTrack {
+  id: string;
+  title: string;
+  summary: string;
+  courses: RuntimeCourseCard[];
+}
+
+export interface RuntimeCourseCollection {
+  schemaVersion: 1;
+  title: string;
+  summary: string;
+  tracks: RuntimeCollectionTrack[];
+}
 
 export interface GuidedCourseStateV1 {
   schemaVersion: 1;

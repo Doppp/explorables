@@ -4,12 +4,15 @@ import path from "node:path";
 import {
   agentPluginManifestSchema,
   agentSkillFrontmatterSchema,
+  type CourseCollection,
   type CourseFrontmatter,
+  courseCollectionSchema,
   courseFrontmatterSchema,
   type Diagnostic,
   exerciseManifestSchema,
   type ParsedLesson,
   type RuntimeCourse,
+  type RuntimeCourseCollection,
   type RuntimeExplorable,
 } from "@explorables/course-schema";
 import {
@@ -83,11 +86,25 @@ export interface LoadedCourse {
   lessons: ParsedLesson[];
 }
 
+export interface CourseLoadOptions {
+  assetBase?: string;
+  lessonHashPrefix?: string;
+}
+
+export interface LoadedCourseCollection {
+  root: string;
+  manifestFile: string;
+  manifest: CourseCollection;
+  runtime: RuntimeCourseCollection;
+  coursePaths: Map<string, string>;
+}
+
 function rewriteLocalReferences(
   html: string,
   root: string,
   sourceFile: string,
   lessons: Map<string, string>,
+  options: CourseLoadOptions = {},
 ): string {
   return html.replace(
     /\b(href|src)="([^"]+)"/g,
@@ -96,8 +113,10 @@ function rewriteLocalReferences(
       try {
         const target = resolveCoursePath(root, sourceFile, reference);
         const lessonId = lessons.get(target);
-        if (attribute === "href" && lessonId) return `href="#/${lessonId}"`;
-        return `${attribute}="course-files/${path.relative(root, target).split(path.sep).join("/")}"`;
+        if (attribute === "href" && lessonId)
+          return `href="#/${options.lessonHashPrefix ?? ""}${lessonId}"`;
+        const assetBase = options.assetBase ?? "course-files";
+        return `${attribute}="${assetBase}/${path.relative(root, target).split(path.sep).join("/")}"`;
       } catch {
         return match;
       }
@@ -105,7 +124,10 @@ function rewriteLocalReferences(
   );
 }
 
-export async function loadCourse(coursePath: string): Promise<LoadedCourse> {
+export async function loadCourse(
+  coursePath: string,
+  options: CourseLoadOptions = {},
+): Promise<LoadedCourse> {
   const root = path.resolve(coursePath);
   const courseFile = path.join(root, "COURSE.md");
   const courseMarkdown = await fs.readFile(courseFile, "utf8");
@@ -124,7 +146,7 @@ export async function loadCourse(coursePath: string): Promise<LoadedCourse> {
   );
   const rewrittenLessons = lessons.map((lesson) => ({
     ...lesson,
-    html: rewriteLocalReferences(lesson.html, root, lesson.file, lessonIds),
+    html: rewriteLocalReferences(lesson.html, root, lesson.file, lessonIds, options),
   }));
   const introduction = (
     await renderMarkdown(courseMarkdown, courseFile, frontmatter.id)
@@ -134,6 +156,7 @@ export async function loadCourse(coursePath: string): Promise<LoadedCourse> {
     root,
     courseFile,
     lessonIds,
+    options,
   );
   return {
     root,
@@ -144,8 +167,11 @@ export async function loadCourse(coursePath: string): Promise<LoadedCourse> {
   };
 }
 
-export async function compileRuntimeCourse(coursePath: string): Promise<RuntimeCourse> {
-  const loaded = await loadCourse(coursePath);
+export async function compileRuntimeCourse(
+  coursePath: string,
+  options: CourseLoadOptions = {},
+): Promise<RuntimeCourse> {
+  const loaded = await loadCourse(coursePath, options);
   const lessons = await Promise.all(
     loaded.lessons.map(async (lesson) => {
       const explorables: RuntimeExplorable[] = await Promise.all(
@@ -183,6 +209,108 @@ export async function compileRuntimeCourse(coursePath: string): Promise<RuntimeC
     introductionHtml: loaded.introductionHtml,
     lessons,
   };
+}
+
+export async function loadCourseCollection(
+  collectionPath: string,
+): Promise<LoadedCourseCollection> {
+  const root = path.resolve(collectionPath);
+  const manifestFile = path.join(root, "explorables.library.json");
+  const manifest = courseCollectionSchema.parse(
+    JSON.parse(await fs.readFile(manifestFile, "utf8")),
+  );
+  const coursePaths = new Map<string, string>();
+  const ids = new Set<string>();
+  const trackIds = new Set<string>();
+  const runtimeTracks: RuntimeCourseCollection["tracks"] = [];
+
+  for (const track of manifest.tracks) {
+    if (trackIds.has(track.id))
+      throw new Error(`Duplicate collection track id: ${track.id}`);
+    trackIds.add(track.id);
+    const courses: RuntimeCourseCollection["tracks"][number]["courses"] = [];
+    for (const entry of track.courses) {
+      if (entry.status === "planned") {
+        if (ids.has(entry.id))
+          throw new Error(`Duplicate collection course id: ${entry.id}`);
+        ids.add(entry.id);
+        courses.push({
+          id: entry.id,
+          title: entry.title,
+          summary: entry.summary,
+          ...(entry.estimatedHours === undefined
+            ? {}
+            : { estimatedHours: entry.estimatedHours }),
+          tags: entry.tags ?? [],
+          status: "planned",
+          featured: entry.featured ?? false,
+        });
+        continue;
+      }
+
+      if (path.isAbsolute(entry.path))
+        throw new Error(`Collection course path must be relative: ${entry.path}`);
+      const coursePath = path.resolve(root, entry.path);
+      if (!(await isContained(root, coursePath)))
+        throw new Error(`Collection course path escapes its root: ${entry.path}`);
+      const loaded = await loadCourse(coursePath);
+      const courseId = loaded.frontmatter.id;
+      if (ids.has(courseId))
+        throw new Error(`Duplicate collection course id: ${courseId}`);
+      ids.add(courseId);
+      coursePaths.set(courseId, coursePath);
+      courses.push({
+        id: courseId,
+        title: loaded.frontmatter.title,
+        summary: loaded.frontmatter.summary,
+        version: loaded.frontmatter.version,
+        ...(loaded.frontmatter.estimatedHours === undefined
+          ? {}
+          : { estimatedHours: loaded.frontmatter.estimatedHours }),
+        lessonCount: loaded.lessons.length,
+        tags: loaded.frontmatter.tags ?? [],
+        status: "available",
+        featured: entry.featured ?? false,
+      });
+    }
+    runtimeTracks.push({
+      id: track.id,
+      title: track.title,
+      summary: track.summary,
+      courses,
+    });
+  }
+
+  return {
+    root,
+    manifestFile,
+    manifest,
+    runtime: {
+      schemaVersion: 1,
+      title: manifest.title,
+      summary: manifest.summary,
+      tracks: runtimeTracks,
+    },
+    coursePaths,
+  };
+}
+
+export async function validateCourseCollection(
+  collectionPath: string,
+): Promise<Diagnostic[]> {
+  const root = path.resolve(collectionPath);
+  const manifestFile = path.join(root, "explorables.library.json");
+  let loaded: LoadedCourseCollection;
+  try {
+    loaded = await loadCourseCollection(root);
+  } catch (error) {
+    return [diagnostic(manifestFile, "invalid-course-collection", messageFor(error))];
+  }
+
+  const diagnostics: Diagnostic[] = [];
+  for (const coursePath of loaded.coursePaths.values())
+    diagnostics.push(...(await validateCourse(coursePath)));
+  return diagnostics;
 }
 
 async function validateParsedCourse(loaded: LoadedCourse): Promise<Diagnostic[]> {

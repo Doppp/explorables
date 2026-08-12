@@ -49,6 +49,13 @@ momentum update with decoupled weight decay. The starter exponentiates raw
 logits, clips components independently, and forgets its previous velocity.
 :::
 
+## In real models
+
+Released models combine the same next-token cross-entropy objective with
+carefully chosen optimisation, precision, clipping, and scheduling rules.
+Model-specific courses compare those published choices only after fixing the
+objective and numerical invariants established here.
+
 ## Explain and transfer
 
 Why can two optimisers receiving the same gradient make different updates?
