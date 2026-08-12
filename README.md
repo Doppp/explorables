@@ -24,7 +24,7 @@ than treating one umbrella survey as a substitute for studying the lab.
 The simplest learner experience uses **Codex in the ChatGPT desktop app**. Open
 Codex, start a local coding workspace, and paste this prompt:
 
-> Install and start the explorables course from
+> Install and launch explorables from
 > https://github.com/Doppp/explorables.
 >
 > Create a new `explorables` folder in my Documents folder. If that folder
@@ -32,10 +32,10 @@ Codex, start a local coding workspace, and paste this prompt:
 > using HTTPS, read its `AGENTS.md`, and follow its instructions. Check for
 > Node.js 24 and pnpm 11, but ask before installing or changing system
 > software. Install the locked dependencies with `pnpm install
-> --frozen-lockfile`, run `pnpm course`, and open the printed local URL. Then
-> help me choose and start a course. Act as the course tutor: ask me to predict,
-> let me attempt exercises, run tests, and give the smallest useful hint before
-> showing more.
+> --frozen-lockfile`, run `pnpm course`, and open the printed local course
+> library. Help me choose a course, then read that course's `AGENTS.md` and
+> follow its tutoring policy. Ask me to predict, let me attempt exercises, run
+> tests, and give the smallest useful hint before showing more.
 
 Codex will ask for permission before running some commands or accessing a
 folder. Review and approve the actions needed to clone the public repository,
@@ -61,9 +61,10 @@ pnpm course
 Open the printed `http://127.0.0.1:4173` URL in the Codex built-in browser, a
 normal browser, or Claude Code Desktop Preview. The local library shows the
 foundation, shared research-skills course, and planned model specializations.
-Select an available course, then ask the coding host:
+Select an available course. Codex should then follow that course's `AGENTS.md`
+and tutor you through its active lesson. For example:
 
-> Start the course.
+> Start AI from First Principles.
 
 Agent Plugins-compatible clients discover the portable `start-course` skill.
 Codex can also read `AGENTS.md` directly, while Claude Code Desktop uses the
