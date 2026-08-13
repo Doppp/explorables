@@ -63,7 +63,7 @@ const module: ExplorableModule = {
       );
     const render = () => {
       const entries = calculate();
-      output.innerHTML = `<p>Selected: <b>${selected}</b> · temperature ${Number(temperature.value).toFixed(1)}</p>${entries.map((entry) => `<div style="display:grid;grid-template-columns:3rem 1fr 4rem;gap:.5rem;align-items:center;margin:.4rem 0"><span>${entry.token}</span><span style="height:1rem;background:linear-gradient(90deg,#7057e8 ${entry.probability * 100}%,transparent 0);border:1px solid currentColor"></span><output>${(entry.probability * 100).toFixed(1)}%</output></div>`).join("")}${broken.checked ? '<p class="warning">Broken top-p uses vocabulary order, not descending probability.</p>' : ""}`;
+      output.innerHTML = `<p>Selected: <b>${selected}</b> · temperature ${Number(temperature.value).toFixed(1)}</p>${entries.map((entry) => `<div style="display:grid;grid-template-columns:3rem 1fr 4rem;gap:.5rem;align-items:center;margin:.4rem 0"><span>${entry.token}</span><span style="height:1rem;overflow:hidden;border:1px solid var(--border-strong);border-radius:.25rem;background:var(--surface)"><span style="display:block;width:${entry.probability * 100}%;height:100%;background:var(--accent)"></span></span><output>${(entry.probability * 100).toFixed(1)}%</output></div>`).join("")}${broken.checked ? '<p class="warning">Broken top-p uses vocabulary order, not descending probability.</p>' : ""}`;
     };
     const onSample = () => {
       const entries = calculate();
