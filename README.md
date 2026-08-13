@@ -24,19 +24,18 @@ than treating one umbrella survey as a substitute for studying the lab.
 The simplest learner experience uses **Codex in the ChatGPT desktop app**. Open
 Codex, start a local coding workspace, and paste this prompt:
 
-```bash
-Install and launch explorables from
-https://github.com/Doppp/explorables.
+```text
+Install and launch explorables from https://github.com/Doppp/explorables.
 
 Create a new `explorables` folder in my Documents folder. If that folder
 already exists, do not overwrite it; ask me what to do. Clone the repository
 using HTTPS, read its `AGENTS.md`, and follow its instructions. Check for
-Node.js 24 and pnpm 11, but ask before installing or changing system
-software. Install the locked dependencies with `pnpm install
---frozen-lockfile`, run `pnpm course`, and open the printed local course
-library. Help me choose a course, then read that course's `AGENTS.md` and
-follow its tutoring policy. Ask me to predict, let me attempt exercises, run
-tests, and give the smallest useful hint before showing more.
+Node.js 24 and pnpm 11, but ask before installing or changing system software.
+Install the locked dependencies with `pnpm install --frozen-lockfile`, run
+`pnpm course`, and open the printed local course library. Help me choose a
+course, then read that course's `AGENTS.md` and follow its tutoring policy. Ask
+me to predict, let me attempt exercises, run tests, and give the smallest useful
+hint before showing more.
 ```
 
 Codex will ask for permission before running some commands or accessing a
