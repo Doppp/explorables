@@ -65,12 +65,18 @@ Updated: 13 August 2026
   explicit navigation states, compact course contents below 992px, and visually
   consistent sandbox controls. The course shell now reflows at 320px without
   putting the full lesson list ahead of the active lesson.
+- Added an explicit, persistent light/dark theme control to the course library
+  and lesson shell, including live theme synchronization into already-mounted
+  sandboxed explorables. Retuned the dark pastel roles, restored the library
+  hero and local-data notice to the full responsive content width, and corrected
+  title casing while preserving the lowercase `explorables` wordmark.
 
 ## Current work
 
 The v0.1 runtime MVP remains verified. `AI from First Principles`
 `0.3.0-guided.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local
-course-library milestone are implemented. The course UI redesign is complete.
+course-library milestone are implemented. The course UI redesign and its
+responsive/theme follow-up are complete.
 The library presents the shared
 frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as
 planned rather than runnable. The next implementation increment remains the
@@ -118,12 +124,12 @@ npm view pnpm@11 version               latest 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
 Agent Skills validation                pass (template and both first-party courses)
-pnpm check                              pass under Node 24 (format, lint, TS7, 23 suites/76 tests, collection/plugin/course validators)
+pnpm check                              pass under Node 24 (format, lint, TS7, 24 suites/78 tests, collection/plugin/course validators)
 pnpm course:test                        pass under Node 24 (14 model suites/47 tests; 14 starter/reference pairs)
 pnpm build                              pass under Node 24 (9 package entries, collection, standalone course, static site)
-pnpm test:browser                       pass under Node 24 (11 tests; light/dark roles, library, safe routes, guided flow, sandbox, persistence, breakpoint state, failures, axe, 720px, 320px)
+pnpm test:browser                       pass under Node 24 (12 tests; persisted light/dark themes, sandbox sync, library, safe routes, guided flow, failures, axe, 1427px, 1156px, 720px, 320px)
 pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
-course UI visual QA                     pass (library and lesson at 1440px, 800px, 390px, and 320px; no console errors)
+course UI visual QA                     pass (light/dark library at 1156px, 720px, and 320px; full-width hero/note, no overflow)
 generated course smoke                  pass (Agent Plugin manifest/skill, validate, static build)
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass

@@ -28,26 +28,47 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     color-scheme: dark;
-    --canvas: #19201c;
-    --surface: #212a25;
-    --surface-soft: #252e29;
-    --sage: #27372e;
-    --sage-strong: #30473a;
-    --rose: #382b31;
-    --blue: #27343b;
-    --butter: #383323;
-    --ink: #edf1ec;
-    --muted: #b8c0ba;
-    --primary: #a9d1b8;
-    --primary-hover: #c0dfc9;
+    --canvas: #171b20;
+    --surface: #20262c;
+    --surface-soft: #292f36;
+    --sage: #25372f;
+    --sage-strong: #345243;
+    --rose: #3b292f;
+    --blue: #263746;
+    --butter: #3a3424;
+    --ink: #f3f1ea;
+    --muted: #bdc5bf;
+    --primary: #b4d9c3;
+    --primary-hover: #cde6d6;
     --on-primary: #173528;
-    --focus: #8cb8f2;
-    --border: #505b54;
-    --border-strong: #7b8780;
-    --danger: #f1a3aa;
+    --focus: #9bc5ff;
+    --border: #465049;
+    --border-strong: #78847c;
+    --danger: #ffb1b8;
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #171b20;
+  --surface: #20262c;
+  --surface-soft: #292f36;
+  --sage: #25372f;
+  --sage-strong: #345243;
+  --rose: #3b292f;
+  --blue: #263746;
+  --butter: #3a3424;
+  --ink: #f3f1ea;
+  --muted: #bdc5bf;
+  --primary: #b4d9c3;
+  --primary-hover: #cde6d6;
+  --on-primary: #173528;
+  --focus: #9bc5ff;
+  --border: #465049;
+  --border-strong: #78847c;
+  --danger: #ffb1b8;
 }
 
 * {
@@ -141,6 +162,64 @@ button {
   cursor: pointer;
 }
 
+.theme-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.6rem;
+  padding: 0.35rem 0.55rem 0.35rem 0.7rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: var(--sage);
+}
+
+.theme-toggle-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.theme-toggle-track {
+  position: relative;
+  width: 1.9rem;
+  height: 1.1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-soft);
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 0.17rem;
+  left: 0.17rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.theme-toggle[aria-pressed="true"] {
+  background: var(--sage);
+}
+
+.theme-toggle[aria-pressed="true"] .theme-toggle-track {
+  border-color: var(--primary);
+  background: var(--sage-strong);
+}
+
+.theme-toggle[aria-pressed="true"] .theme-toggle-thumb {
+  background: var(--primary);
+  transform: translateX(0.8rem);
+}
+
 h1,
 h2,
 h3 {
@@ -168,6 +247,14 @@ h3 {
   margin: 0 0.35rem 1.1rem;
   padding-bottom: 1.1rem;
   border-bottom: 1px solid var(--border);
+}
+
+.course-sidebar-masthead,
+.library-masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .course-title {
@@ -350,7 +437,7 @@ h3 {
 }
 
 .library-hero {
-  max-width: 47rem;
+  width: 100%;
   margin-bottom: 3.5rem;
 }
 
@@ -360,17 +447,20 @@ h3 {
 
 .library-title {
   margin: 0;
+  text-wrap: balance;
 }
 
-.library-hero > p:not(.eyebrow) {
-  max-width: 43rem;
+.library-summary {
+  max-width: 68ch;
   font-size: 1.03rem;
 }
 
 .library-hero > .local-note {
+  width: 100%;
+  max-width: none;
   margin: 1.5rem 0;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   background: var(--blue);
   color: var(--muted);
@@ -437,7 +527,7 @@ h3 {
   min-width: 0;
   flex-direction: column;
   padding: 1.3rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   background: var(--surface);
 }
@@ -845,13 +935,18 @@ pre code {
   }
 
   .course-sidebar-header {
-    display: flex;
-    align-items: baseline;
+    display: grid;
+    align-items: center;
     justify-content: space-between;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
     gap: 1rem;
     margin: 0;
     padding: 0;
     border: 0;
+  }
+
+  .course-sidebar-masthead {
+    min-width: 0;
   }
 
   .course-title {
@@ -948,6 +1043,10 @@ pre code {
     display: block;
   }
 
+  .course-sidebar-masthead {
+    width: 100%;
+  }
+
   .course-title {
     max-width: none;
     margin-top: 0.45rem;
@@ -1012,6 +1111,10 @@ pre code {
       color 160ms ease,
       border-color 160ms ease,
       background-color 160ms ease;
+  }
+
+  .theme-toggle-thumb {
+    transition: transform 160ms ease;
   }
 }
 

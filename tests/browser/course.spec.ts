@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 async function openCompactContents(page: Page) {
   const compactContents = page.locator("details.compact-course-contents");
@@ -31,14 +31,14 @@ test("presents the local learning path and planned specializations honestly", as
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "explorables model-learning path",
+      name: "explorables Model-Learning Path",
       level: 1,
     }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Research skills" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Research Skills" })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Model specializations" }),
+    page.getByRole("heading", { name: "Model Specializations" }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
@@ -59,14 +59,16 @@ test("presents the local learning path and planned specializations honestly", as
   await page.getByRole("button", { name: "All courses" }).click();
   await expect(
     page.getByRole("heading", {
-      name: "explorables model-learning path",
+      name: "explorables Model-Learning Path",
       level: 1,
     }),
   ).toBeVisible();
 });
 
-test("uses calm role-based palettes in light and dark mode", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "light" });
+test("follows the system theme, syncs explorables, and persists an override", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
   await page.goto("/");
   const palette = () =>
     page.evaluate(() => {
@@ -77,18 +79,91 @@ test("uses calm role-based palettes in light and dark mode", async ({ page }) =>
         primary: styles.getPropertyValue("--primary").trim(),
       };
     });
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(
+    page.getByRole("button", { name: "Dark mode", pressed: true }),
+  ).toBeVisible();
+  await expect.poll(palette).toEqual({
+    canvas: "#171b20",
+    sage: "#25372f",
+    primary: "#b4d9c3",
+  });
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+
+  await page.getByRole("button", { name: "Dark mode" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(
+    page.getByRole("button", { name: "Dark mode", pressed: false }),
+  ).toBeVisible();
   await expect.poll(palette).toEqual({
     canvas: "#f7f3ea",
     sage: "#e8efe5",
     primary: "#365b4b",
   });
+  await expect
+    .poll(() => page.evaluate(() => localStorage.getItem("explorables:theme")))
+    .toBe("light");
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 
-  await page.emulateMedia({ colorScheme: "dark" });
-  await expect.poll(palette).toEqual({
-    canvas: "#19201c",
-    sage: "#27372e",
-    primary: "#a9d1b8",
-  });
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.getByRole("link", { name: "Open course" }).click();
+  const frame = page.frameLocator("iframe").first();
+  await expect(
+    frame.getByRole("heading", { name: "Walk the loss curve" }),
+  ).toBeVisible();
+  await expect(frame.locator("html")).toHaveAttribute("data-theme", "light");
+
+  await page.getByRole("button", { name: "Dark mode" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(frame.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect
+    .poll(() =>
+      frame.locator("html").evaluate((element) => {
+        const styles = getComputedStyle(element);
+        return {
+          canvas: styles.getPropertyValue("--canvas").trim(),
+          accent: styles.getPropertyValue("--accent").trim(),
+        };
+      }),
+    )
+    .toEqual({ canvas: "#20262c", accent: "#b4d9c3" });
+  expect(
+    (await new AxeBuilder({ page }).exclude("iframe").analyze()).violations,
+  ).toEqual([]);
+});
+
+test("lets the library header use its full responsive container", async ({ page }) => {
+  for (const width of [320, 720, 1156, 1427]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await expect(page.locator("h1.library-title")).toHaveText(
+      "explorables Model-Learning Path",
+    );
+    const metrics = await page.evaluate(() => {
+      const library = document.querySelector<HTMLElement>(".course-library");
+      const hero = document.querySelector<HTMLElement>(".library-hero");
+      const note = document.querySelector<HTMLElement>(".local-note");
+      const title = document.querySelector<HTMLElement>(".library-title");
+      if (!library || !hero || !note || !title)
+        throw new Error("Expected library header elements");
+      const titleStyles = getComputedStyle(title);
+      return {
+        overflow:
+          document.documentElement.scrollWidth > document.documentElement.clientWidth,
+        libraryWidth: library.getBoundingClientRect().width,
+        heroWidth: hero.getBoundingClientRect().width,
+        noteWidth: note.getBoundingClientRect().width,
+        titleHeight: title.getBoundingClientRect().height,
+        titleLineHeight: Number.parseFloat(titleStyles.lineHeight),
+      };
+    });
+    expect(metrics.overflow).toBe(false);
+    expect(Math.abs(metrics.heroWidth - metrics.libraryWidth)).toBeLessThan(1);
+    expect(Math.abs(metrics.noteWidth - metrics.heroWidth)).toBeLessThan(1);
+    if (width >= 1156)
+      expect(metrics.titleHeight / metrics.titleLineHeight).toBeLessThan(1.5);
+  }
 });
 
 test("rejects unknown collection courses and escaped asset requests", async ({
