@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "title": "explorables model-learning path",
+  "title": "explorables Model-Learning Path",
   "summary": "Build a language model from first principles, learn to evaluate frontier-model evidence, then choose a model-family specialization.",
   "tracks": [
     {
@@ -17,7 +17,7 @@
     },
     {
       "id": "research-skills",
-      "title": "Research skills",
+      "title": "Research Skills",
       "summary": "Learn to inspect real releases and make controlled, source-grounded comparisons.",
       "courses": [
         {
@@ -32,7 +32,7 @@
     },
     {
       "id": "specializations",
-      "title": "Model specializations",
+      "title": "Model Specializations",
       "summary": "Reconstruct distinctive mechanisms from pinned model-family releases.",
       "courses": [
         {

@@ -3,6 +3,7 @@ import path from "node:path";
 import type { ExplorableEvent, ExplorableValue } from "@explorables/explorable";
 
 export const SANDBOX_ATTRIBUTE = "allow-scripts";
+export type Theme = "light" | "dark";
 export const SANDBOX_CSP = [
   "default-src 'none'",
   "script-src 'unsafe-inline' blob:",
@@ -75,6 +76,9 @@ export async function bundleExplorable(
     addEventListener("message", (event) => {
       const message = event.data;
       if (!message || message.protocol !== protocol || message.instanceId !== instanceId) return;
+      if (message.type === "theme" && (message.theme === "light" || message.theme === "dark")) {
+        document.documentElement.dataset.theme = message.theme;
+      }
       if (message.type === "resize") handle?.resize?.(message.width, message.height);
       if (message.type === "destroy") {
         handle?.destroy?.();
@@ -115,13 +119,13 @@ export async function bundleExplorable(
   if (!script) throw new Error(`No JavaScript was produced for ${entry}`);
 
   return `<!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="${escapeHtml(SANDBOX_CSP)}">
   <style>
-    :root {
+    :root[data-theme="light"] {
       color-scheme: light;
       font-family: "Avenir Next", Avenir, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
       --canvas: #fffdf8;
@@ -136,21 +140,19 @@ export async function bundleExplorable(
       --border: #cfcbbf;
       --border-strong: #7a7b75;
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        color-scheme: dark;
-        --canvas: #212a25;
-        --surface: #19201c;
-        --surface-tint: #27372e;
-        --text: #edf1ec;
-        --muted: #b8c0ba;
-        --accent: #a9d1b8;
-        --accent-hover: #c0dfc9;
-        --on-accent: #173528;
-        --focus: #8cb8f2;
-        --border: #505b54;
-        --border-strong: #7b8780;
-      }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --canvas: #20262c;
+      --surface: #171b20;
+      --surface-tint: #25372f;
+      --text: #f3f1ea;
+      --muted: #bdc5bf;
+      --accent: #b4d9c3;
+      --accent-hover: #cde6d6;
+      --on-accent: #17362a;
+      --focus: #9bc5ff;
+      --border: #465049;
+      --border-strong: #78847c;
     }
     * { box-sizing: border-box; }
     body {
@@ -207,11 +209,21 @@ export function isSandboxMessage(value: unknown): value is SandboxMessage {
   );
 }
 
+function withInitialTheme(html: string, theme: Theme): string {
+  return html.replace(/<html\b[^>]*>/i, (tag) => {
+    const themeAttribute = /\sdata-theme=(?:"[^"]*"|'[^']*'|[^\s>]*)/i;
+    return themeAttribute.test(tag)
+      ? tag.replace(themeAttribute, ` data-theme="${theme}"`)
+      : tag.replace(/>$/, ` data-theme="${theme}">`);
+  });
+}
+
 export interface SandboxControllerOptions {
   instanceId: string;
   title: string;
   height: number;
   html: string;
+  theme: Theme;
   onEvent?: (event: ExplorableEvent) => void;
   onError?: (message: string) => void;
 }
@@ -220,6 +232,7 @@ export interface SandboxController {
   iframe: HTMLIFrameElement;
   destroy(): void;
   resize(width: number, height: number): void;
+  setTheme(theme: Theme): void;
 }
 
 export function mountSandbox(
@@ -232,11 +245,26 @@ export function mountSandbox(
   iframe.setAttribute("sandbox", SANDBOX_ATTRIBUTE);
   iframe.setAttribute("referrerpolicy", "no-referrer");
   iframe.setAttribute("loading", "lazy");
-  iframe.srcdoc = options.html;
+  iframe.style.colorScheme = options.theme;
+  iframe.srcdoc = withInitialTheme(options.html, options.theme);
+
+  let theme = options.theme;
+  const postTheme = () => {
+    iframe.contentWindow?.postMessage(
+      {
+        protocol: "explorables/v1",
+        instanceId: options.instanceId,
+        type: "theme",
+        theme,
+      },
+      "*",
+    );
+  };
 
   const listener = (event: MessageEvent<unknown>) => {
     if (event.source !== iframe.contentWindow || !isSandboxMessage(event.data)) return;
     if (event.data.instanceId !== options.instanceId) return;
+    if (event.data.type === "ready") postTheme();
     if (event.data.type === "event" && event.data.event)
       options.onEvent?.(event.data.event);
     if (event.data.type === "error")
@@ -247,6 +275,11 @@ export function mountSandbox(
 
   return {
     iframe,
+    setTheme(nextTheme) {
+      theme = nextTheme;
+      iframe.style.colorScheme = nextTheme;
+      postTheme();
+    },
     resize(width, height) {
       iframe.contentWindow?.postMessage(
         {

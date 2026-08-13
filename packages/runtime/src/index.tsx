@@ -5,7 +5,11 @@ import type {
   RuntimeCourseCollection,
   RuntimeLesson,
 } from "@explorables/course-schema";
-import { mountSandbox, type SandboxController } from "@explorables/sandbox/client";
+import {
+  mountSandbox,
+  type SandboxController,
+  type Theme,
+} from "@explorables/sandbox/client";
 import {
   type FormEvent,
   memo,
@@ -38,6 +42,66 @@ const LessonArticle = memo(function LessonArticle({
     <article className="lesson-body" dangerouslySetInnerHTML={sanitizedMarkup} />
   );
 });
+
+export const THEME_STORAGE_KEY = "explorables:theme";
+
+function isTheme(value: unknown): value is Theme {
+  return value === "light" || value === "dark";
+}
+
+function initialTheme(): Theme {
+  const documentTheme = document.documentElement.dataset.theme;
+  if (isTheme(documentTheme)) return documentTheme;
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  if (isTheme(storedTheme)) return storedTheme;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function useTheme(): [Theme, () => void] {
+  const [theme, setTheme] = useState<Theme>(initialTheme);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const followSystemTheme = (event: MediaQueryListEvent) => {
+      if (!isTheme(window.localStorage.getItem(THEME_STORAGE_KEY)))
+        setTheme(event.matches ? "dark" : "light");
+    };
+    media.addEventListener("change", followSystemTheme);
+    return () => media.removeEventListener("change", followSystemTheme);
+  }, []);
+
+  return [
+    theme,
+    () => {
+      setTheme((currentTheme) => {
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+        return nextTheme;
+      });
+    },
+  ];
+}
+
+function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () => void }) {
+  return (
+    <button
+      className="theme-toggle"
+      type="button"
+      aria-pressed={theme === "dark"}
+      onClick={onToggle}
+    >
+      <span className="theme-toggle-label">Dark mode</span>
+      <span className="theme-toggle-track" aria-hidden="true">
+        <span className="theme-toggle-thumb" />
+      </span>
+    </button>
+  );
+}
 
 function useCompactNavigation(): boolean {
   const query = "(max-width: 62rem)";
@@ -359,10 +423,14 @@ function GuidedTools({
 
 function Lesson({
   course,
+  theme,
+  onToggleTheme,
   routePrefix = "",
   onBack,
 }: {
   course: RuntimeCourse;
+  theme: Theme;
+  onToggleTheme: () => void;
   routePrefix?: string;
   onBack?: () => void;
 }) {
@@ -377,6 +445,9 @@ function Lesson({
   );
   const stateRef = useRef(state);
   stateRef.current = state;
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
+  const sandboxControllers = useRef<SandboxController[]>([]);
   const [requestedLessonId, navigate] = useHashLesson(course, routePrefix);
   const [navigationNotice, setNavigationNotice] = useState<string | null>(null);
   const compactNavigation = useCompactNavigation();
@@ -438,6 +509,7 @@ function Lesson({
         title: explorable.attributes.title,
         height: explorable.attributes.height,
         html: explorable.sandboxHtml,
+        theme: themeRef.current,
         onEvent: (event) => {
           status.textContent = `Interaction: ${event.type}`;
           const checkpoints = lesson.frontmatter.checkpoints ?? [];
@@ -470,6 +542,7 @@ function Lesson({
       host.append(status);
       controllers.push(controller);
     }
+    sandboxControllers.current = controllers;
 
     for (const exercise of lesson.exercises) {
       const host = document.querySelector<HTMLElement>(
@@ -488,11 +561,17 @@ function Lesson({
       }.`;
       host.prepend(heading, pathText);
     }
-    return () =>
+    return () => {
+      if (sandboxControllers.current === controllers) sandboxControllers.current = [];
       controllers.forEach((controller) => {
         controller.destroy();
       });
+    };
   }, [lesson]);
+
+  useEffect(() => {
+    for (const controller of sandboxControllers.current) controller.setTheme(theme);
+  }, [theme]);
 
   if (!lesson) return <p role="alert">This course has no lessons.</p>;
   const index = course.lessons.indexOf(lesson);
@@ -520,15 +599,18 @@ function Lesson({
     <div className="course-layout">
       <aside className="course-sidebar">
         <div className="course-sidebar-header">
-          {onBack ? (
-            <button className="brand brand-button" type="button" onClick={onBack}>
-              <span aria-hidden="true">←</span> All courses
-            </button>
-          ) : (
-            <a className="brand" href="#/">
-              explorables
-            </a>
-          )}
+          <div className="course-sidebar-masthead">
+            {onBack ? (
+              <button className="brand brand-button" type="button" onClick={onBack}>
+                <span aria-hidden="true">←</span> All courses
+              </button>
+            ) : (
+              <a className="brand" href="#/">
+                explorables
+              </a>
+            )}
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          </div>
           <p className="course-title">{course.frontmatter.title}</p>
         </div>
         <details
@@ -634,19 +716,30 @@ function courseIdFromHash(): string | null {
   return match?.[1] ? decodeURIComponent(match[1]) : null;
 }
 
-function LibraryHome({ collection }: { collection: RuntimeCourseCollection }) {
+function LibraryHome({
+  collection,
+  theme,
+  onToggleTheme,
+}: {
+  collection: RuntimeCourseCollection;
+  theme: Theme;
+  onToggleTheme: () => void;
+}) {
   const firstAvailableCourse = collection.tracks
     .flatMap((track) => track.courses)
     .find((course) => course.status === "available");
   return (
     <main id="library" className="course-library">
       <header className="library-hero">
-        <a className="brand" href="#/courses">
-          explorables
-        </a>
-        <p className="eyebrow library-eyebrow">Local course library</p>
+        <div className="library-masthead">
+          <a className="brand" href="#/courses">
+            explorables
+          </a>
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        </div>
+        <p className="eyebrow library-eyebrow">Local Course Library</p>
         <h1 className="library-title">{collection.title}</h1>
-        <p>{collection.summary}</p>
+        <p className="library-summary">{collection.summary}</p>
         <p className="local-note">
           Courses, exercises, and progress stay on this computer. Planned courses are
           shown so the learning path is visible without pretending they are available.
@@ -723,7 +816,15 @@ function LibraryHome({ collection }: { collection: RuntimeCourseCollection }) {
   );
 }
 
-function CollectionCourse({ courseId }: { courseId: string }) {
+function CollectionCourse({
+  courseId,
+  theme,
+  onToggleTheme,
+}: {
+  courseId: string;
+  theme: Theme;
+  onToggleTheme: () => void;
+}) {
   const [course, setCourse] = useState<RuntimeCourse | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -757,6 +858,8 @@ function CollectionCourse({ courseId }: { courseId: string }) {
   return (
     <Lesson
       course={course}
+      theme={theme}
+      onToggleTheme={onToggleTheme}
       routePrefix={`courses/${encodeURIComponent(courseId)}/lessons/`}
       onBack={() => {
         window.location.hash = "/courses";
@@ -765,7 +868,15 @@ function CollectionCourse({ courseId }: { courseId: string }) {
   );
 }
 
-function CollectionApp({ collection }: { collection: RuntimeCourseCollection }) {
+function CollectionApp({
+  collection,
+  theme,
+  onToggleTheme,
+}: {
+  collection: RuntimeCourseCollection;
+  theme: Theme;
+  onToggleTheme: () => void;
+}) {
   const [courseId, setCourseId] = useState(courseIdFromHash);
   useEffect(() => {
     const onHash = () => setCourseId(courseIdFromHash());
@@ -775,7 +886,14 @@ function CollectionApp({ collection }: { collection: RuntimeCourseCollection }) 
   const knownCourse = collection.tracks
     .flatMap((track) => track.courses)
     .find((course) => course.id === courseId && course.status === "available");
-  if (!courseId) return <LibraryHome collection={collection} />;
+  if (!courseId)
+    return (
+      <LibraryHome
+        collection={collection}
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+      />
+    );
   if (!knownCourse)
     return (
       <main className="fatal-error" role="alert">
@@ -785,10 +903,18 @@ function CollectionApp({ collection }: { collection: RuntimeCourseCollection }) 
         </p>
       </main>
     );
-  return <CollectionCourse key={courseId} courseId={courseId} />;
+  return (
+    <CollectionCourse
+      key={courseId}
+      courseId={courseId}
+      theme={theme}
+      onToggleTheme={onToggleTheme}
+    />
+  );
 }
 
 export function CourseApp() {
+  const [theme, toggleTheme] = useTheme();
   const [course, setCourse] = useState<RuntimeCourse | null>(null);
   const [collection, setCollection] = useState<RuntimeCourseCollection | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -815,8 +941,16 @@ export function CourseApp() {
         Could not load explorables: {error}
       </main>
     );
-  if (collection) return <CollectionApp collection={collection} />;
-  if (course) return <Lesson course={course} />;
+  if (collection)
+    return (
+      <CollectionApp
+        collection={collection}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
+    );
+  if (course)
+    return <Lesson course={course} theme={theme} onToggleTheme={toggleTheme} />;
   return (
     <main className="loading" aria-busy="true">
       Loading explorables…
