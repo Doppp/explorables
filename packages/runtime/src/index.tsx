@@ -23,13 +23,33 @@ import {
   isLessonUnlocked,
   parseGuidedState,
 } from "./guided-state.ts";
+import { lessonBodyHtml } from "./lesson-html.ts";
 
-const LessonArticle = memo(function LessonArticle({ html }: { html: string }) {
+const LessonArticle = memo(function LessonArticle({
+  html,
+  title,
+}: {
+  html: string;
+  title: string;
+}) {
+  const sanitizedMarkup = { __html: lessonBodyHtml(html, title) };
   return (
     // biome-ignore lint/security/noDangerouslySetInnerHtml: the Markdown package sanitises this HTML before it enters runtime data.
-    <article dangerouslySetInnerHTML={{ __html: html }} />
+    <article className="lesson-body" dangerouslySetInnerHTML={sanitizedMarkup} />
   );
 });
+
+function useCompactNavigation(): boolean {
+  const query = "(max-width: 62rem)";
+  const [compact, setCompact] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setCompact(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  return compact;
+}
 
 function hashLessonId(first: string, routePrefix = ""): string {
   const route = window.location.hash.replace(/^#\/?/, "");
@@ -94,26 +114,29 @@ function CheckpointPanel({
         </span>
       </div>
       <ol className="checkpoint-list">
-        {checkpoints.map((checkpoint) => {
+        {checkpoints.map((checkpoint, checkpointIndex) => {
           const isComplete = completed.has(checkpoint.id);
           const status = checkpointStatus(checkpoint, completed, firstIncompleteId);
           return (
             <li
-              className={isComplete ? "checkpoint-complete" : undefined}
+              className={`checkpoint-item checkpoint-${status.toLowerCase()}${
+                isComplete ? " checkpoint-complete" : ""
+              }`}
               key={checkpoint.id}
             >
-              <span aria-hidden="true">{isComplete ? "✓" : "○"}</span>
-              <span>
+              <span className="checkpoint-marker" aria-hidden="true">
+                {isComplete ? "✓" : checkpointIndex + 1}
+              </span>
+              <span className="checkpoint-copy">
                 <strong>{checkpoint.title}</strong>
-                <small>{status}</small>
+                <small className="checkpoint-status">{status}</small>
               </span>
               {checkpoint.completion === "learner" ? (
                 isComplete ? (
                   <small className="automatic-checkpoint">Recorded by learner</small>
-                ) : (
+                ) : checkpoint.id === firstIncompleteId ? (
                   <button
                     type="button"
-                    disabled={checkpoint.id !== firstIncompleteId}
                     onClick={() =>
                       dispatch({
                         type: "complete",
@@ -124,6 +147,10 @@ function CheckpointPanel({
                   >
                     Mark complete
                   </button>
+                ) : (
+                  <small className="automatic-checkpoint">
+                    Available after the prior checkpoint
+                  </small>
                 )
               ) : (
                 <small className="automatic-checkpoint">
@@ -137,6 +164,73 @@ function CheckpointPanel({
         })}
       </ol>
     </section>
+  );
+}
+
+function LessonNavigation({
+  course,
+  lesson,
+  state,
+  routePrefix,
+  onSelect,
+}: {
+  course: RuntimeCourse;
+  lesson: RuntimeLesson;
+  state: GuidedCourseStateV1;
+  routePrefix: string;
+  onSelect?: () => void;
+}) {
+  const guidance = course.frontmatter.guidance;
+  return (
+    <nav className="lesson-navigation" aria-label="Course lessons">
+      <ol>
+        {course.lessons.map((item, itemIndex) => {
+          const current = item.frontmatter.id === lesson.frontmatter.id;
+          const unlocked =
+            !guidance || isLessonUnlocked(course, state, item.frontmatter.id);
+          const complete =
+            Boolean(guidance) && isLessonComplete(course, state, item.frontmatter.id);
+          const stateLabel = complete
+            ? "Done"
+            : current
+              ? "Current"
+              : unlocked
+                ? "Available"
+                : "Locked";
+          const content = (
+            <>
+              <span className="lesson-number" aria-hidden="true">
+                {String(itemIndex + 1).padStart(2, "0")}
+              </span>
+              <span className="lesson-link-copy">
+                <span>{item.frontmatter.title}</span>
+                <small>{stateLabel}</small>
+              </span>
+            </>
+          );
+          return (
+            <li
+              className={`lesson-nav-item lesson-${stateLabel.toLowerCase()}`}
+              key={item.frontmatter.id}
+            >
+              {unlocked ? (
+                <a
+                  aria-current={current ? "page" : undefined}
+                  href={`#/${routePrefix}${item.frontmatter.id}`}
+                  onClick={onSelect}
+                >
+                  {content}
+                </a>
+              ) : (
+                <span className="locked-lesson" aria-disabled="true">
+                  {content}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 }
 
@@ -285,6 +379,11 @@ function Lesson({
   stateRef.current = state;
   const [requestedLessonId, navigate] = useHashLesson(course, routePrefix);
   const [navigationNotice, setNavigationNotice] = useState<string | null>(null);
+  const compactNavigation = useCompactNavigation();
+  const compactContents = useRef<HTMLDetailsElement>(null);
+  const [contentsOpen, setContentsOpen] = useState(() => !compactNavigation);
+
+  useEffect(() => setContentsOpen(!compactNavigation), [compactNavigation]);
 
   useEffect(() => {
     if (!guidance?.persistLocally) return;
@@ -316,6 +415,12 @@ function Lesson({
       course.lessons[0]
     );
   }, [course, guidance, requestedLessonId, state]);
+
+  useEffect(() => {
+    if (!lesson) return;
+    document.getElementById("lesson")?.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, left: 0 });
+  }, [lesson]);
 
   useEffect(() => {
     if (!lesson) return;
@@ -414,51 +519,51 @@ function Lesson({
   return (
     <div className="course-layout">
       <aside className="course-sidebar">
-        {onBack ? (
-          <button className="brand brand-button" type="button" onClick={onBack}>
-            ← All courses
-          </button>
-        ) : (
-          <a className="brand" href="#/">
-            explorables
-          </a>
-        )}
-        <p className="course-title">{course.frontmatter.title}</p>
-        <nav aria-label="Course lessons">
-          <ol>
-            {course.lessons.map((item) => {
-              const unlocked =
-                !guidance || isLessonUnlocked(course, state, item.frontmatter.id);
-              const complete =
-                guidance && isLessonComplete(course, state, item.frontmatter.id);
-              return (
-                <li key={item.frontmatter.id}>
-                  {unlocked ? (
-                    <a
-                      aria-current={
-                        item.frontmatter.id === lesson.frontmatter.id
-                          ? "page"
-                          : undefined
-                      }
-                      href={`#/${routePrefix}${item.frontmatter.id}`}
-                    >
-                      {complete ? "✓ " : ""}
-                      {item.frontmatter.title}
-                    </a>
-                  ) : (
-                    <span className="locked-lesson">🔒 {item.frontmatter.title}</span>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </nav>
-        <GuidedTools
-          course={course}
-          state={state}
-          dispatch={dispatch}
-          routePrefix={routePrefix}
-        />
+        <div className="course-sidebar-header">
+          {onBack ? (
+            <button className="brand brand-button" type="button" onClick={onBack}>
+              <span aria-hidden="true">←</span> All courses
+            </button>
+          ) : (
+            <a className="brand" href="#/">
+              explorables
+            </a>
+          )}
+          <p className="course-title">{course.frontmatter.title}</p>
+        </div>
+        <details
+          className="compact-course-contents"
+          open={contentsOpen}
+          ref={compactContents}
+          onToggle={(event) => {
+            if (compactNavigation) setContentsOpen(event.currentTarget.open);
+          }}
+        >
+          <summary>
+            <span>Course contents</span>
+            <small>
+              Lesson {index + 1} of {course.lessons.length}
+            </small>
+            <span className="contents-chevron" aria-hidden="true" />
+          </summary>
+          <div className="compact-course-body">
+            <LessonNavigation
+              course={course}
+              lesson={lesson}
+              state={state}
+              routePrefix={routePrefix}
+              onSelect={() => {
+                if (compactNavigation) setContentsOpen(false);
+              }}
+            />
+            <GuidedTools
+              course={course}
+              state={state}
+              dispatch={dispatch}
+              routePrefix={routePrefix}
+            />
+          </div>
+        </details>
       </aside>
       <main id="lesson" className="lesson" tabIndex={-1}>
         {navigationNotice ? (
@@ -466,13 +571,16 @@ function Lesson({
             {navigationNotice}
           </p>
         ) : null}
-        <p className="eyebrow">
-          Lesson {index + 1} of {course.lessons.length}
-        </p>
+        <header className="lesson-header">
+          <p className="eyebrow">
+            Lesson {index + 1} of {course.lessons.length}
+          </p>
+          <h1>{lesson.frontmatter.title}</h1>
+        </header>
         {guidance && state.mode === "guided" ? (
           <CheckpointPanel lesson={lesson} state={state} dispatch={dispatch} />
         ) : null}
-        <LessonArticle html={lesson.html} />
+        <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />
         <nav className="lesson-pagination" aria-label="Lesson pagination">
           {previous ? (
             <button type="button" onClick={() => navigate(previous.frontmatter.id)}>
@@ -527,6 +635,9 @@ function courseIdFromHash(): string | null {
 }
 
 function LibraryHome({ collection }: { collection: RuntimeCourseCollection }) {
+  const firstAvailableCourse = collection.tracks
+    .flatMap((track) => track.courses)
+    .find((course) => course.status === "available");
   return (
     <main id="library" className="course-library">
       <header className="library-hero">
@@ -540,12 +651,20 @@ function LibraryHome({ collection }: { collection: RuntimeCourseCollection }) {
           Courses, exercises, and progress stay on this computer. Planned courses are
           shown so the learning path is visible without pretending they are available.
         </p>
+        {firstAvailableCourse ? (
+          <a
+            className="library-primary-action"
+            href={`#/courses/${encodeURIComponent(firstAvailableCourse.id)}`}
+          >
+            Start {firstAvailableCourse.title} <span aria-hidden="true">→</span>
+          </a>
+        ) : null}
       </header>
       {collection.tracks.map((track, trackIndex) => (
         <section className="library-track" key={track.id} aria-labelledby={track.id}>
           <div className="track-heading">
-            <span aria-hidden="true">{trackIndex + 1}</span>
             <div>
+              <p className="track-kicker">Part {trackIndex + 1}</p>
               <h2 className="track-title" id={track.id}>
                 {track.title}
               </h2>
@@ -555,7 +674,9 @@ function LibraryHome({ collection }: { collection: RuntimeCourseCollection }) {
           <div className="course-grid">
             {track.courses.map((course) => (
               <article
-                className={`course-card${course.featured ? " featured-course" : ""}`}
+                className={`course-card course-${course.status}${
+                  course.featured ? " featured-course" : ""
+                }`}
                 key={course.id}
               >
                 <div className="course-card-heading">

@@ -28,7 +28,7 @@ const module: ExplorableModule = {
     visual.style.overflow = "hidden";
     const marker = element("div", "θ");
     marker.style.cssText =
-      "position:absolute;bottom:20px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#7057e8;color:white;transition:left .2s";
+      "position:absolute;bottom:20px;width:28px;height:28px;border-radius:35%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);transition:left .2s";
     const minimum = element("div", "minimum θ = 3");
     minimum.style.cssText = "position:absolute;left:68%;bottom:0;font-size:.72rem";
     const curve = element("div");

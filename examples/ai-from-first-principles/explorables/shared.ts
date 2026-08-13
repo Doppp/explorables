@@ -26,21 +26,21 @@ export function numberInput(
 export function styles(): HTMLStyleElement {
   const style = element("style");
   style.textContent = `
-    .controls { display:flex; flex-wrap:wrap; gap:.8rem; align-items:end; }
-    label { display:grid; gap:.25rem; font-size:.78rem; font-weight:700; }
-    input, select, button { min-height:2.2rem; }
-    input[type=number], input[type=text] { width:7rem; padding:.35rem; }
+    .controls { display:flex; flex-wrap:wrap; gap:.75rem 1rem; align-items:end; }
+    label { display:grid; gap:.3rem; color:var(--muted); font-size:.8rem; font-weight:700; }
+    input, select, button { min-height:2.5rem; }
+    input[type=number], input[type=text] { width:7rem; }
     input[type=range] { width:min(15rem, 65vw); }
-    button { padding:.35rem .7rem; cursor:pointer; }
-    output { font:700 1rem ui-monospace, monospace; }
-    table { width:100%; margin-top:1rem; border-collapse:collapse; font: .78rem ui-monospace, monospace; }
-    th, td { padding:.4rem; border:1px solid color-mix(in srgb, CanvasText 22%, transparent); text-align:right; }
+    output { color:var(--text); font:700 .95rem ui-monospace, monospace; }
+    table { display:block; width:100%; max-width:100%; margin-top:1rem; overflow:auto; border-collapse:collapse; font:.78rem ui-monospace, monospace; }
+    th, td { padding:.45rem; border:1px solid var(--border); text-align:right; }
+    th { background:var(--surface); }
     th:first-child, td:first-child { text-align:left; }
-    .panel { margin-top:1rem; padding:.8rem; border:1px solid color-mix(in srgb, CanvasText 22%, transparent); border-radius:.5rem; }
+    .panel { margin-top:1rem; padding:.85rem; border:1px solid var(--border); border-radius:.45rem; background:var(--surface-tint); }
     .tokens { display:flex; flex-wrap:wrap; gap:.35rem; margin:.5rem 0; }
-    .token { padding:.25rem .45rem; border:1px solid currentColor; border-radius:.3rem; font: .78rem ui-monospace,monospace; }
-    .warning { color:#bd3434; font-weight:700; }
-    @media (prefers-color-scheme:dark) { .warning { color:#ff8e8e; } }
+    .token { padding:.25rem .45rem; border:1px solid var(--border-strong); border-radius:.3rem; background:var(--surface); font:.78rem ui-monospace,monospace; }
+    .warning { color:#8c3640; font-weight:700; }
+    @media (prefers-color-scheme:dark) { .warning { color:#f1a3aa; } }
   `;
   return style;
 }

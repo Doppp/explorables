@@ -121,11 +121,75 @@ export async function bundleExplorable(
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="${escapeHtml(SANDBOX_CSP)}">
   <style>
-    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, sans-serif; }
+    :root {
+      color-scheme: light;
+      font-family: "Avenir Next", Avenir, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+      --canvas: #fffdf8;
+      --surface: #f7f3ea;
+      --surface-tint: #e8efe5;
+      --text: #26312b;
+      --muted: #5d665f;
+      --accent: #365b4b;
+      --accent-hover: #29483b;
+      --on-accent: #fffdf8;
+      --focus: #1e5aa8;
+      --border: #cfcbbf;
+      --border-strong: #7a7b75;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --canvas: #212a25;
+        --surface: #19201c;
+        --surface-tint: #27372e;
+        --text: #edf1ec;
+        --muted: #b8c0ba;
+        --accent: #a9d1b8;
+        --accent-hover: #c0dfc9;
+        --on-accent: #173528;
+        --focus: #8cb8f2;
+        --border: #505b54;
+        --border-strong: #7b8780;
+      }
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; padding: 1rem; background: Canvas; color: CanvasText; }
-    button, input, select { font: inherit; }
-    :focus-visible { outline: 3px solid #7c5cff; outline-offset: 2px; }
+    body {
+      margin: 0;
+      padding: .85rem;
+      background: var(--canvas);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    h1, h2, h3 {
+      font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      line-height: 1.2;
+    }
+    h2:first-child, h3:first-child { margin-top: 0; }
+    button, input, select, textarea { font: inherit; }
+    button {
+      min-height: 2.5rem;
+      padding: .45rem .75rem;
+      border: 1px solid var(--accent);
+      border-radius: .35rem;
+      background: var(--accent);
+      color: var(--on-accent);
+      cursor: pointer;
+      font-weight: 700;
+    }
+    button:hover:not(:disabled) { background: var(--accent-hover); }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    input[type="number"], input[type="text"], select, textarea {
+      min-height: 2.5rem;
+      padding: .4rem .5rem;
+      border: 1px solid var(--border-strong);
+      border-radius: .35rem;
+      background: var(--surface);
+      color: var(--text);
+    }
+    input[type="range"], input[type="checkbox"], input[type="radio"] {
+      accent-color: var(--accent);
+    }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
     ${style}
   </style>
 </head>

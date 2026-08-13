@@ -1,7 +1,17 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+async function openCompactContents(page: Page) {
+  const compactContents = page.locator("details.compact-course-contents");
+  if (
+    (await compactContents.isVisible()) &&
+    (await compactContents.getAttribute("open")) === null
+  )
+    await compactContents.locator(":scope > summary").click();
+}
+
 async function enterExploreMode(page: Page) {
+  await openCompactContents(page);
   await page.getByRole("button", { name: "Switch to Explore mode" }).click();
   await page.getByRole("button", { name: "Enter Explore mode" }).click();
 }
@@ -55,6 +65,32 @@ test("presents the local learning path and planned specializations honestly", as
   ).toBeVisible();
 });
 
+test("uses calm role-based palettes in light and dark mode", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  const palette = () =>
+    page.evaluate(() => {
+      const styles = getComputedStyle(document.documentElement);
+      return {
+        canvas: styles.getPropertyValue("--canvas").trim(),
+        sage: styles.getPropertyValue("--sage").trim(),
+        primary: styles.getPropertyValue("--primary").trim(),
+      };
+    });
+  await expect.poll(palette).toEqual({
+    canvas: "#f7f3ea",
+    sage: "#e8efe5",
+    primary: "#365b4b",
+  });
+
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect.poll(palette).toEqual({
+    canvas: "#19201c",
+    sage: "#27372e",
+    primary: "#a9d1b8",
+  });
+});
+
 test("rejects unknown collection courses and escaped asset requests", async ({
   request,
 }) => {
@@ -73,7 +109,9 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
   ).toBeVisible();
   await expect(page.getByText("Mode: Guided")).toBeVisible();
   await expect(page.getByText("0 of 4")).toBeVisible();
-  await expect(page.getByText("🔒 Backpropagation")).toBeVisible();
+  await expect(
+    page.locator(".lesson-locked").filter({ hasText: "Backpropagation" }),
+  ).toContainText("Locked");
   await expect(page.getByRole("button", { name: "Backpropagation →" })).toBeDisabled();
   const iframe = page.locator("iframe").first();
   await expect(iframe).toHaveAttribute("sandbox", "allow-scripts");
@@ -87,9 +125,8 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
   await expect(
     page
       .getByRole("listitem")
-      .filter({ hasText: "Attempt the exercise and run its tests" })
-      .getByRole("button", { name: "Mark complete" }),
-  ).toBeDisabled();
+      .filter({ hasText: "Attempt the exercise and run its tests" }),
+  ).toContainText("Available after the prior checkpoint");
   await page
     .getByRole("listitem")
     .filter({ hasText: "Record your prediction" })
@@ -118,7 +155,55 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
   await expect(
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "✓ Gradient descent" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Gradient descent Done" })).toBeVisible();
+});
+
+test("keeps the lesson first and course contents compact at 320px", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  await openFoundation(page);
+
+  const contents = page.locator("details.compact-course-contents");
+  await expect(contents).not.toHaveAttribute("open", "");
+  const sidebarHeight = await page
+    .locator(".course-sidebar")
+    .evaluate((element) => element.getBoundingClientRect().height);
+  const headingTop = await page
+    .getByRole("heading", { name: "Gradient descent", level: 1 })
+    .evaluate((element) => element.getBoundingClientRect().top);
+  expect(sidebarHeight).toBeLessThan(220);
+  expect(headingTop).toBeLessThan(360);
+  await expect(page.locator("main h1")).toHaveCount(1);
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  );
+  expect(overflow).toBe(false);
+  const results = await new AxeBuilder({ page }).exclude("iframe").analyze();
+  expect(results.violations).toEqual([]);
+
+  await contents.locator(":scope > summary").click();
+  await expect(
+    page.getByRole("link", { name: "Gradient descent Current" }),
+  ).toBeVisible();
+});
+
+test("preserves an unfinished parked question across the navigation breakpoint", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await openFoundation(page);
+  await page.getByText("Question parking lot (0)").click();
+  await page.getByLabel("Question to revisit").fill("How does routing work?");
+
+  await page.setViewportSize({ width: 800, height: 900 });
+  const contents = page.locator("details.compact-course-contents");
+  await expect(contents).not.toHaveAttribute("open", "");
+  await contents.locator(":scope > summary").click();
+  await expect(page.getByLabel("Question to revisit")).toHaveValue(
+    "How does routing work?",
+  );
 });
 
 test("recovers locked deep links and supports parking, skipping, explore, and reset", async ({
@@ -338,6 +423,7 @@ test("course shell passes axe and fits a narrow preview pane", async ({ page }) 
     );
   expect(frameOverflow).toBe(false);
 
+  await openCompactContents(page);
   await page.getByRole("link", { name: "Next-token training" }).click();
   const trainingFrame = page.frameLocator("iframe").first();
   await expect(
@@ -350,6 +436,7 @@ test("course shell passes axe and fits a narrow preview pane", async ({ page }) 
     );
   expect(trainingOverflow).toBe(false);
 
+  await openCompactContents(page);
   await page
     .getByRole("link", { name: "Autoregressive inference and KV caching" })
     .click();
