@@ -357,6 +357,32 @@ A lesson should usually follow this sequence:
 
 These stages are pedagogical guidance, not mandatory runtime primitives. Most can be written as ordinary Markdown around one or two interactive embeds.
 
+## 6.4 Course sessions and learner language
+
+Every course start surface must explain how to leave and return without relying
+on a learner to know host-specific commands. The runtime and host adapters use
+these meanings consistently:
+
+- **Start this course** starts at the beginning when no saved progress exists
+  and otherwise offers to resume it.
+- **Resume this course** opens the saved lesson and, for a guided course, its
+  first incomplete checkpoint.
+- **Pause this course** or **End this session** preserves progress and lets the
+  host stop the local course process. Direct-terminal learners use `Ctrl+C`.
+- **Review lesson _name_** revisits an unlocked lesson without changing guided
+  completion.
+- **Restart from checkpoint _name_** requires confirmation and clears that
+  checkpoint and all later guided progress.
+- **Explore lesson _name_** uses Explore mode without moving the saved Guided
+  position.
+- **Reset this course** requires confirmation and clears all local progress.
+- **Finish the course** means completing the final required checkpoint; it is
+  not a synonym for pausing or resetting.
+
+If a learner says the ambiguous phrase **End the course**, the host asks whether
+they mean pause the current session or reset progress. It must not erase state
+or claim completion by inference.
+
 ---
 
 # 7. Public landing page
@@ -1201,6 +1227,20 @@ never inside an explorable iframe. It is:
 - Non-essential to course completion
 - Free of accounts, analytics, remote synchronization, and server-side state
 
+All courses may remember the last visited lesson. Guided courses additionally
+remember checkpoint completion, skips, Guided/Explore mode, and parked
+questions. On startup the runtime presents a course-session screen that shows
+whether progress exists, the saved lesson/checkpoint, the last-saved time, and
+the standard learner phrases for pausing, resuming, reviewing, exploring,
+restarting, and resetting.
+
+Resume is guaranteed only for the same course version, browser profile, and web
+origin. The local development command therefore uses a stable strict port by
+default and reports a conflict instead of silently moving the course to a new
+origin. A different browser profile, device, explicit port, cleared site data,
+or course version has a separate progress record. The runtime must state these
+limits and warn visibly when browser persistence is unavailable.
+
 The local state may contain checkpoint IDs, skips, the active lesson, mode, and
 a learner-authored question parking lot. It must not contain exercise solutions
 or hidden assessment data.
@@ -1494,6 +1534,12 @@ When the learner says “continue”, the host should infer the current location
 - The course order in `COURSE.md`
 
 No remote progress record is needed.
+
+The host must also honor the course-session language in section 6.4. Pausing
+flushes local browser progress before the host stops the local process. Reviewing
+does not roll progress back. Restarting from a checkpoint and resetting the
+course require explicit confirmation. Host conversation history may supplement
+the runtime state but is never the authoritative progress record.
 
 ## 16.5 Adapter principle
 

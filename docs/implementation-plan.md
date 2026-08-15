@@ -179,3 +179,21 @@ Deliverables:
 
 Exit check: the frozen lockfile installs and the full check/build suite passes
 under Node.js 22 with pnpm 10 and Node.js 24 with pnpm 11.
+
+## Milestone 10 — course-session continuity
+
+Deliverables:
+
+- Framework-owned start/resume surface and shared lifecycle phrase vocabulary.
+- Lesson-level local resume for every course and checkpoint-level resume,
+  review, confirmed rollback, Explore, reset, and completion behavior for guided
+  courses.
+- Safe browser-storage handling, page-exit flush, visible persistence status,
+  and a strict stable development origin.
+- Matching portable skill, Codex, Claude, scaffold, authoring, architecture,
+  PRD, changelog, and accessibility/browser coverage.
+
+Exit check: pause and restart the local course across a server restart, resume
+the exact guided checkpoint and an unguided lesson, verify review/rollback and
+storage-failure behavior, then pass the full check, build, course, browser, and
+site suites.
