@@ -71,6 +71,11 @@ guidance:
   persistLocally: true
 ```
 
+Newly scaffolded courses include this Guided configuration and a four-step
+prediction, interaction, implementation, and explanation checkpoint sequence.
+Authors may remove `guidance` when unrestricted navigation is intentional; the
+runtime still remembers the last visited lesson locally.
+
 Courses without this object retain unrestricted navigation. Guided courses must
 give every lesson at least one checkpoint. A learner checkpoint is an explicit
 acknowledgment; an explorable checkpoint completes only after an exact event
@@ -101,6 +106,19 @@ exercise work: the runtime deliberately does not run or grade exercises.
 
 Local persistence is browser-profile-only and resettable. It is not suitable
 for assessment evidence, identity, analytics, or cross-device progress.
+
+The runtime adds a course-session panel without requiring author markup. It
+remembers the last visited lesson for locally persistent courses and identifies
+the first incomplete checkpoint in Guided mode. The panel defines portable
+learner phrases for start/resume, pause/end-session, review, Explore, confirmed
+checkpoint restart, reset, and finish. Course tutor policies should use those
+meanings and treat the browser state as authoritative.
+
+Resume is scoped to the course ID/version, browser profile, and web origin.
+Keep the default strict local port for normal use. A custom port intentionally
+creates a separate progress scope. Course state never contains solutions or
+assessment evidence, and storage failures must leave the course usable with a
+visible non-persistence warning.
 
 ## 4. Write a lesson
 

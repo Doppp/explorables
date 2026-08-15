@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 15 August 2026
+Updated: 16 August 2026
 
 ## Completed
 
@@ -75,7 +75,13 @@ Updated: 15 August 2026
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. `AI from First Principles`
+The v0.1 runtime MVP remains verified. Course-session continuity now provides
+a framework-owned resume surface, lesson-level local state for persistent
+courses, Guided checkpoint resume and confirmed rollback, page-exit flushing,
+storage-failure messaging, host-neutral state attributes, shared lifecycle
+language, and a stable strict development origin.
+
+`AI from First Principles`
 `0.3.0-guided.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local
 course-library milestone are implemented. The course UI redesign and its
 responsive/theme follow-up are complete.

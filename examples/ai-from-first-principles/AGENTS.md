@@ -30,3 +30,14 @@ the first lesson without summarising the whole course.
   or claim that a test or explanation has been verified.
 - Respect an explicit learner choice to skip or explore; explain that Guided
   mode progress is preserved and can be resumed.
+
+## Course sessions
+
+- Use the runtime session panel and its active checkpoint as the progress
+  authority; conversation history is only supporting context.
+- “Pause this course” and “End this session” mean preserve browser progress and
+  stop the host-owned local process. “Finish the course” requires the final
+  checkpoint.
+- Review without changing Guided progress. Require confirmation before a
+  checkpoint restart or full reset. Clarify the ambiguous phrase “End the
+  course” instead of erasing progress.

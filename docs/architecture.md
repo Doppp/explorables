@@ -100,6 +100,21 @@ permissions and cannot access the parent document's state. Exercises remain
 deliberate learner or host actions; the runtime's learner acknowledgment is not
 automated grading.
 
+Every locally persistent course also writes a smaller, versioned session record
+containing only its last visited lesson and update time. The runtime reads both
+records defensively, resumes Guided courses from their reducer-owned active
+lesson and first incomplete checkpoint, and resumes unguided courses from the
+session lesson. It flushes both records on `pagehide` and reports unavailable
+browser storage without blocking the lesson.
+
+The visible session panel is the host-neutral continuity surface. The lesson
+root also exposes read-only `data-explorables-*` attributes for course/version,
+visible lesson, Guided position, checkpoint, mode, and persistence status.
+Neither surface can complete a checkpoint. Review navigation leaves the Guided
+position intact; a confirmed restart uses the reducer to delete the selected
+checkpoint and all later progress. The local server uses a strict port so it
+cannot silently move state to a different browser origin.
+
 ## Agent Plugin packaging and hosts
 
 Each distributable course root is an Agent Plugins v1 package. Root

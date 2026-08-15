@@ -325,7 +325,7 @@ function CourseSessionPanel({
   const [confirmReset, setConfirmReset] = useState(false);
   const savedLessonId = course.frontmatter.guidance
     ? guidedState.activeLessonId
-    : savedSession?.activeLessonId;
+    : (savedSession?.activeLessonId ?? course.lessons[0]?.frontmatter.id);
   const savedLesson = course.lessons.find(
     (lesson) => lesson.frontmatter.id === savedLessonId,
   );
@@ -351,9 +351,11 @@ function CourseSessionPanel({
       </div>
       {savedLesson ? (
         <button type="button" onClick={onResume}>
-          {savedLesson.frontmatter.id === currentLesson.frontmatter.id
-            ? "Resume this course here"
-            : "Resume saved progress"}
+          {!hasSavedProgress
+            ? "Start course"
+            : savedLesson.frontmatter.id === currentLesson.frontmatter.id
+              ? "Resume this course here"
+              : "Resume saved progress"}
         </button>
       ) : null}
       <details>

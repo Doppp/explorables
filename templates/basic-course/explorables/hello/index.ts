@@ -11,18 +11,19 @@ const module: ExplorableModule = {
     input.value = "2";
     const output = document.createElement("output");
     output.setAttribute("aria-live", "polite");
-    const render = () => {
+    const render = (emit = true) => {
       const value = Number(input.value);
       output.value = `${value} × 2 = ${value * 2}`;
-      context.emit({ type: "parameter-changed", payload: { value } });
+      if (emit) context.emit({ type: "parameter-changed", payload: { value } });
     };
-    input.addEventListener("input", render);
+    const onInput = () => render();
+    input.addEventListener("input", onInput);
     label.append(input, output);
     root.append(label);
-    render();
+    render(false);
     return {
       destroy() {
-        input.removeEventListener("input", render);
+        input.removeEventListener("input", onInput);
         root.replaceChildren();
       },
     };

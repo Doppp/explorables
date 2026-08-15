@@ -1,6 +1,6 @@
+import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
   compileRuntimeCourse,
@@ -9,7 +9,7 @@ import {
   validateCourse,
   validateCourseCollection,
 } from "@explorables/validator";
-import { build as viteBuild, createServer, type Plugin } from "vite";
+import { createServer, type Plugin, build as viteBuild } from "vite";
 
 const packageDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(packageDirectory, "../../..");
@@ -218,9 +218,17 @@ export async function startCourse(coursePath: string, port = 4173): Promise<void
         ? collectionPlugin(await loadCourseCollection(root))
         : coursePlugin(root),
     ],
-    server: { host: "127.0.0.1", port, strictPort: false },
+    server: { host: "127.0.0.1", port, strictPort: true },
   });
-  await server.listen();
+  try {
+    await server.listen();
+  } catch (error) {
+    await server.close();
+    throw new Error(
+      `Could not start explorables on port ${port}. Stop the process using that port, or explicitly choose another with --port <port>. A different port has separate browser progress.`,
+      { cause: error },
+    );
+  }
   server.printUrls();
 }
 

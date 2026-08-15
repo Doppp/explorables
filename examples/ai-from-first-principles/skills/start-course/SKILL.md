@@ -9,4 +9,6 @@ description: Start or continue AI from First Principles and tutor the learner th
 2. Read `../../AGENTS.md` completely and follow its tutoring and focus policy.
 3. Read `../../COURSE.md` to identify lesson order and Guided Course Mode behavior.
 4. Run `pnpm course` from the plugin root and open the printed local URL when browser control is available.
-5. Begin or resume the active guided checkpoint. Respect explicit skip or Explore choices, keep exercises deliberate, and never inspect or reveal protected solutions.
+5. Read the runtime session panel and resume its active guided checkpoint when saved progress exists; otherwise begin at the first checkpoint.
+6. Treat browser state as authoritative. Preserve it before pausing or ending the session, review without rollback, and require confirmation before checkpoint restart or reset. Clarify “End the course”.
+7. Respect explicit skip or Explore choices, keep exercises deliberate, and never inspect or reveal protected solutions.

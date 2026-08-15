@@ -71,6 +71,14 @@ and tutor you through its active lesson. For example:
 
 > Start AI from First Principles.
 
+The course-session panel shows the saved lesson and, in Guided mode, the first
+incomplete checkpoint. Progress is stored only in the same browser profile,
+course version, and local address. Say **“Pause this course”** or **“End this
+session”** before stopping the local process, and **“Resume this course”** when
+you return. Reviewing preserves completion; checkpoint restarts and full resets
+require confirmation. If port `4173` is occupied, the CLI stops with guidance
+instead of silently changing the browser origin.
+
 Agent Plugins-compatible clients discover the portable `start-course` skill.
 Codex can also read `AGENTS.md` directly, while Claude Code Desktop uses the
 thin `CLAUDE.md` adapter and `.claude/launch.json`; every path operates on the
@@ -85,6 +93,10 @@ explorables test [path]
 explorables build [path]
 explorables new <name>
 ```
+
+`explorables start` uses the strict default address `127.0.0.1:4173` so local
+resume state remains available. `--port <port>` is supported explicitly, but a
+different port has separate browser storage.
 
 From this source checkout, run the CLI as `pnpm exec explorables` or use the
 root scripts:

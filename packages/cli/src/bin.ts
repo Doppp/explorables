@@ -17,7 +17,11 @@ const program = new Command()
 program
   .command("start")
   .argument("[path]", "course directory", ".")
-  .option("-p, --port <port>", "local port", "4173")
+  .option(
+    "-p, --port <port>",
+    "local port (changing it creates a separate browser-progress origin)",
+    "4173",
+  )
   .action(async (coursePath, options) => startCourse(coursePath, Number(options.port)));
 
 program

@@ -201,6 +201,14 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
   await expect(page.getByText("Mode: Guided")).toBeVisible();
+  await expect(page.locator("#lesson")).toHaveAttribute(
+    "data-explorables-checkpoint-id",
+    "predict",
+  );
+  await expect(page.locator("#lesson")).toHaveAttribute(
+    "data-explorables-persistence",
+    "available",
+  );
   await expect(page.getByText("0 of 4")).toBeVisible();
   await expect(
     page.locator(".lesson-locked").filter({ hasText: "Backpropagation" }),
@@ -253,6 +261,10 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
     page.getByRole("heading", { name: "Your progress is saved" }),
   ).toBeVisible();
   await expect(page.getByText(/Saved at Backpropagation/)).toBeVisible();
+  await expect(page.locator("#lesson")).toHaveAttribute(
+    "data-explorables-guided-lesson-id",
+    "backpropagation",
+  );
 });
 
 test("explains session phrases and confirms checkpoint rollback", async ({ page }) => {

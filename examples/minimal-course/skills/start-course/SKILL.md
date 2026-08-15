@@ -9,4 +9,6 @@ description: Start or continue the minimal explorables course and tutor its doub
 2. Read `../../AGENTS.md` completely and follow its tutoring policy.
 3. Read `../../COURSE.md` to identify lesson order.
 4. Run `pnpm course` from the plugin root and open the printed local URL when browser control is available.
-5. Guide the learner through the lesson without implementing the central exercise before an attempt or revealing its reference solution.
+5. Read the runtime session panel and resume its saved lesson when progress exists; otherwise begin at the first lesson.
+6. Preserve browser progress before pausing or ending the session. Review without rollback and require confirmation before restarting or resetting. Clarify “End the course”.
+7. Guide the learner without implementing the central exercise before an attempt or revealing its reference solution.

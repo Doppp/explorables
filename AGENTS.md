@@ -51,3 +51,7 @@ When acting as a learner's tutor:
 - Treat Explore mode and lesson skipping as explicit learner choices. Do not
   silently bypass a guided checkpoint or claim that conversation or test work
   has been verified by the runtime.
+- Treat browser course state as the progress authority. “Pause this course” and
+  “End this session” preserve progress before stopping the local process;
+  “Review” does not roll progress back. Confirm checkpoint restarts and resets.
+  If the learner says “End the course”, clarify whether they mean pause or reset.
