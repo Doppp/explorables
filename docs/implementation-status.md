@@ -134,13 +134,15 @@ official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
 Agent Skills validation                pass (template and both first-party courses)
 Node 22.22.2 / pnpm 10.26.0            pass (frozen install, check, build)
-pnpm check                              pass under Node 24 (format, lint, TS7, 24 suites/78 tests, collection/plugin/course validators)
-pnpm course:test                        pass under Node 24 (14 model suites/47 tests; 14 starter/reference pairs)
-pnpm build                              pass under Node 24 (9 package entries, collection, standalone course, static site)
-pnpm test:browser                       pass under Node 24 (12 tests; persisted light/dark themes, sandbox sync, library, safe routes, guided flow, failures, axe, 1427px, 1156px, 720px, 320px)
-pnpm site:test                          pass (content, no-tracking copy, axe, 720px)
+pnpm check                              pass locally on Node 26.7.0/pnpm 11.21.0 (format, lint, TS7, 26 suites/83 tests, collection/plugin/course validators)
+pnpm course:test                        pass locally on Node 26.7.0/pnpm 11.21.0 (14 model suites/47 tests; 14 starter/reference pairs)
+pnpm build                              pass locally on Node 26.7.0/pnpm 11.21.0 (9 package entries, collection, standalone course, static site)
+pnpm test:browser                       pass locally on Node 26.7.0/pnpm 11.21.0 (14 tests; session resume/rollback/storage failure, persisted themes, sandbox sync, library, guided flow, failures, axe, 1427px, 1156px, 720px, 320px)
+pnpm site:test                          pass locally on Node 26.7.0/pnpm 11.21.0 (content, no-tracking copy, axe, 720px)
+strict-port conflict                    pass (actionable failure; no fallback origin)
 course UI visual QA                     pass (light/dark library at 1156px, 720px, and 320px; full-width hero/note, no overflow)
-generated course smoke                  pass (Agent Plugin manifest/skill, validate, static build)
+course scaffold tests                   pass (Guided template, Agent Plugin manifest/skill, validator integration)
+external generated-course install       deferred until @explorables packages are published
 pnpm audit --audit-level high           pass (no known vulnerabilities)
 Pages workflow YAML parse               pass
 GitHub Pages API                         pass (workflow source, public, CNAME configured)
