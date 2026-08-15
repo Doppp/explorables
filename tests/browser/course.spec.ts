@@ -88,6 +88,24 @@ test("follows the system theme, syncs explorables, and persists an override", as
     sage: "#25372f",
     primary: "#b4d9c3",
   });
+  const typography = await page.evaluate(() => {
+    const body = getComputedStyle(document.body);
+    const action = document.querySelector<HTMLElement>(".library-primary-action");
+    if (!action) throw new Error("Expected the primary course action");
+    const primaryAction = getComputedStyle(action);
+    return {
+      fontFamily: body.fontFamily,
+      fontSmoothing: body.getPropertyValue("-webkit-font-smoothing"),
+      textRendering: body.textRendering,
+      primaryActionWeight: primaryAction.fontWeight,
+    };
+  });
+  expect(typography.fontFamily).not.toContain("Avenir");
+  expect(typography).toMatchObject({
+    fontSmoothing: "antialiased",
+    textRendering: "auto",
+    primaryActionWeight: "700",
+  });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 
   await page.getByRole("button", { name: "Dark mode" }).click();
