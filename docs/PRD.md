@@ -1026,7 +1026,8 @@ Explorable dependencies are bundled before loading into the iframe. Runtime impo
 
 ## 11.4 Dependency security
 
-The reference implementation uses pnpm 11 with a committed lockfile.
+The reference implementation defaults to pnpm 11 with a committed lockfile and
+maintains backward compatibility with pnpm 10.26.0 and newer 10.x releases.
 
 Course dependencies must:
 
@@ -1213,8 +1214,8 @@ or hidden assessment data.
 | Area | Choice |
 |---|---|
 | Language | TypeScript 7.0 |
-| Runtime | Node.js 24 LTS |
-| Package manager | pnpm 11 |
+| Runtime | Node.js 24 LTS default; Node.js 22.22.2+ compatible |
+| Package manager | pnpm 11 default; pnpm 10.26.0+ compatible |
 | Monorepo | pnpm workspaces |
 | Dev server and bundling | Vite |
 | Runtime UI shell | React |
@@ -1269,7 +1270,10 @@ The project should not depend on custom TypeScript language-service plugins in v
 
 ## 14.4 Node.js policy
 
-Use Node.js 24 LTS for production and CI.
+Use Node.js 24 LTS as the default for production and deployment CI. Also test
+and support Node.js 22 from 22.22.2 onward while that release line remains LTS.
+The lower bound follows the strictest dependency in the committed lockfile;
+older Node.js 22 releases are not supported.
 
 A `.node-version` file should pin the supported major version:
 
@@ -1279,7 +1283,9 @@ A `.node-version` file should pin the supported major version:
 
 ## 14.5 Package manager policy
 
-Use pnpm 11 because it provides:
+Use pnpm 11 by default and keep the committed lockfile installable with pnpm
+10.26.0 and newer 10.x releases. The pnpm 10 lower bound is the first release
+with the workspace's `allowBuilds` setting. Both supported majors provide:
 
 - Strong workspace support
 - Reproducible lockfiles

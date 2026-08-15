@@ -5,7 +5,8 @@ Thank you for improving `explorables`. By participating, follow the
 
 ## Local setup
 
-Use Node.js 24 LTS and pnpm 11:
+Use Node.js 22.22.2+ (22.x) or 24.15.0+ (24.x), with pnpm 10.26.0+ (10.x) or
+pnpm 11. Node.js 24 and pnpm 11 remain the default toolchain:
 
 ```bash
 pnpm install --frozen-lockfile

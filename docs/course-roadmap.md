@@ -284,8 +284,9 @@ versioned educational contract.
   prompt, text alternative, and primary-source references where applicable.
 - All required work runs locally without accounts, APIs, GPUs, or weight
   downloads.
-- Every course validates, tests, and builds from a clean checkout under Node 24
-  and pnpm 11.
+- Every course validates, tests, and builds from a clean checkout under the
+  default Node.js 24/pnpm 11 toolchain and the supported Node.js 22/pnpm 10
+  compatibility floor.
 - Codex and Claude Code Desktop tutor every course through the same
   host-neutral format.
 - Learner evidence shows that transitions from foundation to shared core to a

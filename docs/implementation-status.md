@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 13 August 2026
+Updated: 15 August 2026
 
 ## Completed
 
@@ -70,6 +70,8 @@ Updated: 13 August 2026
   sandboxed explorables. Retuned the dark pastel roles, restored the library
   hero and local-data notice to the full responsive content width, and corrected
   title casing while preserving the lowercase `explorables` wordmark.
+- Retained Node.js 24/pnpm 11 as the default toolchain while adding an enforced,
+  CI-tested compatibility floor of Node.js 22.22.2 and pnpm 10.26.0.
 
 ## Current work
 
@@ -87,8 +89,9 @@ remain.
 ## Decisions
 
 - The installed global Node 26, pnpm 9, and TypeScript 5 are not used as the
-  compatibility claim. The repository pins Node 24/pnpm 11/TypeScript 7 and all
-  acceptance checks run through those pinned versions.
+  compatibility claim. TypeScript 7 remains pinned; Node.js 24/pnpm 11 is the
+  default, and Node.js 22.22.2+/pnpm 10.26.0+ is the tested backward-compatible
+  floor recorded in ADR 0006.
 - The existing Claude preview schema is current; no ADR is needed.
 - The landing page uses the repository's mandated React/Vite stack and GitHub
   Pages rather than introducing a second site framework or hosted service.
@@ -120,10 +123,11 @@ gh auth status                         pass (Doppp, SSH, repo scope)
 gh repo view Doppp/explorables         pass (PUBLIC, default master)
 git remote -v                          pass (canonical SSH URL)
 npm view typescript@7 version          7.0.2
-npm view pnpm@11 version               latest 11.15.1
+npm view pnpm@11 version               latest 11.21.0; default CI pin 11.15.1
 official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
 Agent Skills validation                pass (template and both first-party courses)
+Node 22.22.2 / pnpm 10.26.0            pass (frozen install, check, build)
 pnpm check                              pass under Node 24 (format, lint, TS7, 24 suites/78 tests, collection/plugin/course validators)
 pnpm course:test                        pass under Node 24 (14 model suites/47 tests; 14 starter/reference pairs)
 pnpm build                              pass under Node 24 (9 package entries, collection, standalone course, static site)

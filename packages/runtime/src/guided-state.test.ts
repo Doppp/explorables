@@ -86,7 +86,10 @@ describe("guided course state", () => {
   });
 
   it("recovers safely from malformed, stale, and partially invalid storage", () => {
-    expect(parseGuidedState(course, "{broken")).toEqual(createGuidedState(course));
+    const { updatedAt, ...recovered } = parseGuidedState(course, "{broken");
+    const { updatedAt: _initialUpdatedAt, ...initial } = createGuidedState(course);
+    expect(recovered).toEqual(initial);
+    expect(Number.isNaN(Date.parse(updatedAt))).toBe(false);
     const stale = { ...createGuidedState(course), courseVersion: "0.9.0" };
     expect(parseGuidedState(course, JSON.stringify(stale)).courseVersion).toBe("1.0.0");
     const stored = {

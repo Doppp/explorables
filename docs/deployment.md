@@ -12,10 +12,12 @@ deployment branch.
 
 ## GitHub Pages
 
-`.github/workflows/pages.yml` installs the pinned Node 24 and pnpm 11 versions
-from the lockfile, validates and tests the repository, builds `apps/site`,
-uploads its static output, and deploys through the `github-pages` environment.
-It runs on pushes to `master` and manual dispatch.
+`.github/workflows/pages.yml` installs the default pinned Node 24 and pnpm 11
+versions from the lockfile, validates and tests the repository, builds
+`apps/site`, uploads its static output, and deploys through the `github-pages`
+environment. It runs on pushes to `master` and manual dispatch. A separate
+compatibility workflow verifies the same frozen lockfile under the supported
+Node.js 22/pnpm 10 and Node.js 24/pnpm 11 boundaries.
 
 Repository Pages settings must use GitHub Actions as the build type. The REST
 equivalent after the workflow exists is:

@@ -9,7 +9,8 @@ is committed and pushed to `master` after its checks pass.
 - Local-first course folders; no accounts, database, analytics, backend, audio,
   hosted execution, catalogue service, or LMS features.
 - Plain Markdown with only `explorable` and `exercise` directives.
-- Node.js 24 LTS, pnpm 11, TypeScript 7, React/Vite, unified/remark/rehype,
+- Node.js 24 LTS and pnpm 11 by default, with Node.js 22.22.2+ and pnpm 10.26.0+
+  compatibility; TypeScript 7, React/Vite, unified/remark/rehype,
   Zod, Biome, Vitest, Playwright, and axe-core.
 - Course JavaScript runs only in sandboxed iframes with network access denied.
 - `AGENTS.md` is canonical; `CLAUDE.md` and `.claude/launch.json` are thin
@@ -99,7 +100,8 @@ Deliverables:
 
 Final verification:
 
-1. Install using the committed lockfile under Node 24 and pnpm 11.
+1. Install using the committed lockfile under the default Node 24/pnpm 11
+   toolchain and the Node 22/pnpm 10 compatibility floor.
 2. Run formatting/lint, typecheck, unit, integration, browser, accessibility,
    validator, all-package build, site build/test, and both example validations.
 3. Scaffold and verify a course in a temporary directory.
@@ -161,5 +163,19 @@ Deliverables:
 
 Exit check: collection and standalone validation/build pass; browser tests
 cover selection, planned states, deep links, guidance, sandboxing, narrow
-layout, and axe; the full repository check and build pass under Node 24 and
-pnpm 11.
+layout, and axe; the full repository check and build pass under the default
+Node 24/pnpm 11 toolchain and the Node 22/pnpm 10 compatibility floor.
+
+## Milestone 9 — supported toolchain compatibility
+
+Deliverables:
+
+- Keep Node.js 24 and pnpm 11 as the default development and deployment
+  toolchain.
+- Accept Node.js 22.22.2+ within the 22.x LTS line and pnpm 10.26.0+.
+- Verify frozen installs, checks, and builds at both compatibility boundaries in
+  GitHub Actions.
+- Document the support window and dependency-derived minimum versions.
+
+Exit check: the frozen lockfile installs and the full check/build suite passes
+under Node.js 22 with pnpm 10 and Node.js 24 with pnpm 11.

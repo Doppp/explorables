@@ -24,7 +24,9 @@ When requirements conflict, follow `docs/PRD.md`, then document the conflict and
 - Do not add accounts, databases, analytics, audio, hosted application services, or a visual authoring system. A static GitHub Pages landing site is required.
 - Do not replace plain Markdown with MDX.
 - Do not add custom Markdown directives beyond `explorable` and `exercise`.
-- Preserve TypeScript 7, Node.js 24 LTS, and pnpm 11 unless a verified incompatibility requires an ADR.
+- Preserve TypeScript 7, the default Node.js 24 LTS/pnpm 11 toolchain, and the
+  tested Node.js 22/pnpm 10 compatibility floor unless a verified
+  incompatibility requires an ADR.
 - Keep course code out of the main runtime document context.
 - Keep Codex and Claude Code Desktop support as thin adapters over the same host-neutral course format.
 - Treat sandboxing, accessibility, validation, and clean-checkout reproducibility as required features.

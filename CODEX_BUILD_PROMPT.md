@@ -75,8 +75,8 @@ The completed repository must let a learner:
 Follow these unless the PRD explicitly says otherwise:
 
 - TypeScript 7.0
-- Node.js 24 LTS
-- pnpm 11
+- Node.js 24 LTS by default; support Node.js 22.22.2+ within the 22.x line
+- pnpm 11 by default; support pnpm 10.26.0+
 - Plain Markdown, not MDX
 - React for the runtime shell only
 - Vite for development and bundling
