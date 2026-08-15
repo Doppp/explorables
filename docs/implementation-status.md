@@ -110,8 +110,9 @@ remain.
 
 ## Known external evidence
 
-- GitHub Pages is configured with `build_type: workflow`; the current Node 24
-  workflow's full build and deploy succeeded in Actions run `29851928963`.
+- GitHub Pages is configured with `build_type: workflow`; the course-session
+  build, accessibility checks, artifact verification, and deployment succeeded
+  in Actions run `31896818682`.
 - DNS provider access for `explorables.ai` has not been established. DNS queries
   currently return no A, AAAA, or `www` CNAME records. Exact records are in
   `docs/deployment.md`.
@@ -134,12 +135,14 @@ official Node release status           Node 24 is LTS
 official Claude Desktop preview docs   launch schema version 0.0.1 confirmed
 Agent Skills validation                pass (template and both first-party courses)
 Node 22.22.2 / pnpm 10.26.0            pass (frozen install, check, build)
-pnpm check                              pass locally on Node 26.7.0/pnpm 11.21.0 (format, lint, TS7, 26 suites/83 tests, collection/plugin/course validators)
-pnpm course:test                        pass locally on Node 26.7.0/pnpm 11.21.0 (14 model suites/47 tests; 14 starter/reference pairs)
-pnpm build                              pass locally on Node 26.7.0/pnpm 11.21.0 (9 package entries, collection, standalone course, static site)
-pnpm test:browser                       pass locally on Node 26.7.0/pnpm 11.21.0 (14 tests; session resume/rollback/storage failure, persisted themes, sandbox sync, library, guided flow, failures, axe, 1427px, 1156px, 720px, 320px)
-pnpm site:test                          pass locally on Node 26.7.0/pnpm 11.21.0 (content, no-tracking copy, axe, 720px)
+pnpm check                              pass locally on Node 24.19.0/pnpm 11.15.1 (format, lint, TS7, 26 suites/83 tests, collection/plugin/course validators)
+pnpm course:test                        pass locally on Node 24.19.0/pnpm 11.15.1 (14 model suites/47 tests; 14 starter/reference pairs)
+pnpm build                              pass locally on Node 24.19.0/pnpm 11.15.1 (9 package entries, collection, standalone course, static site)
+pnpm test:browser                       pass locally on Node 24.19.0/pnpm 11.15.1 (14 tests; session resume/rollback/storage failure, persisted themes, sandbox sync, library, guided flow, failures, axe, 1427px, 1156px, 720px, 320px)
+pnpm site:test                          pass locally on Node 24.19.0/pnpm 11.15.1 (content, no-tracking copy, axe, 720px)
 strict-port conflict                    pass (actionable failure; no fallback origin)
+GitHub toolchain compatibility          pass (run 31896818681; Node 22/pnpm 10 and Node 24/pnpm 11)
+GitHub Pages build/deploy                pass (run 31896818682)
 course UI visual QA                     pass (light/dark library at 1156px, 720px, and 320px; full-width hero/note, no overflow)
 course scaffold tests                   pass (Guided template, Agent Plugin manifest/skill, validator integration)
 external generated-course install       deferred until @explorables packages are published
