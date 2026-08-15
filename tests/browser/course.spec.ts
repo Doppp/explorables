@@ -249,6 +249,55 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Gradient descent Done" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Your progress is saved" }),
+  ).toBeVisible();
+  await expect(page.getByText(/Saved at Backpropagation/)).toBeVisible();
+});
+
+test("explains session phrases and confirms checkpoint rollback", async ({ page }) => {
+  await openFoundation(page);
+  await page.getByText("How to pause, resume, or change position").click();
+  for (const phrase of [
+    "Pause this course",
+    "Resume this course",
+    "Review lesson …",
+    "Explore lesson …",
+    "Restart from checkpoint …",
+    "Finish the course",
+  ])
+    await expect(page.getByText(phrase, { exact: true })).toBeVisible();
+
+  await page
+    .getByRole("listitem")
+    .filter({ hasText: "Record your prediction" })
+    .getByRole("button", { name: "Mark complete" })
+    .click();
+  await page.reload();
+  await page
+    .getByRole("listitem")
+    .filter({ hasText: "Record your prediction" })
+    .getByRole("button", { name: "Restart here" })
+    .click();
+  await page.getByRole("button", { name: "Confirm restart" }).click();
+  await expect(page.getByText("0 of 4")).toBeVisible();
+});
+
+test("warns when browser progress storage is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Storage.prototype.getItem = () => {
+      throw new DOMException("Storage disabled");
+    };
+    Storage.prototype.setItem = () => {
+      throw new DOMException("Storage disabled");
+    };
+  });
+  await openFoundation(page);
+  await expect(
+    page.getByText(
+      "Browser storage is unavailable. Progress will last only for this open page.",
+    ),
+  ).toBeVisible();
 });
 
 test("keeps the lesson first and course contents compact at 320px", async ({
@@ -324,8 +373,9 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
   await expect(
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Reset local progress" }).click();
-  await page.getByRole("button", { name: "Reset progress", exact: true }).click();
+  await page.getByText("How to pause, resume, or change position").click();
+  await page.getByRole("button", { name: "Reset this course" }).click();
+  await page.getByRole("button", { name: "Reset course", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();

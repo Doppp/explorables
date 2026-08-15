@@ -212,6 +212,14 @@ export interface GuidedCourseStateV1 {
   updatedAt: string;
 }
 
+export interface CourseSessionStateV1 {
+  schemaVersion: 1;
+  courseId: string;
+  courseVersion: string;
+  activeLessonId: string;
+  updatedAt: string;
+}
+
 export interface SourcePosition {
   file: string;
   line: number;

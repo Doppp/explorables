@@ -699,6 +699,81 @@ pre {
   color: var(--ink);
 }
 
+.course-session-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem 1.2rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--blue);
+}
+
+.course-session-panel .eyebrow,
+.course-session-panel h2,
+.course-session-panel p {
+  margin-top: 0;
+}
+
+.course-session-panel h2 {
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.course-session-panel p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.course-session-panel > button,
+.course-session-panel details button {
+  width: fit-content;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.course-session-panel > details {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+}
+
+.course-session-panel summary {
+  padding-top: 0.7rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.course-session-panel ul {
+  margin-bottom: 0.8rem;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.course-session-panel li + li {
+  margin-top: 0.3rem;
+}
+
+.checkpoint-restart-confirmation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 0.3rem;
+}
+
+.checkpoint-restart {
+  background: transparent;
+}
+
 .checkpoint-panel {
   margin-top: 0;
   margin-bottom: 2rem;
@@ -1021,6 +1096,14 @@ pre code {
 @media (max-width: 42rem) {
   :root {
     font-size: 16px;
+  }
+
+  .course-session-panel {
+    display: block;
+  }
+
+  .course-session-panel > button {
+    margin-top: 0.7rem;
   }
 
   .course-library {

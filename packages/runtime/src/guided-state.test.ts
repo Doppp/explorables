@@ -7,6 +7,7 @@ import {
   isLessonComplete,
   isLessonUnlocked,
   parseGuidedState,
+  restartGuidedStateFrom,
 } from "./guided-state.ts";
 
 const course = {
@@ -112,5 +113,21 @@ describe("guided course state", () => {
     expect(state.parkedQuestions).toEqual(["What comes later?"]);
     state = guidedCourseReducer(state, { type: "remove-question", index: 0 });
     expect(state.parkedQuestions).toEqual([]);
+  });
+
+  it("restarts from a checkpoint without disturbing earlier progress", () => {
+    const progressed = {
+      ...createGuidedState(course),
+      activeLessonId: "two",
+      completedCheckpoints: { one: ["predict", "experiment"], two: ["later"] },
+      skippedLessons: ["two"],
+    };
+    const restarted = restartGuidedStateFrom(course, progressed, "one", "experiment");
+    expect(restarted).toMatchObject({
+      mode: "guided",
+      activeLessonId: "one",
+      completedCheckpoints: { one: ["predict"] },
+      skippedLessons: [],
+    });
   });
 });

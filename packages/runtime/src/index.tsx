@@ -1,5 +1,6 @@
 import type {
   Checkpoint,
+  CourseSessionStateV1,
   GuidedCourseStateV1,
   RuntimeCourse,
   RuntimeCourseCollection,
@@ -20,12 +21,23 @@ import {
   useState,
 } from "react";
 import {
+  readBrowserStorage,
+  removeBrowserStorage,
+  writeBrowserStorage,
+} from "./browser-storage.ts";
+import {
+  courseSessionStorageKey,
+  createCourseSessionState,
+  parseCourseSessionState,
+} from "./course-session.ts";
+import {
   createGuidedState,
   guidedCourseReducer,
   guidedStorageKey,
   isLessonComplete,
   isLessonUnlocked,
   parseGuidedState,
+  restartGuidedStateFrom,
 } from "./guided-state.ts";
 import { lessonBodyHtml } from "./lesson-html.ts";
 
@@ -52,7 +64,7 @@ function isTheme(value: unknown): value is Theme {
 function initialTheme(): Theme {
   const documentTheme = document.documentElement.dataset.theme;
   if (isTheme(documentTheme)) return documentTheme;
-  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  const storedTheme = readBrowserStorage(THEME_STORAGE_KEY).value;
   if (isTheme(storedTheme)) return storedTheme;
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
@@ -68,7 +80,7 @@ function useTheme(): [Theme, () => void] {
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const followSystemTheme = (event: MediaQueryListEvent) => {
-      if (!isTheme(window.localStorage.getItem(THEME_STORAGE_KEY)))
+      if (!isTheme(readBrowserStorage(THEME_STORAGE_KEY).value))
         setTheme(event.matches ? "dark" : "light");
     };
     media.addEventListener("change", followSystemTheme);
@@ -80,7 +92,7 @@ function useTheme(): [Theme, () => void] {
     () => {
       setTheme((currentTheme) => {
         const nextTheme = currentTheme === "dark" ? "light" : "dark";
-        window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+        writeBrowserStorage(THEME_STORAGE_KEY, nextTheme);
         return nextTheme;
       });
     },
@@ -115,25 +127,29 @@ function useCompactNavigation(): boolean {
   return compact;
 }
 
-function hashLessonId(first: string, routePrefix = ""): string {
+function hashLessonId(first: string, routePrefix = "", preferred = first): string {
   const route = window.location.hash.replace(/^#\/?/, "");
-  if (!routePrefix) return route || first;
+  if (!routePrefix) return route || preferred;
   return route.startsWith(routePrefix)
-    ? route.slice(routePrefix.length) || first
-    : first;
+    ? route.slice(routePrefix.length) || preferred
+    : preferred;
 }
 
 function useHashLesson(
   course: RuntimeCourse,
   routePrefix = "",
+  preferredLessonId?: string,
 ): [string, (id: string) => void] {
   const first = course.lessons[0]?.frontmatter.id ?? "";
-  const [lessonId, setLessonId] = useState(() => hashLessonId(first, routePrefix));
+  const preferred = preferredLessonId ?? first;
+  const [lessonId, setLessonId] = useState(() =>
+    hashLessonId(first, routePrefix, preferred),
+  );
   useEffect(() => {
-    const onHash = () => setLessonId(hashLessonId(first, routePrefix));
+    const onHash = () => setLessonId(hashLessonId(first, routePrefix, preferred));
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, [first, routePrefix]);
+  }, [first, preferred, routePrefix]);
   return [
     lessonId,
     (id) => {
@@ -156,11 +172,14 @@ function CheckpointPanel({
   lesson,
   state,
   dispatch,
+  onRestart,
 }: {
   lesson: RuntimeLesson;
   state: GuidedCourseStateV1;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+  onRestart: (checkpointId: string) => void;
 }) {
+  const [restartCheckpointId, setRestartCheckpointId] = useState<string | null>(null);
   const checkpoints = lesson.frontmatter.checkpoints ?? [];
   const completed = new Set(state.completedCheckpoints[lesson.frontmatter.id] ?? []);
   const firstIncompleteId = checkpoints.find(
@@ -195,10 +214,33 @@ function CheckpointPanel({
                 <strong>{checkpoint.title}</strong>
                 <small className="checkpoint-status">{status}</small>
               </span>
-              {checkpoint.completion === "learner" ? (
-                isComplete ? (
-                  <small className="automatic-checkpoint">Recorded by learner</small>
-                ) : checkpoint.id === firstIncompleteId ? (
+              {isComplete ? (
+                restartCheckpointId === checkpoint.id ? (
+                  <span className="checkpoint-restart-confirmation">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onRestart(checkpoint.id);
+                        setRestartCheckpointId(null);
+                      }}
+                    >
+                      Confirm restart
+                    </button>
+                    <button type="button" onClick={() => setRestartCheckpointId(null)}>
+                      Cancel
+                    </button>
+                  </span>
+                ) : (
+                  <button
+                    className="checkpoint-restart"
+                    type="button"
+                    onClick={() => setRestartCheckpointId(checkpoint.id)}
+                  >
+                    Restart here
+                  </button>
+                )
+              ) : checkpoint.completion === "learner" ? (
+                checkpoint.id === firstIncompleteId ? (
                   <button
                     type="button"
                     onClick={() =>
@@ -227,6 +269,135 @@ function CheckpointPanel({
           );
         })}
       </ol>
+    </section>
+  );
+}
+
+function savedCheckpointTitle(
+  course: RuntimeCourse,
+  state: GuidedCourseStateV1,
+): string | null {
+  const lesson = course.lessons.find(
+    (candidate) => candidate.frontmatter.id === state.activeLessonId,
+  );
+  const completed = new Set(state.completedCheckpoints[state.activeLessonId] ?? []);
+  return (
+    (lesson?.frontmatter.checkpoints ?? []).find(
+      (checkpoint) => !completed.has(checkpoint.id),
+    )?.title ?? null
+  );
+}
+
+function activeCheckpointId(
+  course: RuntimeCourse,
+  state: GuidedCourseStateV1,
+): string | undefined {
+  const lesson = course.lessons.find(
+    (candidate) => candidate.frontmatter.id === state.activeLessonId,
+  );
+  const completed = new Set(state.completedCheckpoints[state.activeLessonId] ?? []);
+  return (lesson?.frontmatter.checkpoints ?? []).find(
+    (checkpoint) => !completed.has(checkpoint.id),
+  )?.id;
+}
+
+function CourseSessionPanel({
+  course,
+  currentLesson,
+  savedSession,
+  hasSavedProgress,
+  guidedState,
+  persistenceEnabled,
+  persistenceAvailable,
+  onResume,
+  onReset,
+}: {
+  course: RuntimeCourse;
+  currentLesson: RuntimeLesson;
+  savedSession: CourseSessionStateV1 | null;
+  hasSavedProgress: boolean;
+  guidedState: GuidedCourseStateV1;
+  persistenceEnabled: boolean;
+  persistenceAvailable: boolean;
+  onResume: () => void;
+  onReset: () => void;
+}) {
+  const [confirmReset, setConfirmReset] = useState(false);
+  const savedLessonId = course.frontmatter.guidance
+    ? guidedState.activeLessonId
+    : savedSession?.activeLessonId;
+  const savedLesson = course.lessons.find(
+    (lesson) => lesson.frontmatter.id === savedLessonId,
+  );
+  const checkpoint = course.frontmatter.guidance
+    ? savedCheckpointTitle(course, guidedState)
+    : null;
+  return (
+    <section className="course-session-panel" aria-labelledby="course-session-title">
+      <div>
+        <p className="eyebrow">Course session</p>
+        <h2 id="course-session-title">
+          {hasSavedProgress ? "Your progress is saved" : "Start here, return anytime"}
+        </h2>
+        <p>
+          {!persistenceEnabled
+            ? "This course does not save progress after the page closes."
+            : persistenceAvailable
+              ? savedLesson
+                ? `Saved at ${savedLesson.frontmatter.title}${checkpoint ? ` — ${checkpoint}` : ""}${savedSession ? ` on ${new Date(savedSession.updatedAt).toLocaleString()}` : ""}.`
+                : "Progress is saved locally as you work."
+              : "Browser storage is unavailable. Progress will last only for this open page."}
+        </p>
+      </div>
+      {savedLesson ? (
+        <button type="button" onClick={onResume}>
+          {savedLesson.frontmatter.id === currentLesson.frontmatter.id
+            ? "Resume this course here"
+            : "Resume saved progress"}
+        </button>
+      ) : null}
+      <details>
+        <summary>How to pause, resume, or change position</summary>
+        <ul>
+          <li>
+            <q>Pause this course</q> or <q>End this session</q> saves your place.
+          </li>
+          <li>
+            <q>Resume this course</q> returns to the saved lesson and checkpoint.
+          </li>
+          <li>
+            <q>Review lesson …</q> revisits earlier material without changing progress.
+          </li>
+          <li>
+            <q>Explore lesson …</q> looks ahead while preserving Guided progress.
+          </li>
+          <li>
+            <q>Restart from checkpoint …</q> rolls progress back after confirmation.
+          </li>
+          <li>
+            <q>Finish the course</q> means completing the final checkpoint.
+          </li>
+        </ul>
+        <p>
+          This works in the same browser profile, course version, and local address. If
+          you started from a terminal, press <kbd>Ctrl</kbd>+<kbd>C</kbd> after pausing.
+        </p>
+        {confirmReset ? (
+          <div className="mode-confirmation" role="alert">
+            <p>Reset all saved progress for this course?</p>
+            <button type="button" onClick={onReset}>
+              Reset course
+            </button>
+            <button type="button" onClick={() => setConfirmReset(false)}>
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button type="button" onClick={() => setConfirmReset(true)}>
+            Reset this course
+          </button>
+        )}
+      </details>
     </section>
   );
 }
@@ -310,7 +481,7 @@ function GuidedTools({
   routePrefix: string;
 }) {
   const [question, setQuestion] = useState("");
-  const [confirmation, setConfirmation] = useState<"explore" | "reset" | null>(null);
+  const [confirmation, setConfirmation] = useState<"explore" | null>(null);
   const guidance = course.frontmatter.guidance;
   if (!guidance) return null;
 
@@ -319,13 +490,6 @@ function GuidedTools({
     dispatch({ type: "park-question", question });
     setQuestion("");
   };
-  const reset = () => {
-    window.localStorage.removeItem(guidedStorageKey(course));
-    dispatch({ type: "reset", state: createGuidedState(course) });
-    window.location.hash = `/${routePrefix}${course.lessons[0]?.frontmatter.id ?? ""}`;
-    setConfirmation(null);
-  };
-
   return (
     <section className="guided-tools" aria-label="Course guidance">
       <p className="mode-label">
@@ -399,21 +563,6 @@ function GuidedTools({
         ) : null}
       </details>
 
-      {confirmation === "reset" ? (
-        <div className="mode-confirmation" role="alert">
-          <p>Reset all checkpoints, skips, and parked questions for this course?</p>
-          <button type="button" onClick={reset}>
-            Reset progress
-          </button>
-          <button type="button" onClick={() => setConfirmation(null)}>
-            Cancel
-          </button>
-        </div>
-      ) : (
-        <button type="button" onClick={() => setConfirmation("reset")}>
-          Reset local progress
-        </button>
-      )}
       <small>
         Progress stays in this browser profile. No account or server is used.
       </small>
@@ -435,20 +584,59 @@ function Lesson({
   onBack?: () => void;
 }) {
   const guidance = course.frontmatter.guidance;
-  const [state, dispatch] = useReducer(guidedCourseReducer, course, (currentCourse) =>
-    parseGuidedState(
-      currentCourse,
-      currentCourse.frontmatter.guidance?.persistLocally
-        ? window.localStorage.getItem(guidedStorageKey(currentCourse))
-        : null,
-    ),
+  const persistenceEnabled = guidance?.persistLocally ?? true;
+  const initialSessionRead = useMemo(
+    () =>
+      persistenceEnabled
+        ? readBrowserStorage(courseSessionStorageKey(course))
+        : { value: null, available: true },
+    [course, persistenceEnabled],
+  );
+  const initialGuidedRead = useMemo(
+    () =>
+      persistenceEnabled
+        ? readBrowserStorage(guidedStorageKey(course))
+        : { value: null, available: true },
+    [course, persistenceEnabled],
+  );
+  const initialSession = useMemo(
+    () => parseCourseSessionState(course, initialSessionRead.value),
+    [course, initialSessionRead.value],
+  );
+  const [startupSession, setStartupSession] = useState(initialSession);
+  const [hasSavedProgress, setHasSavedProgress] = useState(
+    Boolean(initialSessionRead.value || (guidance && initialGuidedRead.value)),
+  );
+  const [state, dispatch] = useReducer(
+    guidedCourseReducer,
+    initialGuidedRead.value,
+    (serialized) =>
+      parseGuidedState(course, guidance?.persistLocally ? serialized : null),
+  );
+  const [persistenceAvailable, setPersistenceAvailable] = useState(
+    initialSessionRead.available && initialGuidedRead.available,
   );
   const stateRef = useRef(state);
   stateRef.current = state;
+  const sessionRef = useRef<CourseSessionStateV1>(
+    initialSession ??
+      createCourseSessionState(
+        course,
+        guidance && initialGuidedRead.value ? state.activeLessonId : undefined,
+      ),
+  );
   const themeRef = useRef(theme);
   themeRef.current = theme;
   const sandboxControllers = useRef<SandboxController[]>([]);
-  const [requestedLessonId, navigate] = useHashLesson(course, routePrefix);
+  const preferredLessonId =
+    guidance && initialGuidedRead.value
+      ? state.activeLessonId
+      : initialSession?.activeLessonId;
+  const [requestedLessonId, navigate] = useHashLesson(
+    course,
+    routePrefix,
+    preferredLessonId,
+  );
   const [navigationNotice, setNavigationNotice] = useState<string | null>(null);
   const compactNavigation = useCompactNavigation();
   const compactContents = useRef<HTMLDetailsElement>(null);
@@ -458,7 +646,8 @@ function Lesson({
 
   useEffect(() => {
     if (!guidance?.persistLocally) return;
-    window.localStorage.setItem(guidedStorageKey(course), JSON.stringify(state));
+    if (!writeBrowserStorage(guidedStorageKey(course), JSON.stringify(state)))
+      setPersistenceAvailable(false);
   }, [course, guidance?.persistLocally, state]);
 
   useEffect(() => {
@@ -486,6 +675,29 @@ function Lesson({
       course.lessons[0]
     );
   }, [course, guidance, requestedLessonId, state]);
+
+  useEffect(() => {
+    if (!persistenceEnabled) return;
+    if (!lesson) return;
+    const session = createCourseSessionState(course, lesson.frontmatter.id);
+    sessionRef.current = session;
+    if (!writeBrowserStorage(courseSessionStorageKey(course), JSON.stringify(session)))
+      setPersistenceAvailable(false);
+  }, [course, lesson, persistenceEnabled]);
+
+  useEffect(() => {
+    const flush = () => {
+      if (!persistenceEnabled) return;
+      writeBrowserStorage(
+        courseSessionStorageKey(course),
+        JSON.stringify(sessionRef.current),
+      );
+      if (guidance?.persistLocally)
+        writeBrowserStorage(guidedStorageKey(course), JSON.stringify(stateRef.current));
+    };
+    window.addEventListener("pagehide", flush);
+    return () => window.removeEventListener("pagehide", flush);
+  }, [course, guidance?.persistLocally, persistenceEnabled]);
 
   useEffect(() => {
     if (!lesson) return;
@@ -595,6 +807,28 @@ function Lesson({
     navigate(next.frontmatter.id);
   };
 
+  const resetCourse = () => {
+    const resetState = createGuidedState(course);
+    const resetSession = createCourseSessionState(course);
+    const guidedRemoved = removeBrowserStorage(guidedStorageKey(course));
+    const sessionRemoved = removeBrowserStorage(courseSessionStorageKey(course));
+    setPersistenceAvailable(guidedRemoved && sessionRemoved);
+    setStartupSession(null);
+    setHasSavedProgress(false);
+    stateRef.current = resetState;
+    sessionRef.current = resetSession;
+    dispatch({ type: "reset", state: resetState });
+    navigate(course.lessons[0]?.frontmatter.id ?? "");
+  };
+
+  const resumeCourse = () => {
+    navigate(
+      guidance
+        ? state.activeLessonId
+        : (startupSession?.activeLessonId ?? course.lessons[0]?.frontmatter.id ?? ""),
+    );
+  };
+
   return (
     <div className="course-layout">
       <aside className="course-sidebar">
@@ -647,7 +881,26 @@ function Lesson({
           </div>
         </details>
       </aside>
-      <main id="lesson" className="lesson" tabIndex={-1}>
+      <main
+        id="lesson"
+        className="lesson"
+        tabIndex={-1}
+        data-explorables-course-id={course.frontmatter.id}
+        data-explorables-course-version={course.frontmatter.version}
+        data-explorables-mode={guidance ? state.mode : "unguided"}
+        data-explorables-guided-lesson-id={guidance ? state.activeLessonId : undefined}
+        data-explorables-visible-lesson-id={lesson.frontmatter.id}
+        data-explorables-checkpoint-id={
+          guidance ? activeCheckpointId(course, state) : undefined
+        }
+        data-explorables-persistence={
+          !persistenceEnabled
+            ? "disabled"
+            : persistenceAvailable
+              ? "available"
+              : "unavailable"
+        }
+      >
         {navigationNotice ? (
           <p className="navigation-notice" role="status">
             {navigationNotice}
@@ -659,8 +912,34 @@ function Lesson({
           </p>
           <h1>{lesson.frontmatter.title}</h1>
         </header>
+        <CourseSessionPanel
+          course={course}
+          currentLesson={lesson}
+          savedSession={startupSession}
+          hasSavedProgress={hasSavedProgress}
+          guidedState={state}
+          persistenceEnabled={persistenceEnabled}
+          persistenceAvailable={persistenceAvailable}
+          onResume={resumeCourse}
+          onReset={resetCourse}
+        />
         {guidance && state.mode === "guided" ? (
-          <CheckpointPanel lesson={lesson} state={state} dispatch={dispatch} />
+          <CheckpointPanel
+            lesson={lesson}
+            state={state}
+            dispatch={dispatch}
+            onRestart={(checkpointId) => {
+              const restarted = restartGuidedStateFrom(
+                course,
+                stateRef.current,
+                lesson.frontmatter.id,
+                checkpointId,
+              );
+              stateRef.current = restarted;
+              dispatch({ type: "reset", state: restarted });
+              navigate(lesson.frontmatter.id);
+            }}
+          />
         ) : null}
         <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />
         <nav className="lesson-pagination" aria-label="Lesson pagination">

@@ -160,3 +160,45 @@ export function isLessonUnlocked(
   );
   return requested >= 0 && requested <= Math.max(active, 0);
 }
+
+export function restartGuidedStateFrom(
+  course: RuntimeCourse,
+  state: GuidedCourseStateV1,
+  lessonId: string,
+  checkpointId: string,
+): GuidedCourseStateV1 {
+  const lessonIndex = course.lessons.findIndex(
+    (lesson) => lesson.frontmatter.id === lessonId,
+  );
+  const lesson = course.lessons[lessonIndex];
+  const checkpointIndex = (lesson?.frontmatter.checkpoints ?? []).findIndex(
+    (checkpoint) => checkpoint.id === checkpointId,
+  );
+  if (!lesson || lessonIndex < 0 || checkpointIndex < 0) return state;
+
+  const earlierLessonIds = new Set(
+    course.lessons.slice(0, lessonIndex).map((item) => item.frontmatter.id),
+  );
+  const priorCheckpointIds = new Set(
+    (lesson.frontmatter.checkpoints ?? [])
+      .slice(0, checkpointIndex)
+      .map((checkpoint) => checkpoint.id),
+  );
+  const completedCheckpoints = Object.fromEntries(
+    Object.entries(state.completedCheckpoints).flatMap(([completedLessonId, ids]) => {
+      if (earlierLessonIds.has(completedLessonId)) return [[completedLessonId, ids]];
+      if (completedLessonId !== lessonId) return [];
+      const retained = ids.filter((id) => priorCheckpointIds.has(id));
+      return retained.length > 0 ? [[completedLessonId, retained]] : [];
+    }),
+  );
+
+  return {
+    ...state,
+    mode: "guided",
+    activeLessonId: lessonId,
+    completedCheckpoints,
+    skippedLessons: state.skippedLessons.filter((id) => earlierLessonIds.has(id)),
+    updatedAt: now(),
+  };
+}
