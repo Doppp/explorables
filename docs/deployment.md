@@ -6,35 +6,24 @@
 - SSH remote: `git@github.com:Doppp/explorables.git`
 - Default/deployment branch: `master`
 
-The repository already existed with one licence commit. The specification was
-attached without rewriting that history. Never force-push or create a `main`
-deployment branch.
+The repository already existed with one licence commit. The specification was attached without rewriting that history. Never force-push or create a `main` deployment branch.
 
 ## GitHub Pages
 
-`.github/workflows/pages.yml` installs the default pinned Node 24 and pnpm 11
-versions from the lockfile, validates and tests the repository, builds
-`apps/site`, uploads its static output, and deploys through the `github-pages`
-environment. It runs on pushes to `master` and manual dispatch. A separate
-compatibility workflow verifies the same frozen lockfile under the supported
-Node.js 22/pnpm 10 and Node.js 24/pnpm 11 boundaries.
+`.github/workflows/pages.yml` installs the default pinned Node 24 and pnpm 11 versions from the lockfile, validates and tests the repository, builds `apps/site`, uploads its static output, and deploys through the `github-pages` environment. It runs on pushes to `master` and manual dispatch. A separate compatibility workflow verifies the same frozen lockfile under the supported Node.js 22/pnpm 10 and Node.js 24/pnpm 11 boundaries.
 
-Repository Pages settings must use GitHub Actions as the build type. The REST
-equivalent after the workflow exists is:
+Repository Pages settings must use GitHub Actions as the build type. The REST equivalent after the workflow exists is:
 
 ```bash
 gh api --method POST repos/Doppp/explorables/pages \
   -f build_type=workflow
 ```
 
-If Pages already exists with a different source, use `PUT` instead. The
-implementation run records the actual API result in
-`docs/implementation-status.md`.
+If Pages already exists with a different source, use `PUT` instead. The implementation run records the actual API result in `docs/implementation-status.md`.
 
 ## Custom domain
 
-The static artifact includes `CNAME` containing `explorables.ai`, and the Pages
-API/settings must separately set the same domain:
+The static artifact includes `CNAME` containing `explorables.ai`, and the Pages API/settings must separately set the same domain:
 
 ```bash
 gh api --method PUT repos/Doppp/explorables/pages \
@@ -42,13 +31,11 @@ gh api --method PUT repos/Doppp/explorables/pages \
   -F https_enforced=true
 ```
 
-HTTPS enforcement can succeed only after GitHub has issued the certificate and
-DNS is valid.
+HTTPS enforcement can succeed only after GitHub has issued the certificate and DNS is valid.
 
 ## External DNS records
 
-At the authoritative DNS provider for `explorables.ai`, configure the apex with
-all four current GitHub Pages IPv4 records:
+At the authoritative DNS provider for `explorables.ai`, configure the apex with all four current GitHub Pages IPv4 records:
 
 ```text
 @  A  185.199.108.153
@@ -72,8 +59,7 @@ For the recommended `www` redirect, add:
 www  CNAME  Doppp.github.io.
 ```
 
-Do not add wildcard records. Domain ownership should also be verified under the
-GitHub account or organisation to reduce takeover risk.
+Do not add wildcard records. Domain ownership should also be verified under the GitHub account or organisation to reduce takeover risk.
 
 Verify propagation with:
 
@@ -83,8 +69,7 @@ dig explorables.ai AAAA +noall +answer
 dig www.explorables.ai CNAME +noall +answer
 ```
 
-DNS may take up to 24 hours to propagate. After it resolves, re-enable HTTPS in
-Pages settings if certificate issuance did not complete automatically.
+DNS may take up to 24 hours to propagate. After it resolves, re-enable HTTPS in Pages settings if certificate issuance did not complete automatically.
 
 ## References
 

@@ -36,8 +36,7 @@ checkpoints:
 > **Predict:** What will the output be when the input is 4?
 
 :::explorable{src="../explorables/hello/index.ts" id="doubling-explorer" title="Doubling explorer" height="300"}
-Choose an input, observe the output, and save at least two runs to infer the
-relationship.
+Choose an input, observe the output, and save at least two runs to infer the relationship.
 :::
 
 :::exercise{path="../exercises/double" command="pnpm test" title="Implement double"}

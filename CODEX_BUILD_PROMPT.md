@@ -110,8 +110,7 @@ Follow these unless the PRD explicitly says otherwise:
 - Codex reads `AGENTS.md` directly.
 - Claude Code Desktop uses `CLAUDE.md` plus `.claude/launch.json`.
 - `CLAUDE.md` must remain a thin adapter to the canonical policy.
-- Every course root is an Agent Plugins v1 package with `plugin.json` and a
-  portable `skills/start-course/SKILL.md` Agent Skill.
+- Every course root is an Agent Plugins v1 package with `plugin.json` and a portable `skills/start-course/SKILL.md` Agent Skill.
 - Portable skills remain thin adapters to the canonical `AGENTS.md` policy.
 - Community explorable code must not execute in the main course document context.
 - Explorables must run in sandboxed iframes with a restrictive content security policy and no network access by default.
@@ -216,9 +215,7 @@ The root repository should also expose convenient pnpm commands for development,
 
 ### Portability
 
-The course format, runtime, lessons, explorables, and exercises must remain independent of either host.
-Agent Plugins v1 is the portable packaging layer; do not encode the course as a
-client-specific plugin manifest.
+The course format, runtime, lessons, explorables, and exercises must remain independent of either host. Agent Plugins v1 is the portable packaging layer; do not encode the course as a client-specific plugin manifest.
 
 ## Required landing page
 

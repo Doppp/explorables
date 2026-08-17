@@ -117,16 +117,9 @@ A text alternative describing the explorable.
 
 ## 3.4 Portable Agent Plugin packaging with thin host adapters
 
-Every distributable `explorables` course conforms to Agent Plugins v1. The
-course root contains `plugin.json`, and `skills/start-course/SKILL.md` provides
-the portable entry workflow using the Agent Skills format. Agent Plugins is a
-packaging and discovery layer; it does not replace `COURSE.md`, the runtime, or
-the explorable sandbox.
+Every distributable `explorables` course conforms to Agent Plugins v1. The course root contains `plugin.json`, and `skills/start-course/SKILL.md` provides the portable entry workflow using the Agent Skills format. Agent Plugins is a packaging and discovery layer; it does not replace `COURSE.md`, the runtime, or the explorable sandbox.
 
-`explorables` keeps the canonical teaching policy in `AGENTS.md`. The portable
-skill reads and follows that policy rather than duplicating it. Codex can still
-read `AGENTS.md` directly. Claude Code Desktop reads the thin `CLAUDE.md`
-adapter and may also discover the portable skill when its plugin support allows.
+`explorables` keeps the canonical teaching policy in `AGENTS.md`. The portable skill reads and follows that policy rather than duplicating it. Codex can still read `AGENTS.md` directly. Claude Code Desktop reads the thin `CLAUDE.md` adapter and may also discover the portable skill when its plugin support allows.
 
 The canonical instructions define:
 
@@ -137,9 +130,7 @@ The canonical instructions define:
 - Which assignments it must not solve for the learner
 - How to run tests
 
-The plugin manifest and portable skill are required distribution adapters for
-first-party and newly scaffolded courses. Client-specific extensions remain
-optional and must not fork course content or teaching policy.
+The plugin manifest and portable skill are required distribution adapters for first-party and newly scaffolded courses. Client-specific extensions remain optional and must not fork course content or teaching policy.
 
 ## 3.5 No backend is required
 
@@ -196,21 +187,11 @@ The course format must not require private Codex or Claude APIs.
 
 ## 3.8 Optional local course collections
 
-A repository may contain `explorables.library.json` to present an ordered local
-learning path across multiple self-contained course packages. The manifest is
-an explicit allowlist of relative course roots; it is not a hosted catalogue,
-filesystem scan, marketplace, or remote installer.
+A repository may contain `explorables.library.json` to present an ordered local learning path across multiple self-contained course packages. The manifest is an explicit allowlist of relative course roots; it is not a hosted catalogue, filesystem scan, marketplace, or remote installer.
 
-The collection interface may also show clearly labelled planned courses so the
-curriculum path is visible. Planned entries cannot be opened. Every available
-course remains independently valid and runnable with its own `COURSE.md`, Agent
-Plugin manifest, portable skill, host adapters, exercises, and version.
+The collection interface may also show clearly labelled planned courses so the curriculum path is visible. Planned entries cannot be opened. Every available course remains independently valid and runnable with its own `COURSE.md`, Agent Plugin manifest, portable skill, host adapters, exercises, and version.
 
-The model-learning collection is structured as a vendor-neutral foundation, a
-shared frontier-research course, and separately versioned model-family case
-studies. Foundation lessons may include brief real-model connections in
-ordinary Markdown; release-specific reconstruction belongs in the appropriate
-case-study course.
+The model-learning collection is structured as a vendor-neutral foundation, a shared frontier-research course, and separately versioned model-family case studies. Foundation lessons may include brief real-model connections in ordinary Markdown; release-specific reconstruction belongs in the appropriate case-study course.
 
 ---
 
@@ -312,10 +293,7 @@ They open the folder in Codex or Claude Code Desktop and type:
 
 > Start the course.
 
-A conforming Agent Plugins client discovers `plugin.json` and the portable
-`start-course` skill. Codex can also read `AGENTS.md` directly, while Claude
-Code Desktop uses `CLAUDE.md`. The host runs the documented start command and
-opens the local course URL in its built-in browser or preview pane.
+A conforming Agent Plugins client discovers `plugin.json` and the portable `start-course` skill. Codex can also read `AGENTS.md` directly, while Claude Code Desktop uses `CLAUDE.md`. The host runs the documented start command and opens the local course URL in its built-in browser or preview pane.
 
 A direct terminal path also exists:
 
@@ -359,29 +337,18 @@ These stages are pedagogical guidance, not mandatory runtime primitives. Most ca
 
 ## 6.4 Course sessions and learner language
 
-Every course start surface must explain how to leave and return without relying
-on a learner to know host-specific commands. The runtime and host adapters use
-these meanings consistently:
+Every course start surface must explain how to leave and return without relying on a learner to know host-specific commands. The runtime and host adapters use these meanings consistently:
 
-- **Start this course** starts at the beginning when no saved progress exists
-  and otherwise offers to resume it.
-- **Resume this course** opens the saved lesson and, for a guided course, its
-  first incomplete checkpoint.
-- **Pause this course** or **End this session** preserves progress and lets the
-  host stop the local course process. Direct-terminal learners use `Ctrl+C`.
-- **Review lesson _name_** revisits an unlocked lesson without changing guided
-  completion.
-- **Restart from checkpoint _name_** requires confirmation and clears that
-  checkpoint and all later guided progress.
-- **Explore lesson _name_** uses Explore mode without moving the saved Guided
-  position.
+- **Start this course** starts at the beginning when no saved progress exists and otherwise offers to resume it.
+- **Resume this course** opens the saved lesson and, for a guided course, its first incomplete checkpoint.
+- **Pause this course** or **End this session** preserves progress and lets the host stop the local course process. Direct-terminal learners use `Ctrl+C`.
+- **Review lesson _name_** revisits an unlocked lesson without changing guided completion.
+- **Restart from checkpoint _name_** requires confirmation and clears that checkpoint and all later guided progress.
+- **Explore lesson _name_** uses Explore mode without moving the saved Guided position.
 - **Reset this course** requires confirmation and clears all local progress.
-- **Finish the course** means completing the final required checkpoint; it is
-  not a synonym for pausing or resetting.
+- **Finish the course** means completing the final required checkpoint; it is not a synonym for pausing or resetting.
 
-If a learner says the ambiguous phrase **End the course**, the host asks whether
-they mean pause the current session or reset progress. It must not erase state
-or claim completion by inference.
+If a learner says the ambiguous phrase **End the course**, the host asks whether they mean pause the current session or reset progress. It must not erase state or claim completion by inference.
 
 ---
 
@@ -680,10 +647,7 @@ skills/
         └── SKILL.md
 ```
 
-This Agent Skills component is discovered from the fixed Agent Plugins v1
-location. It resolves the plugin root, reads `AGENTS.md` and `COURSE.md`, starts
-the runtime, and applies the canonical policy. It must remain concise and must
-not duplicate lesson content or protected solutions.
+This Agent Skills component is discovered from the fixed Agent Plugins v1 location. It resolves the plugin root, reads `AGENTS.md` and `COURSE.md`, starts the runtime, and applies the canonical policy. It must remain concise and must not duplicate lesson content or protected solutions.
 
 ## 8.6 `COURSE.md`
 
@@ -1060,8 +1024,7 @@ Explorable dependencies are bundled before loading into the iframe. Runtime impo
 
 ## 11.4 Dependency security
 
-The reference implementation defaults to pnpm 11 with a committed lockfile and
-maintains backward compatibility with pnpm 10.26.0 and newer 10.x releases.
+The reference implementation defaults to pnpm 11 with a committed lockfile and maintains backward compatibility with pnpm 10.26.0 and newer 10.x releases.
 
 Course dependencies must:
 
@@ -1215,19 +1178,11 @@ It does not teach the subject itself. The course content and Codex instructions 
 
 ## 13.3 Guided mode and local state
 
-Courses may opt into Guided Course Mode in `COURSE.md`. A guided lesson declares
-ordered checkpoints completed either by an explicit learner acknowledgment or
-by a named event from a named explorable instance. The runtime does not
-auto-run exercises and does not claim to verify a learner's conversation,
-understanding, or test result.
+Courses may opt into Guided Course Mode in `COURSE.md`. A guided lesson declares ordered checkpoints completed either by an explicit learner acknowledgment or by a named event from a named explorable instance. The runtime does not auto-run exercises and does not claim to verify a learner's conversation, understanding, or test result.
 
-Guided mode keeps future lessons visible but locked until the active lesson is
-completed or explicitly skipped. When enabled by the course, the learner may
-enter Explore mode after a clear confirmation and access lessons freely.
-Returning to Guided mode restores the prior guided position.
+Guided mode keeps future lessons visible but locked until the active lesson is completed or explicitly skipped. When enabled by the course, the learner may enter Explore mode after a clear confirmation and access lessons freely. Returning to Guided mode restores the prior guided position.
 
-Optional resume state is stored in the main document's browser `localStorage`,
-never inside an explorable iframe. It is:
+Optional resume state is stored in the main document's browser `localStorage`, never inside an explorable iframe. It is:
 
 - Opt-in per course
 - Namespaced by course ID, course version, schema version, and browser profile
@@ -1235,39 +1190,17 @@ never inside an explorable iframe. It is:
 - Non-essential to course completion
 - Free of accounts, analytics, remote synchronization, and server-side state
 
-All courses may remember the last visited lesson. Guided courses additionally
-remember checkpoint completion, skips, Guided/Explore mode, and parked
-questions. On startup the runtime presents a course-session screen that shows
-whether progress exists, the saved lesson/checkpoint, the last-saved time, and
-the standard learner phrases for pausing, resuming, reviewing, exploring,
-restarting, and resetting.
+All courses may remember the last visited lesson. Guided courses additionally remember checkpoint completion, skips, Guided/Explore mode, and parked questions. On startup the runtime presents a course-session screen that shows whether progress exists, the saved lesson/checkpoint, the last-saved time, and the standard learner phrases for pausing, resuming, reviewing, exploring, restarting, and resetting.
 
-Resume is guaranteed only for the same course version, browser profile, and web
-origin. The local development command therefore uses a stable strict port by
-default and reports a conflict instead of silently moving the course to a new
-origin. A different browser profile, device, explicit port, cleared site data,
-or course version has a separate progress record. The runtime must state these
-limits and warn visibly when browser persistence is unavailable.
+Resume is guaranteed only for the same course version, browser profile, and web origin. The local development command therefore uses a stable strict port by default and reports a conflict instead of silently moving the course to a new origin. A different browser profile, device, explicit port, cleared site data, or course version has a separate progress record. The runtime must state these limits and warn visibly when browser persistence is unavailable.
 
-The local state may contain checkpoint IDs, skips, the active lesson, mode, a
-learner-authored question parking lot, bounded prediction/reflection responses,
-and bounded experiment records. It must not contain exercise solutions or
-hidden assessment data. Learner-authored work remains local, resettable, and
-ungraded.
+The local state may contain checkpoint IDs, skips, the active lesson, mode, a learner-authored question parking lot, bounded prediction/reflection responses, and bounded experiment records. It must not contain exercise solutions or hidden assessment data. Learner-authored work remains local, resettable, and ungraded.
 
 ## 13.4 Optional discovery cycles
 
-A course or individual lesson may opt into a discovery cycle. Discovery lessons
-declare ordered prediction, experiment, application, and reflection checkpoint
-phases. Prediction and reflection may capture a bounded local text response. An
-experiment completes only after a meaningful interaction emits a structured
-experiment record; initial render never completes it.
+A course or individual lesson may opt into a discovery cycle. Discovery lessons declare ordered prediction, experiment, application, and reflection checkpoint phases. Prediction and reflection may capture a bounded local text response. An experiment completes only after a meaningful interaction emits a structured experiment record; initial render never completes it.
 
-The runtime may show saved runs and compare a selected baseline with the latest
-evidence. Experiment payloads contain bounded scalar input/output fields. The
-main runtime validates and stores them; explorable iframes receive no browser
-storage access. These learning artifacts support reflection but are not proof of
-understanding, assessment results, analytics, or remote submissions.
+The runtime may show saved runs and compare a selected baseline with the latest evidence. Experiment payloads contain bounded scalar input/output fields. The main runtime validates and stores them; explorable iframes receive no browser storage access. These learning artifacts support reflection but are not proof of understanding, assessment results, analytics, or remote submissions.
 
 ---
 
@@ -1334,10 +1267,7 @@ The project should not depend on custom TypeScript language-service plugins in v
 
 ## 14.4 Node.js policy
 
-Use Node.js 24 LTS as the default for production and deployment CI. Also test
-and support Node.js 22 from 22.22.2 onward while that release line remains LTS.
-The lower bound follows the strictest dependency in the committed lockfile;
-older Node.js 22 releases are not supported.
+Use Node.js 24 LTS as the default for production and deployment CI. Also test and support Node.js 22 from 22.22.2 onward while that release line remains LTS. The lower bound follows the strictest dependency in the committed lockfile; older Node.js 22 releases are not supported.
 
 A `.node-version` file should pin the supported major version:
 
@@ -1347,9 +1277,7 @@ A `.node-version` file should pin the supported major version:
 
 ## 14.5 Package manager policy
 
-Use pnpm 11 by default and keep the committed lockfile installable with pnpm
-10.26.0 and newer 10.x releases. The pnpm 10 lower bound is the first release
-with the workspace's `allowBuilds` setting. Both supported majors provide:
+Use pnpm 11 by default and keep the committed lockfile installable with pnpm 10.26.0 and newer 10.x releases. The pnpm 10 lower bound is the first release with the workspace's `allowBuilds` setting. Both supported majors provide:
 
 - Strong workspace support
 - Reproducible lockfiles
@@ -1503,9 +1431,7 @@ It defines:
 - Protected solution paths
 - Test instructions
 
-Every course also includes a root Agent Plugins v1 `plugin.json` and a portable
-`skills/start-course/SKILL.md`. The skill delegates teaching policy to
-`AGENTS.md`; the manifest supplies portable identity and discovery metadata.
+Every course also includes a root Agent Plugins v1 `plugin.json` and a portable `skills/start-course/SKILL.md`. The skill delegates teaching policy to `AGENTS.md`; the manifest supplies portable identity and discovery metadata.
 
 ## 16.2 Codex adapter
 
@@ -1521,8 +1447,7 @@ When asked to start the course, Codex should:
 6. Ask the learner to interact with the page rather than summarising the entire course.
 7. Move into exercise files only when referenced by the current lesson.
 
-Codex may activate the portable `start-course` skill or use `AGENTS.md`
-directly. Both paths must produce the same course behavior.
+Codex may activate the portable `start-course` skill or use `AGENTS.md` directly. Both paths must produce the same course behavior.
 
 ## 16.3 Claude Code Desktop adapter
 
@@ -1544,9 +1469,7 @@ When asked to start the course, Claude Code Desktop should:
 5. Use file and terminal panes for exercises.
 6. Apply the same tutoring restrictions as Codex.
 
-Claude may activate the same portable `skills/start-course/SKILL.md` when its
-Agent Plugins integration supports it; `.claude/launch.json` remains a thin
-preview adapter.
+Claude may activate the same portable `skills/start-course/SKILL.md` when its Agent Plugins integration supports it; `.claude/launch.json` remains a thin preview adapter.
 
 ## 16.4 Host-neutral continuation
 
@@ -1559,11 +1482,7 @@ When the learner says “continue”, the host should infer the current location
 
 No remote progress record is needed.
 
-The host must also honor the course-session language in section 6.4. Pausing
-flushes local browser progress before the host stops the local process. Reviewing
-does not roll progress back. Restarting from a checkpoint and resetting the
-course require explicit confirmation. Host conversation history may supplement
-the runtime state but is never the authoritative progress record.
+The host must also honor the course-session language in section 6.4. Pausing flushes local browser progress before the host stops the local process. Reviewing does not roll progress back. Restarting from a checkpoint and resetting the course require explicit confirmation. Host conversation history may supplement the runtime state but is never the authoritative progress record.
 
 ## 16.5 Adapter principle
 
@@ -1920,8 +1839,7 @@ The lesson references the directory, not individual files.
 
 ## 18.8 Configure coding-agent tutoring
 
-Edit the canonical `AGENTS.md`, then keep `skills/start-course/SKILL.md` and
-`CLAUDE.md` as thin adapters.
+Edit the canonical `AGENTS.md`, then keep `skills/start-course/SKILL.md` and `CLAUDE.md` as thin adapters.
 
 Specify:
 
@@ -2068,9 +1986,7 @@ For lessons using the discovery profile:
 - connect the observed invariant to an implementation or learner-authored test;
 - finish with evidence-based reflection and a failure mode.
 
-Automated validation checks the declared cycle and event contract. Course review
-and learner playtesting determine whether the interaction genuinely supports
-discovery.
+Automated validation checks the declared cycle and event contract. Course review and learner playtesting determine whether the interaction genuinely supports discovery.
 
 ---
 
@@ -2724,57 +2640,41 @@ The first course, *AI from First Principles*, takes software developers from bas
 
 These references informed the platform choices current as of July 2026:
 
-- TypeScript 7.0 announcement:  
-  https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/
+- TypeScript 7.0 announcement: https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/
 
-- Node.js release status:  
-  https://nodejs.org/en/about/previous-releases
+- Node.js release status: https://nodejs.org/en/about/previous-releases
 
-- pnpm 11 release:  
-  https://pnpm.io/blog/releases/11.0
+- pnpm 11 release: https://pnpm.io/blog/releases/11.0
 
-- Codex built-in browser:  
-  https://learn.chatgpt.com/docs/browser?surface=app
+- Codex built-in browser: https://learn.chatgpt.com/docs/browser?surface=app
 
-- Codex `AGENTS.md` instructions:  
-  https://learn.chatgpt.com/docs/agent-configuration/agents-md
+- Codex `AGENTS.md` instructions: https://learn.chatgpt.com/docs/agent-configuration/agents-md
 
-- Codex skills:  
-  https://learn.chatgpt.com/docs/build-skills
+- Codex skills: https://learn.chatgpt.com/docs/build-skills
 
-- Codex plugins:  
-  https://learn.chatgpt.com/docs/plugins
+- Codex plugins: https://learn.chatgpt.com/docs/plugins
 
-- Agent Plugins v1 specification:
-  https://agent-plugins.org/specification
+- Agent Plugins v1 specification: https://agent-plugins.org/specification
 
-- Agent Skills specification:
-  https://agentskills.io/specification
+- Agent Skills specification: https://agentskills.io/specification
 
-- Claude Code overview and Desktop setup:  
+- Claude Code overview and Desktop setup:
   https://docs.anthropic.com/en/docs/claude-code/overview  
   https://docs.anthropic.com/en/docs/claude-code/setup
 
-- Claude Code memory and `CLAUDE.md`:  
-  https://docs.anthropic.com/en/docs/claude-code/memory
+- Claude Code memory and `CLAUDE.md`: https://docs.anthropic.com/en/docs/claude-code/memory
 
-- Claude Code skills:  
-  https://docs.anthropic.com/en/docs/claude-code/skills
+- Claude Code skills: https://docs.anthropic.com/en/docs/claude-code/skills
 
 
 ## Additional GitHub references
 
-- GitHub Pages overview:  
-  https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
+- GitHub Pages overview: https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
 
-- Custom GitHub Pages workflows:  
-  https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+- Custom GitHub Pages workflows: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
 
-- Configuring a custom domain:  
-  https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site
+- Configuring a custom domain: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site
 
-- GitHub CLI repository creation:  
-  https://docs.github.com/en/github-cli/github-cli/quickstart
+- GitHub CLI repository creation: https://docs.github.com/en/github-cli/github-cli/quickstart
 
-- Changing the default branch:  
-  https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch
+- Changing the default branch: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch

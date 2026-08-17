@@ -1,13 +1,10 @@
 # Open frontier course-family candidate source register
 
-Status: candidate sources for planning
-Checked: 17 August 2026
+Status: candidate sources for planning Checked: 17 August 2026
 
 ## How to use this register
 
-This is not yet the immutable release manifest. It identifies suitable primary
-artifacts for curriculum design. Before a lesson enters implementation, its
-source row must be expanded with:
+This is not yet the immutable release manifest. It identifies suitable primary artifacts for curriculum design. Before a lesson enters implementation, its source row must be expanded with:
 
 - exact paper and report revision;
 - immutable repository commit;
@@ -17,13 +14,9 @@ source row must be expanded with:
 - evaluation protocol and required hardware;
 - claim labels used by the lesson.
 
-The commit recorded below is the official repository head observed during
-planning. It is evidence of what was reviewed, not a promise to track that
-branch.
+The commit recorded below is the official repository head observed during planning. It is evidence of what was reviewed, not a promise to track that branch.
 
-This register feeds several independent courses. It does not make a source
-eligible everywhere: each course must copy its selected rows into an immutable
-course-local manifest and complete the selection gates before implementation.
+This register feeds several independent courses. It does not make a source eligible everywhere: each course must copy its selected rows into an immutable course-local manifest and complete the selection gates before implementation.
 
 ## Candidate artifacts
 
@@ -53,39 +46,21 @@ course-local manifest and complete the selection gates before implementation.
 
 ## 17 August 2026 release refresh
 
-The first DeepSeek course now ends at V4 rather than V3/R1. V3 and R1 remain
-necessary lineage sources: V4 changes the attention and residual architecture
-while building on sparse-expert and reasoning work that those releases
-document. The course must compare Pro and Flash as two sizes in one V4 family,
-not treat their benchmark difference as a controlled architecture ablation.
+The first DeepSeek course now ends at V4 rather than V3/R1. V3 and R1 remain necessary lineage sources: V4 changes the attention and residual architecture while building on sparse-expert and reasoning work that those releases document. The course must compare Pro and Flash as two sizes in one V4 family, not treat their benchmark difference as a controlled architecture ablation.
 
-The first GLM course now ends at GLM 5.2 rather than GLM 4.5. GLM 5 supplies
-the available architecture and post-training report; GLM 5.2 supplies the
-current configuration, weights, IndexShare deployment pattern, MTP changes,
-and long-horizon evaluation claims. Z.ai links the name `IndexShare` to the
-paper titled *IndexCache: Accelerating Sparse Attention via Cross-Layer Index
-Reuse*. Course prose must preserve both names and their scopes rather than
-silently treating them as independently documented mechanisms.
+The first GLM course now ends at GLM 5.2 rather than GLM 4.5. GLM 5 supplies the available architecture and post-training report; GLM 5.2 supplies the current configuration, weights, IndexShare deployment pattern, MTP changes, and long-horizon evaluation claims. Z.ai links the name `IndexShare` to the paper titled *IndexCache: Accelerating Sparse Attention via Cross-Layer Index Reuse*. Course prose must preserve both names and their scopes rather than silently treating them as independently documented mechanisms.
 
-These are candidate-source updates, not immutable course-local manifests. The
-reviewed commits make the planning decision auditable, but each course still
-must complete its source-freeze and licence gates before technical lessons are
-implemented.
+These are candidate-source updates, not immutable course-local manifests. The reviewed commits make the planning decision auditable, but each course still must complete its source-freeze and licence gates before technical lessons are implemented.
 
 ## Selection gates
 
 A model becomes a course case study only when:
 
 1. its public artifact demonstrates a distinct, teachable mechanism;
-2. an official technical report, repository, or model card documents the
-   mechanism;
+2. an official technical report, repository, or model card documents the mechanism;
 3. a small deterministic implementation can expose a meaningful trade-off;
-4. the course can state the simplification without implying full-model
-   reproduction;
-5. code, prose, figures, and weights used by the course have compatible
-   licences;
+4. the course can state the simplification without implying full-model reproduction;
+5. code, prose, figures, and weights used by the course have compatible licences;
 6. the lesson remains useful after the named model is no longer current.
 
-Very recent model releases should not replace a stable source merely because
-they report a higher benchmark score. They enter only when they add a mechanism
-that improves the educational comparison.
+Very recent model releases should not replace a stable source merely because they report a higher benchmark score. They enter only when they add a mechanism that improves the educational comparison.

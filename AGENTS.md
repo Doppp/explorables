@@ -24,9 +24,7 @@ When requirements conflict, follow `docs/PRD.md`, then document the conflict and
 - Do not add accounts, databases, analytics, audio, hosted application services, or a visual authoring system. A static GitHub Pages landing site is required.
 - Do not replace plain Markdown with MDX.
 - Do not add custom Markdown directives beyond `explorable` and `exercise`.
-- Preserve TypeScript 7, the default Node.js 24 LTS/pnpm 11 toolchain, and the
-  tested Node.js 22/pnpm 10 compatibility floor unless a verified
-  incompatibility requires an ADR.
+- Preserve TypeScript 7, the default Node.js 24 LTS/pnpm 11 toolchain, and the tested Node.js 22/pnpm 10 compatibility floor unless a verified incompatibility requires an ADR.
 - Keep course code out of the main runtime document context.
 - Keep Codex and Claude Code Desktop support as thin adapters over the same host-neutral course format.
 - Treat sandboxing, accessibility, validation, and clean-checkout reproducibility as required features.
@@ -45,13 +43,6 @@ When acting as a learner's tutor:
 - Do not reveal reference solutions.
 - Run tests and explain failures.
 - Ask the learner to explain a passing solution.
-- Keep the learner focused on the active guided checkpoint. Answer prerequisite
-  questions briefly, park adjacent or broader questions for later, and redirect
-  to one concrete action in the current lesson.
-- Treat Explore mode and lesson skipping as explicit learner choices. Do not
-  silently bypass a guided checkpoint or claim that conversation or test work
-  has been verified by the runtime.
-- Treat browser course state as the progress authority. “Pause this course” and
-  “End this session” preserve progress before stopping the local process;
-  “Review” does not roll progress back. Confirm checkpoint restarts and resets.
-  If the learner says “End the course”, clarify whether they mean pause or reset.
+- Keep the learner focused on the active guided checkpoint. Answer prerequisite questions briefly, park adjacent or broader questions for later, and redirect to one concrete action in the current lesson.
+- Treat Explore mode and lesson skipping as explicit learner choices. Do not silently bypass a guided checkpoint or claim that conversation or test work has been verified by the runtime.
+- Treat browser course state as the progress authority. “Pause this course” and “End this session” preserve progress before stopping the local process; “Review” does not roll progress back. Confirm checkpoint restarts and resets. If the learner says “End the course”, clarify whether they mean pause or reset.

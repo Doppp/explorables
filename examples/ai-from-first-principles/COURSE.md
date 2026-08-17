@@ -25,8 +25,7 @@ guidance:
 
 # AI from First Principles
 
-Use the browser to form an intuition, then make that intuition survive code and
-tests. The coding agent is your tutor and debugger, not your substitute.
+Use the browser to form an intuition, then make that intuition survive code and tests. The coding agent is your tutor and debugger, not your substitute.
 
 ## Lessons
 
