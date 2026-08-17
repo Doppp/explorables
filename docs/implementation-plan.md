@@ -197,3 +197,24 @@ Exit check: pause and restart the local course across a server restart, resume
 the exact guided checkpoint and an unguided lesson, verify review/rollback and
 storage-failure behavior, then pass the full check, build, course, browser, and
 site suites.
+
+## Milestone 11 — discovery learning records
+
+Deliverables:
+
+- Optional course- or lesson-level discovery cycles with ordered prediction,
+  experiment, application, and reflection phases.
+- Browser-local prediction/reflection responses and version-1 guided-state
+  migration without accounts, grading, analytics, or cross-device state.
+- A bounded `recordExperiment` SDK contract, parent-owned evidence journal,
+  selectable baselines, and accessible run comparison without weakening the
+  iframe boundary.
+- Discovery-first pilots for gradient descent, self-attention, and evaluation
+  leakage, plus a discovery-ready generated-course template.
+- Authoring rubric, validator coverage, security/state tests, and a human
+  playtest protocol before wider lesson rollout.
+
+Exit check: complete all four phases in each pilot, reload and compare saved
+evidence, restart before the experiment and verify later work is removed, reject
+malformed records, validate a scaffolded discovery course, and pass the full
+check/build/browser/accessibility suite.

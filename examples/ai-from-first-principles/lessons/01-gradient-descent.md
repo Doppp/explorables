@@ -2,11 +2,24 @@
 id: gradient-descent
 title: Gradient descent
 order: 1
+discoveryCycle: true
 checkpoints:
-  - { id: predict, title: "Record your prediction", completion: learner }
-  - { id: experiment, title: "Run the gradient-step experiment", completion: explorable-event, instanceId: gradient-stepper, event: simulation-completed }
-  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
-  - { id: explain, title: "Explain the result and one failure mode", completion: learner }
+  - id: predict
+    title: "Record your prediction"
+    phase: predict
+    completion: learner
+    response:
+      format: short-text
+      prompt: "Will a rate of 1.1 converge, oscillate, or diverge—and why?"
+  - { id: experiment, title: "Run and save the gradient-step experiment", phase: experiment, completion: explorable-event, instanceId: gradient-stepper, event: experiment-recorded }
+  - { id: implement, title: "Attempt the exercise and run its tests", phase: apply, completion: learner }
+  - id: explain
+    title: "Explain the result and one failure mode"
+    phase: reflect
+    completion: learner
+    response:
+      format: long-text
+      prompt: "What evidence confirmed or changed your model, and where does it fail?"
 objectives:
   - interpret a gradient as local slope
   - predict how learning rate changes convergence
@@ -21,10 +34,9 @@ We want the parameter θ to reach the minimum of `L(θ) = (θ − 3)²`.
 > oscillate, or diverge? Write down your reason before taking a step.
 
 :::explorable{src="../explorables/gradient-descent/index.ts" title="Gradient descent loss curve and stepper" height="470" id="gradient-stepper"}
-The curve is a bowl with its minimum at θ = 3. Each step subtracts the learning
-rate times the gradient. Rates below 1 move toward the minimum; a rate above 1
-can cross the bowl with increasing distance. The controls expose θ, loss,
-gradient, and step history.
+The curve is a bowl with its minimum at θ = 3. Choose a learning rate, run four
+steps, and save the result. The controls expose θ, loss, gradient, and step
+history so two runs can be compared.
 :::
 
 ## Debug the update
@@ -34,7 +46,8 @@ the step size amplifies the distance after each sign change.
 
 :::exercise{path="../exercises/gradient-descent" command="pnpm exec vitest run exercises/gradient-descent/tests --config vitest.exercise.config.ts" title="Implement one gradient update"}
 Implement loss, gradient, and a guarded update step. The starter intentionally
-uses the gradient sign incorrectly.
+uses the gradient sign incorrectly. Add one test derived from an experiment you
+saved above.
 :::
 
 ## In real models

@@ -229,25 +229,41 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
       .filter({ hasText: "Attempt the exercise and run its tests" }),
   ).toContainText("Available after the prior checkpoint");
   await page
-    .getByRole("listitem")
-    .filter({ hasText: "Record your prediction" })
-    .getByRole("button", { name: "Mark complete" })
-    .click();
-  await frame.getByRole("button", { name: "Take one step" }).click();
+    .getByLabel("Will a rate of 1.1 converge, oscillate, or diverge—and why?")
+    .fill("It will diverge because each step overshoots farther.");
+  await page.getByRole("button", { name: "Save response" }).click();
+  await frame.getByRole("button", { name: "Run four steps and save evidence" }).click();
   await expect(
-    page.getByRole("status").filter({ hasText: "simulation-completed" }),
+    page.getByRole("status").filter({ hasText: "experiment-recorded" }),
   ).toBeVisible();
   await expect(page.getByText("2 of 4")).toBeVisible();
-  for (const title of [
-    "Attempt the exercise and run its tests",
-    "Explain the result and one failure mode",
-  ]) {
-    await page
-      .getByRole("listitem")
-      .filter({ hasText: title })
-      .getByRole("button", { name: "Mark complete" })
-      .click();
-  }
+  await expect(page.getByRole("heading", { name: "Experiment journal" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "rate 0.20" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await frame.getByLabel("Learning rate").fill("1.1");
+  await frame.getByRole("button", { name: "Run four steps and save evidence" }).click();
+  await expect(page.getByRole("button", { name: "rate 1.10" })).toBeVisible();
+  await expect(page.getByRole("table")).toContainText("diverging");
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download journal" }).click();
+  await expect((await download).suggestedFilename()).toBe(
+    "gradient-descent-learning-journal.json",
+  );
+  await page
+    .getByRole("listitem")
+    .filter({ hasText: "Attempt the exercise and run its tests" })
+    .getByRole("button", { name: "Mark complete" })
+    .click();
+  await page
+    .getByLabel(
+      "What evidence confirmed or changed your model, and where does it fail?",
+    )
+    .fill(
+      "The loss grew at rate 1.1; smaller rates reduced it. Adaptive updates differ.",
+    );
+  await page.getByRole("button", { name: "Save response" }).click();
   await page.getByRole("button", { name: "Backpropagation →" }).click();
   await expect(
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
@@ -281,10 +297,9 @@ test("explains session phrases and confirms checkpoint rollback", async ({ page 
     await expect(page.getByText(phrase, { exact: true })).toBeVisible();
 
   await page
-    .getByRole("listitem")
-    .filter({ hasText: "Record your prediction" })
-    .getByRole("button", { name: "Mark complete" })
-    .click();
+    .getByLabel("Will a rate of 1.1 converge, oscillate, or diverge—and why?")
+    .fill("It will diverge.");
+  await page.getByRole("button", { name: "Save response" }).click();
   await page.reload();
   await page
     .getByRole("listitem")
@@ -293,6 +308,30 @@ test("explains session phrases and confirms checkpoint rollback", async ({ page 
     .click();
   await page.getByRole("button", { name: "Confirm restart" }).click();
   await expect(page.getByText("0 of 4")).toBeVisible();
+});
+
+test("removes later discovery evidence when restarting its checkpoint", async ({
+  page,
+}) => {
+  await openFoundation(page);
+  await page
+    .getByLabel("Will a rate of 1.1 converge, oscillate, or diverge—and why?")
+    .fill("It will diverge.");
+  await page.getByRole("button", { name: "Save response" }).click();
+  const frame = page.frameLocator("iframe").first();
+  await frame.getByRole("button", { name: "Run four steps and save evidence" }).click();
+  await expect(page.getByRole("heading", { name: "Experiment journal" })).toBeVisible();
+  await page
+    .getByRole("listitem")
+    .filter({ hasText: "Run and save the gradient-step experiment" })
+    .getByRole("button", { name: "Restart here" })
+    .click();
+  await page.getByRole("button", { name: "Confirm restart" }).click();
+  await expect(page.getByText("1 of 4")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Experiment journal" })).toHaveCount(
+    0,
+  );
+  await expect(page.getByText("It will diverge.", { exact: true })).toBeVisible();
 });
 
 test("warns when browser progress storage is unavailable", async ({ page }) => {

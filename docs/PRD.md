@@ -869,11 +869,19 @@ export type ExplorableValue =
   | ExplorableValue[]
   | { [key: string]: ExplorableValue };
 
+export interface ExplorableExperimentRecord {
+  label?: string;
+  inputs: Record<string, null | boolean | number | string>;
+  outputs: Record<string, null | boolean | number | string>;
+  summary?: string;
+}
+
 export interface ExplorableContext {
   instanceId: string;
   lessonId: string;
   config: ExplorableValue;
   emit(event: ExplorableEvent): void;
+  recordExperiment(record: ExplorableExperimentRecord): void;
 }
 
 export interface ExplorableEvent {
@@ -1241,9 +1249,25 @@ origin. A different browser profile, device, explicit port, cleared site data,
 or course version has a separate progress record. The runtime must state these
 limits and warn visibly when browser persistence is unavailable.
 
-The local state may contain checkpoint IDs, skips, the active lesson, mode, and
-a learner-authored question parking lot. It must not contain exercise solutions
-or hidden assessment data.
+The local state may contain checkpoint IDs, skips, the active lesson, mode, a
+learner-authored question parking lot, bounded prediction/reflection responses,
+and bounded experiment records. It must not contain exercise solutions or
+hidden assessment data. Learner-authored work remains local, resettable, and
+ungraded.
+
+## 13.4 Optional discovery cycles
+
+A course or individual lesson may opt into a discovery cycle. Discovery lessons
+declare ordered prediction, experiment, application, and reflection checkpoint
+phases. Prediction and reflection may capture a bounded local text response. An
+experiment completes only after a meaningful interaction emits a structured
+experiment record; initial render never completes it.
+
+The runtime may show saved runs and compare a selected baseline with the latest
+evidence. Experiment payloads contain bounded scalar input/output fields. The
+main runtime validates and stores them; explorable iframes receive no browser
+storage access. These learning artifacts support reflection but are not proof of
+understanding, assessment results, analytics, or remote submissions.
 
 ---
 
@@ -2032,6 +2056,21 @@ Do not create difficulty through:
 - Fragile setup
 - Needlessly clever tests
 - Arbitrary time limits
+
+## 19.8 Make discovery inspectable
+
+For lessons using the discovery profile:
+
+- capture a prediction before revealing the formal claim;
+- let the learner generate a meaningful case rather than only select a preset;
+- expose inputs, assumptions, intermediate state, and outputs;
+- record at least one run that can be compared with another;
+- connect the observed invariant to an implementation or learner-authored test;
+- finish with evidence-based reflection and a failure mode.
+
+Automated validation checks the declared cycle and event contract. Course review
+and learner playtesting determine whether the interaction genuinely supports
+discovery.
 
 ---
 

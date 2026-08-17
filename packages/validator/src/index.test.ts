@@ -95,6 +95,33 @@ describe("course validator", () => {
     );
   });
 
+  it("enforces an opted-in discovery cycle", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-discovery-"));
+    await fs.mkdir(path.join(root, "lessons"));
+    await writePluginFiles(root, "discovery");
+    await Promise.all([
+      fs.writeFile(path.join(root, "README.md"), "# Course\n"),
+      fs.writeFile(path.join(root, "AGENTS.md"), "# Tutor\n"),
+      fs.writeFile(path.join(root, "CLAUDE.md"), "@AGENTS.md\n"),
+      fs.writeFile(path.join(root, "package.json"), '{"private":true}\n'),
+      fs.writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n"),
+      fs.writeFile(
+        path.join(root, "COURSE.md"),
+        "---\nid: discovery\ntitle: Discovery\nversion: 0.1.0\nsummary: Discover.\nlicense: CC-BY-4.0\nguidance: {}\n---\n\n## Lessons\n\n1. [One](lessons/01.md)\n",
+      ),
+      fs.writeFile(
+        path.join(root, "lessons", "01.md"),
+        "---\nid: one\ntitle: One\ndiscoveryCycle: true\ncheckpoints:\n  - { id: explain, title: Explain, phase: reflect, completion: learner }\n  - { id: predict, title: Predict, phase: predict, completion: learner }\n---\n\n# One\n",
+      ),
+    ]);
+    expect(await validateCourse(root)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "invalid-discovery-cycle" }),
+        expect.objectContaining({ code: "missing-discovery-response" }),
+      ]),
+    );
+  });
+
   it("rejects an invalid Agent Plugin manifest", async () => {
     const root = path.resolve(import.meta.dirname, "../../../examples/minimal-course");
     const temporary = await fs.mkdtemp(path.join(os.tmpdir(), "explorables-plugin-"));

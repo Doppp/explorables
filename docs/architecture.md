@@ -89,7 +89,8 @@ lessons without checkpoints, duplicate checkpoint IDs, and event checkpoints
 that reference an absent explorable instance.
 
 The runtime reducer owns the active lesson, completed checkpoints, explicit
-skips, mode, and question parking lot. State is serialized under a
+skips, mode, question parking lot, optional checkpoint responses, and bounded
+experiment records. State is serialized under a
 course/version/schema-scoped `localStorage` key when the course enables local
 persistence. Parsing filters unknown lessons and checkpoints and resets stale
 course versions. Courses without `guidance` keep unrestricted navigation.
@@ -99,6 +100,18 @@ message can complete a checkpoint. Sandboxed modules retain the same
 permissions and cannot access the parent document's state. Exercises remain
 deliberate learner or host actions; the runtime's learner acknowledgment is not
 automated grading.
+
+Discovery-cycle lessons add semantic checkpoint phases without adding Markdown
+directives. `recordExperiment` wraps the existing local event channel with
+bounded scalar inputs and outputs. The parent validates the payload, supplies
+its ID and timestamp, retains at most twenty records per explorable, and renders
+baseline/latest comparisons. The iframe cannot select storage keys, read prior
+records, or bypass its opaque origin and `connect-src 'none'` boundary.
+
+Guided-state schema v2 stores submitted responses, experiment runs, and selected
+baselines. Parsing migrates valid schema-v1 progress. Confirmed restart removes
+responses and evidence at or after the chosen checkpoint; reset removes both v2
+and legacy keys. These artifacts are explicitly ungraded and local-only.
 
 Every locally persistent course also writes a smaller, versioned session record
 containing only its last visited lesson and update time. The runtime reads both

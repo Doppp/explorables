@@ -2,11 +2,24 @@
 id: evaluation-leakage
 title: Evaluation leakage
 order: 13
+discoveryCycle: true
 checkpoints:
-  - { id: predict, title: "Record your prediction", completion: learner }
-  - { id: experiment, title: "Manipulate the evaluation split", completion: explorable-event, instanceId: leakage-lab, event: parameter-changed }
-  - { id: implement, title: "Attempt the exercise and run its tests", completion: learner }
-  - { id: explain, title: "State the supported claim and one failure mode", completion: learner }
+  - id: predict
+    title: "Record your prediction"
+    phase: predict
+    completion: learner
+    response:
+      format: short-text
+      prompt: "Which split will score higher, and which claim will each score support?"
+  - { id: experiment, title: "Save an evaluation-split experiment", phase: experiment, completion: explorable-event, instanceId: leakage-lab, event: experiment-recorded }
+  - { id: implement, title: "Attempt the exercise and run its tests", phase: apply, completion: learner }
+  - id: explain
+    title: "State the supported claim and one failure mode"
+    phase: reflect
+    completion: learner
+    response:
+      format: long-text
+      prompt: "What claim does your evidence support, and what does it not establish?"
 objectives:
   - distinguish examples from independent task families
   - identify contamination across a train-test boundary
@@ -24,9 +37,9 @@ task family has several lightly rewritten variants.
 > family?
 
 :::explorable{src="../explorables/leakage/index.ts" title="Evaluation leakage split laboratory" height="570" id="leakage-lab"}
-The laboratory assigns task variants to train or test. With leakage enabled,
-variants from the same family cross the boundary and a memoriser appears
-accurate. Grouped splitting keeps families intact and exposes generalisation.
+Choose how many task families and variants to create, then compare two split
+units. The laboratory exposes which test families occurred in training and
+lets you save the resulting scores as evidence.
 :::
 
 ## Diagnose the flattering score
@@ -41,7 +54,8 @@ changing a single prediction.
 
 :::exercise{path="../exercises/leakage" command="pnpm exec vitest run exercises/leakage/tests --config vitest.exercise.config.ts" title="Create a leakage-safe split"}
 Implement a deterministic grouped split. The starter shuffles examples rather
-than task families.
+than task families. Add one test based on a family/variant combination you
+created in the laboratory.
 :::
 
 ## In real models

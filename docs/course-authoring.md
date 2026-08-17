@@ -107,6 +107,48 @@ exercise work: the runtime deliberately does not run or grade exercises.
 Local persistence is browser-profile-only and resettable. It is not suitable
 for assessment evidence, identity, analytics, or cross-device progress.
 
+### Optional discovery cycle
+
+Set `discoveryCycle: true` in lesson frontmatter to apply the stricter profile
+to one lesson while piloting it. Set `guidance.discoveryCycle: true` to require
+it in every lesson. A discovery cycle uses ordered `predict`, `experiment`,
+`apply`, and `reflect` phases. Prediction and reflection capture a bounded
+browser-local response; the experiment records evidence rather than completing
+from an incidental parameter change:
+
+```yaml
+discoveryCycle: true
+checkpoints:
+  - id: predict
+    title: Predict the outcome
+    phase: predict
+    completion: learner
+    response:
+      format: short-text
+      prompt: What do you expect, and why?
+  - id: experiment
+    title: Save an experiment
+    phase: experiment
+    completion: explorable-event
+    instanceId: queue-simulator
+    event: experiment-recorded
+  - id: implement
+    title: Apply the model in code
+    phase: apply
+    completion: learner
+  - id: explain
+    title: Explain the evidence and one failure mode
+    phase: reflect
+    completion: learner
+    response:
+      format: long-text
+      prompt: What evidence changed or confirmed your model?
+```
+
+Responses and experiment runs migrate with guided progress, are removed by the
+same confirmed restart/reset rules, and never leave the browser. They are
+learning artifacts, not grades or proof of understanding.
+
 The runtime adds a course-session panel without requiring author markup. It
 remembers the last visited lesson for locally persistent courses and identifies
 the first incomplete checkpoint in Guided mode. The panel defines portable
@@ -183,7 +225,12 @@ const module: ExplorableModule = {
   mount(root, context) {
     const button = document.createElement("button");
     button.textContent = "Take a step";
-    const onClick = () => context.emit({ type: "simulation-completed" });
+    const onClick = () =>
+      context.recordExperiment({
+        label: "one step",
+        inputs: { queueLength: 3 },
+        outputs: { queueLength: 4 },
+      });
     button.addEventListener("click", onClick);
     root.append(button);
     return {
@@ -201,10 +248,19 @@ const module: ExplorableModule = {
 export default module;
 ```
 
-`context` supplies `instanceId`, `lessonId`, JSON-compatible `config`, and a
-local `emit` function. Events are never analytics. Keep mathematical/model code
-separate and unit-test it. `mountForTest` in `@explorables/explorable` provides
-a DOM smoke helper.
+`context` supplies `instanceId`, `lessonId`, JSON-compatible `config`, a local
+`emit` function, and `recordExperiment`. Experiment records accept bounded
+scalar input/output fields so the parent can validate, store, and compare them.
+The parent supplies record IDs and timestamps; the iframe never receives
+storage access. Events and records are never analytics. Keep mathematical/model
+code separate and unit-test it. `mountForTest` in
+`@explorables/explorable` provides a DOM smoke helper.
+
+For a discovery explorable, provide a baseline/reset, learner-created inputs,
+visible assumptions and intermediate calculations, a meaningful broken case,
+and a save-evidence action. Do not call `recordExperiment` during initial
+render. The authoring review should be able to answer: what new question can a
+learner investigate that the lesson did not prescribe exactly?
 
 Every interaction must work with a keyboard, use labels/native controls where
 practical, expose important updates through `aria-live`, avoid colour-only

@@ -370,6 +370,62 @@ async function validateParsedCourse(loaded: LoadedCourse): Promise<Diagnostic[]>
         );
       }
     }
+    const discoveryCycle =
+      lesson.frontmatter.discoveryCycle ??
+      loaded.frontmatter.guidance?.discoveryCycle ??
+      false;
+    if (discoveryCycle) {
+      const checkpoints = lesson.frontmatter.checkpoints ?? [];
+      const requiredPhases = ["predict", "experiment", "apply", "reflect"] as const;
+      const phaseIndexes = requiredPhases.map((phase) =>
+        checkpoints.findIndex((checkpoint) => checkpoint.phase === phase),
+      );
+      if (
+        phaseIndexes.some((index) => index < 0) ||
+        phaseIndexes.some((index, position) =>
+          position === 0 ? false : index <= (phaseIndexes[position - 1] ?? -1),
+        )
+      ) {
+        diagnostics.push(
+          diagnostic(
+            lesson.file,
+            "invalid-discovery-cycle",
+            "A discovery-cycle lesson needs predict, experiment, apply, and reflect checkpoint phases in that order.",
+          ),
+        );
+      }
+      for (const phase of ["predict", "reflect"] as const) {
+        const checkpoint = checkpoints.find((candidate) => candidate.phase === phase);
+        if (
+          checkpoint &&
+          (checkpoint.completion !== "learner" || !checkpoint.response)
+        ) {
+          diagnostics.push(
+            diagnostic(
+              lesson.file,
+              "missing-discovery-response",
+              `The ${phase} checkpoint must capture a local learner response.`,
+            ),
+          );
+        }
+      }
+      const experiment = checkpoints.find(
+        (checkpoint) => checkpoint.phase === "experiment",
+      );
+      if (
+        experiment &&
+        (experiment.completion !== "explorable-event" ||
+          experiment.event !== "experiment-recorded")
+      ) {
+        diagnostics.push(
+          diagnostic(
+            lesson.file,
+            "invalid-discovery-experiment",
+            'The experiment checkpoint must complete from the "experiment-recorded" explorable event.',
+          ),
+        );
+      }
+    }
 
     for (const explorable of lesson.explorables) {
       if (!explorable.fallbackHtml.trim()) {

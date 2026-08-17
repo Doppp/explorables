@@ -168,3 +168,27 @@ GitHub Actions run 29851928963           pass (current actions; build, checks, a
 clean temporary SSH clone                pass (feature branch; frozen install, check, collection/standalone/site build)
 DNS A / AAAA / www CNAME                no records returned (external blocker)
 ```
+
+## Discovery learning milestone
+
+Implemented on `agent/discovery-learning` on 17 August 2026:
+
+- Added opt-in discovery cycles with ordered predict, experiment, apply, and
+  reflect phases and structural validation.
+- Added bounded browser-local prediction/reflection responses, experiment
+  records, selectable baselines, and guided-state v1-to-v2 migration.
+- Extended the sandbox-safe explorable contract with `recordExperiment` without
+  changing iframe permissions, CSP, network policy, or exercise execution.
+- Converted gradient descent, self-attention, and evaluation leakage into
+  discovery-first pilots and updated the generated-course template.
+- Recorded ADR 0008 and a no-telemetry human playtest protocol. Wider rollout
+  remains contingent on the required five-learner study.
+
+Verification on the current Node 26.7.0/pnpm 11.22.0 shell (which emits the
+expected unsupported-engine warning because the supported runtime lines are
+Node 22.22.2+ and Node 24) passed: `pnpm check` (27 suites/87 tests), `pnpm
+build`, `pnpm course:test` (14 model suites/47 tests and all 14 starter/reference
+pairs), `pnpm test:browser` (15 tests including discovery persistence,
+comparison, download, rollback, narrow layout, sandboxing, and axe), `pnpm
+site:test` (2 tests), and a freshly scaffolded discovery-course validation and
+build. The five-learner study remains external acceptance evidence.

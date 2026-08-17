@@ -27,7 +27,8 @@ const module: ExplorableModule = {
     broken.type = "checkbox";
     brokenLabel.prepend(broken);
     const controls = element("div", undefined, "controls");
-    controls.append(qLabel, kLabel, causalLabel, brokenLabel);
+    const saveExperiment = element("button", "Save this matrix as evidence");
+    controls.append(qLabel, kLabel, causalLabel, brokenLabel, saveExperiment);
     const output = element("div");
     output.setAttribute("aria-live", "polite");
     const render = () => {
@@ -47,15 +48,45 @@ const module: ExplorableModule = {
         (broken.checked && causal.checked
           ? '<p class="warning">Rows below 1 reveal post-softmax masking without renormalisation.</p>'
           : "");
-      context.emit({
-        type: "parameter-changed",
-        payload: { causal: causal.checked, broken: broken.checked },
+      context.emit({ type: "parameter-changed" });
+    };
+    const onSaveExperiment = () => {
+      const queries = values(q);
+      const keys = values(k);
+      const rows = attentionWeights(queries, keys, causal.checked, broken.checked);
+      const rowSums = rows.map((row) => row.reduce((sum, weight) => sum + weight, 0));
+      const futureWeight = rows.reduce(
+        (sum, row, rowIndex) =>
+          sum +
+          row.reduce(
+            (rowSum, weight, columnIndex) =>
+              rowSum + (columnIndex > rowIndex ? weight : 0),
+            0,
+          ),
+        0,
+      );
+      context.recordExperiment({
+        label: broken.checked ? "broken masking" : "valid masking",
+        inputs: {
+          queries: q.value,
+          keys: k.value,
+          causalMask: causal.checked,
+          maskAfterSoftmax: broken.checked,
+        },
+        outputs: {
+          rowSums: rowSums.map((sum) => sum.toFixed(3)).join(", "),
+          futureWeight: Number(futureWeight.toFixed(3)),
+        },
+        summary: broken.checked
+          ? "Post-softmax masking breaks normalisation."
+          : "Valid masked attention keeps each non-empty row normalised.",
       });
     };
     const inputs = [q, k, causal, broken];
     inputs.forEach((input) => {
       input.addEventListener("input", render);
     });
+    saveExperiment.addEventListener("click", onSaveExperiment);
     root.append(
       styles(),
       element("h2", "Inspect score and weight matrices"),
@@ -68,6 +99,7 @@ const module: ExplorableModule = {
         inputs.forEach((input) => {
           input.removeEventListener("input", render);
         });
+        saveExperiment.removeEventListener("click", onSaveExperiment);
         root.replaceChildren();
       },
     };
