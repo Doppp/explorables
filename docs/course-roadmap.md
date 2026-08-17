@@ -1,7 +1,8 @@
 # Model-learning course roadmap
 
-Status: accepted; foundation complete and frontier family planned
-Planning date: 28 July 2026
+Status: accepted; foundation complete, frontier family planned, DeepSeek V4 and
+GLM 5.2 refresh complete
+Planning date: 17 August 2026
 
 ## Purpose
 
@@ -53,8 +54,10 @@ Detailed scope:
 
 Prerequisites: the foundation course and shared frontier core.
 
-Reconstruct selected DeepSeek architecture, routing, numerical, systems, and
-reasoning techniques at small scale.
+Trace selected DeepSeek V3/R1 mechanisms into DeepSeek V4 Pro/Flash and
+reconstruct hybrid long-context attention, constrained residual paths, sparse
+routing, optimisation, post-training, and evaluation techniques at small
+scale.
 
 Detailed scope: [courses/inside-deepseek.md](courses/inside-deepseek.md).
 
@@ -90,8 +93,9 @@ Detailed scope: [courses/inside-minimax.md](courses/inside-minimax.md).
 
 Prerequisites: the foundation course and shared frontier core.
 
-Reconstruct selected GLM sparse-model, hybrid-reasoning, and agentic-evaluation
-techniques at small scale.
+Trace GLM 5 into GLM 5.2 and reconstruct selected sparse-model,
+sparse-attention/index-reuse, speculative-decoding, reasoning-control, and
+agentic-evaluation techniques at small scale.
 
 Detailed scope: [courses/inside-glm.md](courses/inside-glm.md).
 
@@ -101,11 +105,11 @@ Detailed scope: [courses/inside-glm.md](courses/inside-glm.md).
 | --- | --- | ---: |
 | `ai-from-first-principles` | `examples/ai-from-first-principles` | 13 complete |
 | `open-frontier-models` | `examples/open-frontier-models` | 5 |
-| `inside-deepseek` | `examples/inside-deepseek` | 6 |
+| `inside-deepseek` | `examples/inside-deepseek` | 7 |
 | `inside-kimi` | `examples/inside-kimi` | 8 |
 | `inside-qwen` | `examples/inside-qwen` | 5 |
 | `inside-minimax` | `examples/inside-minimax` | 5 |
-| `inside-glm` | `examples/inside-glm` | 5 |
+| `inside-glm` | `examples/inside-glm` | 7 |
 
 These are separate course packages with separate `COURSE.md` files. They share
 the runtime and may reuse stable tested utilities; they do not share one lesson
@@ -181,8 +185,12 @@ Status: complete.
 ### Milestone 4 — Inside DeepSeek
 
 - Implement the first complete lab-specific course.
-- Use pinned DeepSeek releases to teach selected attention, expert-routing,
-  numerical/training-system, and reasoning techniques.
+- Use pinned V3/R1 lineage and V4 Pro/Flash artifacts to teach hybrid
+  long-context attention, mHC-inspired residual paths, expert-routing,
+  Muon/low-precision training, post-training consolidation, and reasoning
+  evaluation.
+- Keep Pro-versus-Flash size differences separate from controlled mechanism
+  ablations.
 - Complete a DeepSeek-specific controlled-reconstruction capstone.
 - Use this course to validate the boundary between shared and lab-specific
   material before implementing the remaining courses.
@@ -215,9 +223,10 @@ Status: complete.
 
 ### Milestone 8 — Inside GLM
 
-- Add sparse architecture and hybrid-reasoning experiments.
-- Separate model capability from agent scaffolding and tool-environment
-  evaluation.
+- Add sparse architecture, DSA/IndexShare, and speculative-decoding
+  experiments using pinned GLM 5/5.2 sources.
+- Separate model capability from serving policy, agent scaffolding, context
+  management, and tool-environment evaluation.
 - Complete a GLM-specific controlled-reconstruction capstone.
 
 ### Milestone 9 — external validation and releases
@@ -242,19 +251,19 @@ Planned frontier increments:
 
 4. `feature/guided-course-mode`: runtime guidance and foundation checkpoints.
 5. `course/open-frontier-core`: shared research and comparison foundation.
-6. `course/inside-deepseek-architecture`: anatomy, latent attention, and sparse
-   experts.
-7. `course/inside-deepseek-training`: routing, numerical systems, reasoning,
-   and capstone.
+6. `course/inside-deepseek-architecture`: V4 anatomy, hybrid attention,
+   constrained residual paths, and sparse experts.
+7. `course/inside-deepseek-training`: routing, Muon and low precision,
+   post-training consolidation, reasoning evaluation, and capstone.
 8. `course/inside-kimi`: sparse models, matrix-aware optimisation, efficient
    attention, and capstone.
 9. `course/inside-qwen`: family comparison, reasoning controls, adaptation,
    and capstone.
 10. `course/inside-minimax`: hybrid attention, long context, reasoning, and
    capstone.
-10. `course/inside-glm`: sparse models, agentic evaluation, reasoning, and
-    capstone.
-11. `course/frontier-family-validation`: cross-course checks, learner evidence,
+11. `course/inside-glm`: GLM 5.2 sparse models, DSA/index reuse, speculative
+    decoding, reasoning, agentic evaluation, and capstone.
+12. `course/frontier-family-validation`: cross-course checks, learner evidence,
     maintenance policies, and release preparation.
 
 Each branch starts from updated `master` after its dependencies merge. A course

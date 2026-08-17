@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 16 August 2026
+Updated: 17 August 2026
 
 ## Completed
 
@@ -72,6 +72,17 @@ Updated: 16 August 2026
   title casing while preserving the lowercase `explorables` wordmark.
 - Retained Node.js 24/pnpm 11 as the default toolchain while adding an enforced,
   CI-tested compatibility floor of Node.js 22.22.2 and pnpm 10.26.0.
+- Refreshed the planned `Inside DeepSeek` course through DeepSeek V4 Pro/Flash
+  while retaining V3/R1 as lineage, and refreshed `Inside GLM` through GLM 5.2
+  while retaining GLM 5 as the available architecture/post-training lineage.
+  The revised briefs add hybrid long-context attention, mHC, Muon, mixed
+  precision and policy consolidation for DeepSeek, plus DSA/IndexShare,
+  multi-token prediction, serving ablations, and long-horizon evaluation for
+  GLM.
+- Recorded exact reviewed official model-artifact commits, report revisions,
+  and code/weight licence signals for DeepSeek V4 and GLM 5.2 in the candidate
+  source register without misrepresenting them as immutable course-local source
+  freezes.
 
 ## Current work
 
@@ -85,12 +96,12 @@ language, and a stable strict development origin.
 `0.3.0-guided.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local
 course-library milestone are implemented. The course UI redesign and its
 responsive/theme follow-up are complete.
-The library presents the shared
-frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as
-planned rather than runnable. The next implementation increment remains the
-shared-core source freeze and its five research/comparison lessons, followed by
-the pinned model-specific courses. External DNS and learner-study evidence also
-remain.
+The library presents the shared frontier core and DeepSeek, Kimi, Qwen,
+MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek
+and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation
+increment remains the shared-core source freeze and its five
+research/comparison lessons, followed by the pinned model-specific courses.
+External DNS and learner-study evidence also remain.
 
 ## Decisions
 
@@ -126,6 +137,10 @@ remain.
 ## Latest verification
 
 ```text
+17 Aug model-source refresh             pass (official DeepSeek V4 and GLM 5.2 reports/cards/configs/licences; reviewed commits recorded)
+17 Aug pnpm check                       pass (26 suites/83 tests plus collection/course validation; Node 26.7.0 shell emitted the expected unsupported-engine warning)
+17 Aug pnpm build                       pass (packages, collection, standalone course, and static site; same Node 26 warning)
+17 Aug pnpm test:browser                pass (14 tests including planned-course library, responsive layout, sandboxing, and axe; same Node 26 warning)
 gh auth status                         pass (Doppp, SSH, repo scope)
 gh repo view Doppp/explorables         pass (PUBLIC, default master)
 git remote -v                          pass (canonical SSH URL)

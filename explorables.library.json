@@ -47,9 +47,10 @@
         {
           "status": "planned",
           "id": "inside-deepseek",
-          "title": "Inside DeepSeek",
-          "summary": "Reconstruct selected latent-attention, sparse-routing, and reasoning techniques.",
-          "tags": ["deepseek", "mla", "moe"]
+          "title": "Inside DeepSeek: From V3 and R1 to V4",
+          "summary": "Trace DeepSeek into V4 through hybrid long-context attention, constrained residual paths, sparse routing, optimisation, and reasoning.",
+          "estimatedHours": 10,
+          "tags": ["deepseek-v4", "sparse-attention", "moe", "muon"]
         },
         {
           "status": "planned",
@@ -68,9 +69,10 @@
         {
           "status": "planned",
           "id": "inside-glm",
-          "title": "Inside GLM",
-          "summary": "Separate sparse architecture, hybrid reasoning, and agentic evaluation effects.",
-          "tags": ["glm", "reasoning", "agents"]
+          "title": "Inside GLM: From GLM 5 to 5.2",
+          "summary": "Study sparse execution, cross-layer attention-index reuse, speculative decoding, reasoning controls, and agentic evaluation.",
+          "estimatedHours": 9,
+          "tags": ["glm-5.2", "sparse-attention", "speculative-decoding", "agents"]
         }
       ]
     }
