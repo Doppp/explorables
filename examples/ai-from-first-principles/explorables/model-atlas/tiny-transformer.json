@@ -21,7 +21,8 @@
       "summary": "The fixed prompt enters as three vocabulary IDs.",
       "kind": "tokens",
       "evidence": "executable",
-      "sourceIds": ["executable-model"]
+      "sourceIds": ["executable-model"],
+      "dimensions": { "vocabulary": 3, "context": 3 }
     },
     {
       "id": "embedding",
@@ -29,7 +30,8 @@
       "summary": "The final token ID selects one learned embedding row.",
       "kind": "embedding",
       "evidence": "executable",
-      "sourceIds": ["executable-model"]
+      "sourceIds": ["executable-model"],
+      "dimensions": { "width": 3, "vocabulary": 3 }
     },
     {
       "id": "attention",
@@ -37,7 +39,9 @@
       "summary": "The final query mixes only its visible prefix positions.",
       "kind": "attention",
       "evidence": "executable",
-      "sourceIds": ["executable-model"]
+      "sourceIds": ["executable-model"],
+      "count": 1,
+      "dimensions": { "width": 3, "heads": 1, "context": 3 }
     },
     {
       "id": "residual",
@@ -61,7 +65,8 @@
       "summary": "The output projection produces one logit for each vocabulary token.",
       "kind": "output",
       "evidence": "executable",
-      "sourceIds": ["executable-model"]
+      "sourceIds": ["executable-model"],
+      "dimensions": { "width": 3, "vocabulary": 3 }
     }
   ],
   "budgets": { "maxSceneObjects": 16, "maxInstances": 64 }

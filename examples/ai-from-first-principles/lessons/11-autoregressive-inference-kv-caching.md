@@ -45,7 +45,7 @@ The final capstone combines the course's token embeddings, causal attention, res
 Before opening the atlas, predict which stage first mixes information from multiple token positions. Then select each stage in order and compare your prediction with the exact tensor values.
 
 :::explorable{src="../explorables/model-atlas/index.ts" config="../explorables/model-atlas/tiny-transformer.json" title="Tiny Transformer 3D model atlas" height="760" id="tiny-transformer-atlas"}
-Walk a fixed three-token prompt through the executable teaching model. The 3D blocks and semantic stage list stay synchronized; the inspector reports the exact forward-pass values and remains the complete fallback when WebGL is unavailable.
+Walk a fixed three-token prompt through the executable teaching model, then compare its disclosed dimensions with OpenAI's published GPT-2 small baseline. The 3D blocks and semantic stage list stay synchronized; the inspector reports exact values only for the teaching model and remains the complete fallback when WebGL is unavailable.
 :::
 
 :::explorable{src="../explorables/tiny-transformer/index.ts" title="Tiny Transformer training and generation capstone" height="760" id="tiny-transformer-capstone"}
