@@ -154,3 +154,17 @@ Deliverables:
 - Authoring rubric, validator coverage, security/state tests, and a human playtest protocol before wider lesson rollout.
 
 Exit check: complete all four phases in each pilot, reload and compare saved evidence, restart before the experiment and verify later work is removed, reject malformed records, validate a scaffolded discovery course, and pass the full check/build/browser/accessibility suite.
+
+## Proposed milestone 12 — 3D Model Atlas
+
+Deliverables:
+
+- A source-grounded, accessible 3D architecture, trace, and comparison system using the existing explorable directive and sandbox boundary.
+- An exact tiny-Transformer pilot, a pinned GPT-2 baseline, and a shared model descriptor/provenance contract.
+- Shared frontier comparison lessons followed by independently auditable DeepSeek, Kimi, Qwen, MiniMax, and GLM course integrations as their source freezes complete.
+- A published-only GPT lineage that preserves undisclosed regions rather than inventing architecture details.
+- Synchronized semantic outlines, tensor tables, reduced-motion behavior, WebGL fallback, performance budgets, and learner-study evidence.
+
+Detailed sequencing, boundaries, risks, and acceptance checks are in [the 3D Model Atlas implementation plan](3d-model-atlas-implementation-plan.md).
+
+Exit check: complete the exact tiny-model trace and one source-frozen model comparison, verify provenance from scene object to pinned source, pass keyboard/axe/sandbox/context-loss/narrow-layout checks, then use the five-learner study to decide where 3D is primary or supplementary before rolling out every model family.
