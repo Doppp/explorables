@@ -6,6 +6,7 @@
   "dependencies": {
     "@explorables/course-schema": "workspace:*",
     "@explorables/markdown": "workspace:*",
+    "@explorables/model-atlas": "workspace:*",
     "@explorables/sandbox": "workspace:*"
   }
 }

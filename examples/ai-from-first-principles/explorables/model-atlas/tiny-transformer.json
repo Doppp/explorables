@@ -1,0 +1,68 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "tiny-transformer",
+  "name": "Walk one prediction through the model",
+  "version": "foundation-0.3-teaching-model",
+  "summary": "A fixed three-token prompt passes through the repository's deterministic teaching model.",
+  "sources": [
+    {
+      "id": "executable-model",
+      "label": "Tested tiny-Transformer implementation",
+      "reference": "explorables/tiny-transformer/model.ts",
+      "evidence": "executable",
+      "revision": "course-local source at build commit"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Token IDs",
+      "summary": "The fixed prompt enters as three vocabulary IDs.",
+      "kind": "tokens",
+      "evidence": "executable",
+      "sourceIds": ["executable-model"]
+    },
+    {
+      "id": "embedding",
+      "title": "Token embedding",
+      "summary": "The final token ID selects one learned embedding row.",
+      "kind": "embedding",
+      "evidence": "executable",
+      "sourceIds": ["executable-model"]
+    },
+    {
+      "id": "attention",
+      "title": "Causal attention",
+      "summary": "The final query mixes only its visible prefix positions.",
+      "kind": "attention",
+      "evidence": "executable",
+      "sourceIds": ["executable-model"]
+    },
+    {
+      "id": "residual",
+      "title": "Residual stream",
+      "summary": "Attention is added to the selected embedding instead of replacing it.",
+      "kind": "residual",
+      "evidence": "executable",
+      "sourceIds": ["executable-model"]
+    },
+    {
+      "id": "normalisation",
+      "title": "RMS normalisation",
+      "summary": "RMSNorm rescales the residual stream before prediction.",
+      "kind": "normalisation",
+      "evidence": "executable",
+      "sourceIds": ["executable-model"]
+    },
+    {
+      "id": "lm-head",
+      "title": "Language-model head",
+      "summary": "The output projection produces one logit for each vocabulary token.",
+      "kind": "output",
+      "evidence": "executable",
+      "sourceIds": ["executable-model"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 64 }
+}

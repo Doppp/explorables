@@ -21,6 +21,7 @@ import {
   renderMarkdown,
   resolveCoursePath,
 } from "@explorables/markdown";
+import { modelAtlasDescriptorSchema } from "@explorables/model-atlas/schema";
 import { bundleExplorable } from "@explorables/sandbox";
 import matter from "gray-matter";
 import { ZodError } from "zod";
@@ -189,6 +190,14 @@ export async function compileRuntimeCourse(
               explorable.attributes.config,
             );
             config = JSON.parse(await fs.readFile(configPath, "utf8"));
+            if (
+              typeof config === "object" &&
+              config !== null &&
+              "kind" in config &&
+              config.kind === "model-atlas"
+            ) {
+              config = modelAtlasDescriptorSchema.parse(config);
+            }
           }
           const sandboxHtml = await bundleExplorable({
             courseRoot: loaded.root,
