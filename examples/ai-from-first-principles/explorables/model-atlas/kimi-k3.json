@@ -1,0 +1,75 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "kimi-k3",
+  "name": "Kimi K3",
+  "version": "candidate-view-3cb39df",
+  "summary": "A report-grounded mechanism view of Kimi K3; its custom licence and exact artifacts still require the planned course freeze.",
+  "sources": [
+    {
+      "id": "kimi-k3-repository",
+      "label": "MoonshotAI Kimi K3 repository",
+      "reference": "https://github.com/MoonshotAI/Kimi-K3/tree/3cb39dfd32e51c3328e2e4b4af21341247d06c43",
+      "evidence": "configuration-derived",
+      "revision": "3cb39dfd32e51c3328e2e4b4af21341247d06c43"
+    },
+    {
+      "id": "kimi-k3-report",
+      "label": "Kimi K3 technical report",
+      "reference": "https://arxiv.org/abs/2607.24653",
+      "evidence": "report-derived",
+      "revision": "reviewed candidate report"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Token and multimodal sequence",
+      "summary": "The report's input path is aggregated here; modality-specific preprocessing is outside this course view.",
+      "kind": "tokens",
+      "evidence": "report-derived",
+      "sourceIds": ["kimi-k3-report"]
+    },
+    {
+      "id": "kda-mla",
+      "title": "KDA and gated MLA",
+      "summary": "KDA state updates and periodic gated MLA retrieval are shown as distinct attention mechanisms.",
+      "kind": "attention",
+      "evidence": "report-derived",
+      "sourceIds": ["kimi-k3-report"]
+    },
+    {
+      "id": "attnres",
+      "title": "AttnRes path",
+      "summary": "The residual mechanism is represented without asserting an unfrozen placement schedule.",
+      "kind": "residual",
+      "evidence": "report-derived",
+      "sourceIds": ["kimi-k3-report"]
+    },
+    {
+      "id": "latent-moe",
+      "title": "Stable LatentMoE",
+      "summary": "Sparse expert routing is aggregated; exact expert counts remain outside this candidate view.",
+      "kind": "experts",
+      "evidence": "report-derived",
+      "sourceIds": ["kimi-k3-report"]
+    },
+    {
+      "id": "situ-glu",
+      "title": "SiTU-GLU feed-forward path",
+      "summary": "The published feed-forward mechanism is shown as one semantic stage.",
+      "kind": "feed-forward",
+      "evidence": "report-derived",
+      "sourceIds": ["kimi-k3-report"]
+    },
+    {
+      "id": "undisclosed-scale",
+      "title": "Exact topology not frozen",
+      "summary": "Counts, dimensions, and placement schedules remain undisclosed in this candidate course view.",
+      "kind": "undisclosed",
+      "evidence": "undisclosed",
+      "sourceIds": ["kimi-k3-repository", "kimi-k3-report"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}

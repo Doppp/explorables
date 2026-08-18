@@ -1,0 +1,75 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "deepseek-v4",
+  "name": "DeepSeek V4 family",
+  "version": "candidate-view-arxiv-2606-19348v1",
+  "summary": "A report-grounded family view of V4 Pro and Flash; exact size-specific configuration remains behind the course source-freeze gate.",
+  "sources": [
+    {
+      "id": "deepseek-v4-report",
+      "label": "DeepSeek V4 technical report",
+      "reference": "https://arxiv.org/abs/2606.19348v1",
+      "evidence": "report-derived",
+      "revision": "arXiv:2606.19348v1"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "label": "DeepSeek V4 Pro artifact",
+      "reference": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/tree/b5968e9190ef611bbf34a7229255be88a0e937c1",
+      "evidence": "configuration-derived",
+      "revision": "b5968e9190ef611bbf34a7229255be88a0e937c1"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Token sequence",
+      "summary": "The view begins at token representations; tokenizer details are deferred to the family source freeze.",
+      "kind": "tokens",
+      "evidence": "undisclosed",
+      "sourceIds": ["deepseek-v4-pro"]
+    },
+    {
+      "id": "hybrid-attention",
+      "title": "CSA/HCA hybrid attention",
+      "summary": "The report describes a long-context hybrid attention path; this aggregate block does not imply an undisclosed layer schedule.",
+      "kind": "attention",
+      "evidence": "report-derived",
+      "sourceIds": ["deepseek-v4-report"]
+    },
+    {
+      "id": "mhc",
+      "title": "mHC residual path",
+      "summary": "The report identifies mHC as part of the residual architecture.",
+      "kind": "residual",
+      "evidence": "report-derived",
+      "sourceIds": ["deepseek-v4-report"]
+    },
+    {
+      "id": "sparse-experts",
+      "title": "Sparse expert routing",
+      "summary": "Expert routing is shown as an aggregate mechanism, not as a claim about frozen counts or placement.",
+      "kind": "experts",
+      "evidence": "report-derived",
+      "sourceIds": ["deepseek-v4-report"]
+    },
+    {
+      "id": "undisclosed-scale",
+      "title": "Size-specific topology not frozen",
+      "summary": "Pro/Flash counts, dimensions, and exact schedules are intentionally withheld from this candidate view.",
+      "kind": "undisclosed",
+      "evidence": "undisclosed",
+      "sourceIds": ["deepseek-v4-report", "deepseek-v4-pro"]
+    },
+    {
+      "id": "output",
+      "title": "Output distribution",
+      "summary": "The architecture produces next-token scores; no runtime weights are loaded by this explorable.",
+      "kind": "output",
+      "evidence": "conceptual",
+      "sourceIds": ["deepseek-v4-report"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}

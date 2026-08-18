@@ -1,0 +1,82 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "glm-5-2",
+  "name": "GLM 5.2",
+  "version": "candidate-view-b4734de",
+  "summary": "A current-endpoint view that separates GLM 5's architecture report from GLM 5.2's reviewed artifact and deployment claims.",
+  "sources": [
+    {
+      "id": "glm5-report",
+      "label": "GLM 5 technical report",
+      "reference": "https://arxiv.org/abs/2602.15763v2",
+      "evidence": "report-derived",
+      "revision": "arXiv:2602.15763v2"
+    },
+    {
+      "id": "glm52-artifact",
+      "label": "GLM 5.2 BF16 artifact",
+      "reference": "https://huggingface.co/zai-org/GLM-5.2/tree/b4734de4facf877f85769a911abafc5283eab3d9",
+      "evidence": "configuration-derived",
+      "revision": "b4734de4facf877f85769a911abafc5283eab3d9"
+    },
+    {
+      "id": "indexcache-paper",
+      "label": "IndexCache paper linked from IndexShare",
+      "reference": "https://arxiv.org/abs/2603.12201v1",
+      "evidence": "report-derived",
+      "revision": "arXiv:2603.12201v1"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Token sequence",
+      "summary": "Input is aggregated without claiming an unfrozen tokenizer or context configuration.",
+      "kind": "tokens",
+      "evidence": "undisclosed",
+      "sourceIds": ["glm52-artifact"]
+    },
+    {
+      "id": "dsa",
+      "title": "Dynamic sparse attention",
+      "summary": "DSA is grounded in the GLM 5 architecture report.",
+      "kind": "attention",
+      "evidence": "report-derived",
+      "sourceIds": ["glm5-report"]
+    },
+    {
+      "id": "indexshare",
+      "title": "IndexShare deployment path",
+      "summary": "The release name IndexShare is shown alongside, not substituted for, the linked IndexCache paper's cross-layer index reuse scope.",
+      "kind": "cache",
+      "evidence": "report-derived",
+      "sourceIds": ["glm52-artifact", "indexcache-paper"]
+    },
+    {
+      "id": "sparse-moe",
+      "title": "Sparse MoE path",
+      "summary": "Sparse routing is aggregated without freezing expert counts or layer placement.",
+      "kind": "experts",
+      "evidence": "report-derived",
+      "sourceIds": ["glm5-report"]
+    },
+    {
+      "id": "mtp",
+      "title": "Multi-token prediction",
+      "summary": "MTP is represented as a prediction and serving mechanism, not as a claim that every decoded token is accepted.",
+      "kind": "output",
+      "evidence": "report-derived",
+      "sourceIds": ["glm5-report", "glm52-artifact"]
+    },
+    {
+      "id": "undisclosed-scale",
+      "title": "GLM 5.2 topology not frozen",
+      "summary": "Exact 5.2 dimensions and serving assumptions remain behind the course-local source freeze.",
+      "kind": "undisclosed",
+      "evidence": "undisclosed",
+      "sourceIds": ["glm52-artifact"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}
