@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 17 August 2026
+Updated: 18 August 2026
 
 ## Completed
 
@@ -33,10 +33,11 @@ Updated: 17 August 2026
 - Retained Node.js 24/pnpm 11 as the default toolchain while adding an enforced, CI-tested compatibility floor of Node.js 22.22.2 and pnpm 10.26.0.
 - Refreshed the planned `Inside DeepSeek` course through DeepSeek V4 Pro/Flash while retaining V3/R1 as lineage, and refreshed `Inside GLM` through GLM 5.2 while retaining GLM 5 as the available architecture/post-training lineage. The revised briefs add hybrid long-context attention, mHC, Muon, mixed precision and policy consolidation for DeepSeek, plus DSA/IndexShare, multi-token prediction, serving ablations, and long-horizon evaluation for GLM.
 - Recorded exact reviewed official model-artifact commits, report revisions, and code/weight licence signals for DeepSeek V4 and GLM 5.2 in the candidate source register without misrepresenting them as immutable course-local source freezes.
+- Accepted the source-grounded 3D Model Atlas boundary in ADR 0009 and verified a bounded Three.js scene can be bundled without relaxing the existing opaque-origin iframe, CSP, or network prohibition.
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin.
+The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. The current implementation increment is the accessible tiny-Transformer Model Atlas pilot, followed by extraction of the validated renderer and descriptor contract into a shared package.
 
 `AI from First Principles` `0.3.0-guided.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local course-library milestone are implemented. The course UI redesign and its responsive/theme follow-up are complete. The library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation increment remains the shared-core source freeze and its five research/comparison lessons, followed by the pinned model-specific courses. External DNS and learner-study evidence also remain.
 

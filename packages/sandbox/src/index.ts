@@ -113,6 +113,7 @@ export async function bundleExplorable(
     platform: "browser",
     target: "es2022",
     sourcemap: "inline",
+    sourcesContent: false,
     outfile: "sandbox.js",
     write: false,
     logLevel: "silent",

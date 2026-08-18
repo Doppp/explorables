@@ -12,6 +12,8 @@ This browser boundary does not make dependency installation or exercise executio
 
 The runtime has no accounts, secrets, analytics, backend, or remote learner state. The landing page is static and sets no cookies.
 
+3D model-atlas descriptors are inert data and cannot supply HTML, CSS, shader source, executable code, or runtime URLs. Counts, dimensions, graph references, evidence labels, source references, trace values, and scene budgets are validated before rendering. Renderer resources, observers, listeners, and animation frames are disposed when the explorable is destroyed. WebGL initialization failure or context loss must fall back to the synchronized semantic representation without weakening iframe permissions.
+
 ## Report a vulnerability
 
 Do not open a public issue for an exploitable vulnerability. Use GitHub's private vulnerability reporting for `Doppp/explorables` with reproduction, impact, affected commit/version, and any proposed mitigation. If private reporting is unavailable, contact the repository owner through their public GitHub profile and request a private channel.
