@@ -23,6 +23,7 @@ const course = {
       allowExploreMode: true,
       allowSkipping: true,
       persistLocally: true,
+      discoveryCycle: false,
     },
   },
   introductionHtml: "",
@@ -97,11 +98,84 @@ describe("guided course state", () => {
       ...createGuidedState(course),
       completedCheckpoints: { one: ["predict", "unknown"] },
       parkedQuestions: ["Later topic", "", 1],
+      experimentRuns: {
+        one: {
+          demo: [
+            {
+              id: "invalid",
+              checkpointId: "experiment",
+              instanceId: "demo",
+              inputs: { rate: 1 },
+              outputs: { result: 2 },
+              summary: { html: "not text" },
+              recordedAt: "2026-08-17T00:00:00Z",
+            },
+          ],
+        },
+      },
     };
     expect(parseGuidedState(course, JSON.stringify(stored))).toMatchObject({
       completedCheckpoints: { one: ["predict"] },
       parkedQuestions: ["Later topic"],
+      experimentRuns: {},
     });
+  });
+
+  it("migrates v1 state and stores local responses and bounded experiment evidence", () => {
+    const legacy = {
+      ...createGuidedState(course),
+      schemaVersion: 1,
+      checkpointResponses: undefined,
+      experimentRuns: undefined,
+      experimentBaselines: undefined,
+    };
+    let state = parseGuidedState(course, JSON.stringify(legacy));
+    expect(state.schemaVersion).toBe(2);
+    state = guidedCourseReducer(state, {
+      type: "set-response",
+      lessonId: "one",
+      checkpointId: "predict",
+      text: "It will increase.",
+    });
+    state = guidedCourseReducer(state, {
+      type: "submit-response",
+      lessonId: "one",
+      checkpointId: "predict",
+    });
+    expect(state.checkpointResponses.one?.predict).toMatchObject({
+      text: "It will increase.",
+    });
+    expect(state.completedCheckpoints.one).toContain("predict");
+
+    state = guidedCourseReducer(state, {
+      type: "record-experiment",
+      lessonId: "one",
+      record: {
+        id: "run-1",
+        checkpointId: "experiment",
+        instanceId: "demo",
+        inputs: { rate: 1.1 },
+        outputs: { behavior: "diverging" },
+        recordedAt: "2026-08-17T00:00:00.000Z",
+      },
+    });
+    expect(state.experimentRuns.one?.demo).toHaveLength(1);
+    for (let index = 2; index <= 25; index += 1) {
+      state = guidedCourseReducer(state, {
+        type: "record-experiment",
+        lessonId: "one",
+        record: {
+          id: `run-${index}`,
+          checkpointId: "experiment",
+          instanceId: "demo",
+          inputs: { rate: index / 10 },
+          outputs: { behavior: "observed" },
+          recordedAt: "2026-08-17T00:00:00.000Z",
+        },
+      });
+    }
+    expect(state.experimentRuns.one?.demo).toHaveLength(20);
+    expect(state.experimentRuns.one?.demo?.[0]?.id).toBe("run-6");
   });
 
   it("maintains a local question parking lot", () => {
@@ -121,6 +195,25 @@ describe("guided course state", () => {
       activeLessonId: "two",
       completedCheckpoints: { one: ["predict", "experiment"], two: ["later"] },
       skippedLessons: ["two"],
+      checkpointResponses: {
+        one: {
+          predict: { text: "Prediction", submittedAt: "2026-08-17T00:00:00Z" },
+        },
+      },
+      experimentRuns: {
+        one: {
+          demo: [
+            {
+              id: "run-1",
+              checkpointId: "experiment",
+              instanceId: "demo",
+              inputs: { rate: 1.1 },
+              outputs: { behavior: "diverging" },
+              recordedAt: "2026-08-17T00:00:00Z",
+            },
+          ],
+        },
+      },
     };
     const restarted = restartGuidedStateFrom(course, progressed, "one", "experiment");
     expect(restarted).toMatchObject({
@@ -128,6 +221,12 @@ describe("guided course state", () => {
       activeLessonId: "one",
       completedCheckpoints: { one: ["predict"] },
       skippedLessons: [],
+      checkpointResponses: {
+        one: {
+          predict: { text: "Prediction", submittedAt: "2026-08-17T00:00:00Z" },
+        },
+      },
+      experimentRuns: {},
     });
   });
 });

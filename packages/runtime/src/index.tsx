@@ -1,7 +1,8 @@
 import type {
   Checkpoint,
   CourseSessionStateV1,
-  GuidedCourseStateV1,
+  ExperimentRecord,
+  GuidedCourseStateV2,
   RuntimeCourse,
   RuntimeCourseCollection,
   RuntimeLesson,
@@ -36,9 +37,11 @@ import {
   guidedStorageKey,
   isLessonComplete,
   isLessonUnlocked,
+  legacyGuidedStorageKey,
   parseGuidedState,
   restartGuidedStateFrom,
 } from "./guided-state.ts";
+import { createExperimentRecord } from "./experiment-record.ts";
 import { lessonBodyHtml } from "./lesson-html.ts";
 
 const LessonArticle = memo(function LessonArticle({
@@ -175,7 +178,7 @@ function CheckpointPanel({
   onRestart,
 }: {
   lesson: RuntimeLesson;
-  state: GuidedCourseStateV1;
+  state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
   onRestart: (checkpointId: string) => void;
 }) {
@@ -200,6 +203,8 @@ function CheckpointPanel({
         {checkpoints.map((checkpoint, checkpointIndex) => {
           const isComplete = completed.has(checkpoint.id);
           const status = checkpointStatus(checkpoint, completed, firstIncompleteId);
+          const response =
+            state.checkpointResponses[lesson.frontmatter.id]?.[checkpoint.id];
           return (
             <li
               className={`checkpoint-item checkpoint-${status.toLowerCase()}${
@@ -213,6 +218,9 @@ function CheckpointPanel({
               <span className="checkpoint-copy">
                 <strong>{checkpoint.title}</strong>
                 <small className="checkpoint-status">{status}</small>
+                {response?.submittedAt ? (
+                  <q className="checkpoint-response">{response.text}</q>
+                ) : null}
               </span>
               {isComplete ? (
                 restartCheckpointId === checkpoint.id ? (
@@ -241,18 +249,68 @@ function CheckpointPanel({
                 )
               ) : checkpoint.completion === "learner" ? (
                 checkpoint.id === firstIncompleteId ? (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      dispatch({
-                        type: "complete",
-                        lessonId: lesson.frontmatter.id,
-                        checkpointId: checkpoint.id,
-                      })
-                    }
-                  >
-                    Mark complete
-                  </button>
+                  checkpoint.response ? (
+                    <form
+                      className="checkpoint-response-form"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        dispatch({
+                          type: "submit-response",
+                          lessonId: lesson.frontmatter.id,
+                          checkpointId: checkpoint.id,
+                        });
+                      }}
+                    >
+                      <label htmlFor={`checkpoint-${checkpoint.id}`}>
+                        {checkpoint.response.prompt}
+                      </label>
+                      {checkpoint.response.format === "long-text" ? (
+                        <textarea
+                          id={`checkpoint-${checkpoint.id}`}
+                          value={response?.text ?? ""}
+                          onChange={(event) =>
+                            dispatch({
+                              type: "set-response",
+                              lessonId: lesson.frontmatter.id,
+                              checkpointId: checkpoint.id,
+                              text: event.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        <input
+                          id={`checkpoint-${checkpoint.id}`}
+                          type="text"
+                          value={response?.text ?? ""}
+                          onChange={(event) =>
+                            dispatch({
+                              type: "set-response",
+                              lessonId: lesson.frontmatter.id,
+                              checkpointId: checkpoint.id,
+                              text: event.target.value,
+                            })
+                          }
+                        />
+                      )}
+                      <button type="submit" disabled={!response?.text.trim()}>
+                        Save response
+                      </button>
+                      <small>Saved only in this browser and not graded.</small>
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        dispatch({
+                          type: "complete",
+                          lessonId: lesson.frontmatter.id,
+                          checkpointId: checkpoint.id,
+                        })
+                      }
+                    >
+                      Mark complete
+                    </button>
+                  )
                 ) : (
                   <small className="automatic-checkpoint">
                     Available after the prior checkpoint
@@ -273,9 +331,144 @@ function CheckpointPanel({
   );
 }
 
+function displayExperimentValue(value: unknown): string {
+  if (value === null) return "—";
+  if (typeof value === "boolean") return value ? "yes" : "no";
+  return String(value);
+}
+
+function downloadLessonJournal(
+  lesson: RuntimeLesson,
+  state: GuidedCourseStateV2,
+): void {
+  const payload = {
+    schemaVersion: 1,
+    lessonId: lesson.frontmatter.id,
+    exportedAt: new Date().toISOString(),
+    responses: state.checkpointResponses[lesson.frontmatter.id] ?? {},
+    experiments: state.experimentRuns[lesson.frontmatter.id] ?? {},
+  };
+  const url = URL.createObjectURL(
+    new Blob([`${JSON.stringify(payload, null, 2)}\n`], {
+      type: "application/json",
+    }),
+  );
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${lesson.frontmatter.id}-learning-journal.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function ExperimentJournal({
+  lesson,
+  state,
+  dispatch,
+}: {
+  lesson: RuntimeLesson;
+  state: GuidedCourseStateV2;
+  dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+}) {
+  const byInstance = state.experimentRuns[lesson.frontmatter.id] ?? {};
+  const entries = Object.entries(byInstance).filter(([, records]) => records.length);
+  if (!entries.length) return null;
+  const titles = new Map(
+    lesson.explorables.map((explorable) => [
+      explorable.instanceId,
+      explorable.attributes.title,
+    ]),
+  );
+  return (
+    <section className="experiment-journal" aria-labelledby="experiment-journal-title">
+      <div className="checkpoint-heading">
+        <div>
+          <p className="eyebrow">Local evidence</p>
+          <h2 id="experiment-journal-title">Experiment journal</h2>
+        </div>
+        <button type="button" onClick={() => downloadLessonJournal(lesson, state)}>
+          Download journal
+        </button>
+      </div>
+      <p>
+        Compare what you predicted with evidence you generated. Records stay in this
+        browser and are not assessment results.
+      </p>
+      {entries.map(([instanceId, records]) => {
+        const latest = records.at(-1) as ExperimentRecord;
+        const baselineId =
+          state.experimentBaselines[lesson.frontmatter.id]?.[instanceId];
+        const baseline = records.find((record) => record.id === baselineId) ?? latest;
+        const fields = Array.from(
+          new Set([
+            ...Object.keys(baseline.inputs),
+            ...Object.keys(baseline.outputs),
+            ...Object.keys(latest.inputs),
+            ...Object.keys(latest.outputs),
+          ]),
+        );
+        return (
+          <article className="experiment-group" key={instanceId}>
+            <h3>{titles.get(instanceId) ?? instanceId}</h3>
+            <div className="experiment-runs">
+              {records.map((record, index) => (
+                <button
+                  className={record.id === baseline.id ? "selected-baseline" : ""}
+                  type="button"
+                  key={record.id}
+                  aria-pressed={record.id === baseline.id}
+                  onClick={() =>
+                    dispatch({
+                      type: "set-experiment-baseline",
+                      lessonId: lesson.frontmatter.id,
+                      instanceId,
+                      recordId: record.id,
+                    })
+                  }
+                >
+                  {record.label ?? `Run ${index + 1}`}
+                </button>
+              ))}
+            </div>
+            <div className="experiment-comparison">
+              <table>
+                <caption>Selected baseline compared with the latest run</caption>
+                <thead>
+                  <tr>
+                    <th>Measure</th>
+                    <th>Baseline</th>
+                    <th>Latest</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fields.map((field) => (
+                    <tr key={field}>
+                      <th>{field}</th>
+                      <td>
+                        {displayExperimentValue(
+                          baseline.inputs[field] ?? baseline.outputs[field],
+                        )}
+                      </td>
+                      <td>
+                        {displayExperimentValue(
+                          latest.inputs[field] ?? latest.outputs[field],
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {latest.summary ? <p>{latest.summary}</p> : null}
+          </article>
+        );
+      })}
+    </section>
+  );
+}
+
 function savedCheckpointTitle(
   course: RuntimeCourse,
-  state: GuidedCourseStateV1,
+  state: GuidedCourseStateV2,
 ): string | null {
   const lesson = course.lessons.find(
     (candidate) => candidate.frontmatter.id === state.activeLessonId,
@@ -290,7 +483,7 @@ function savedCheckpointTitle(
 
 function activeCheckpointId(
   course: RuntimeCourse,
-  state: GuidedCourseStateV1,
+  state: GuidedCourseStateV2,
 ): string | undefined {
   const lesson = course.lessons.find(
     (candidate) => candidate.frontmatter.id === state.activeLessonId,
@@ -316,7 +509,7 @@ function CourseSessionPanel({
   currentLesson: RuntimeLesson;
   savedSession: CourseSessionStateV1 | null;
   hasSavedProgress: boolean;
-  guidedState: GuidedCourseStateV1;
+  guidedState: GuidedCourseStateV2;
   persistenceEnabled: boolean;
   persistenceAvailable: boolean;
   onResume: () => void;
@@ -413,7 +606,7 @@ function LessonNavigation({
 }: {
   course: RuntimeCourse;
   lesson: RuntimeLesson;
-  state: GuidedCourseStateV1;
+  state: GuidedCourseStateV2;
   routePrefix: string;
   onSelect?: () => void;
 }) {
@@ -478,7 +671,7 @@ function GuidedTools({
   routePrefix,
 }: {
   course: RuntimeCourse;
-  state: GuidedCourseStateV1;
+  state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
   routePrefix: string;
 }) {
@@ -594,13 +787,16 @@ function Lesson({
         : { value: null, available: true },
     [course, persistenceEnabled],
   );
-  const initialGuidedRead = useMemo(
-    () =>
-      persistenceEnabled
-        ? readBrowserStorage(guidedStorageKey(course))
-        : { value: null, available: true },
-    [course, persistenceEnabled],
-  );
+  const initialGuidedRead = useMemo(() => {
+    if (!persistenceEnabled) return { value: null, available: true };
+    const current = readBrowserStorage(guidedStorageKey(course));
+    if (current.value) return current;
+    const legacy = readBrowserStorage(legacyGuidedStorageKey(course));
+    return {
+      value: legacy.value,
+      available: current.available && legacy.available,
+    };
+  }, [course, persistenceEnabled]);
   const initialSession = useMemo(
     () => parseCourseSessionState(course, initialSessionRead.value),
     [course, initialSessionRead.value],
@@ -650,6 +846,7 @@ function Lesson({
     if (!guidance?.persistLocally) return;
     if (!writeBrowserStorage(guidedStorageKey(course), JSON.stringify(state)))
       setPersistenceAvailable(false);
+    else removeBrowserStorage(legacyGuidedStorageKey(course));
   }, [course, guidance?.persistLocally, state]);
 
   useEffect(() => {
@@ -739,12 +936,29 @@ function Lesson({
               checkpoint.instanceId === explorable.instanceId &&
               checkpoint.event === event.type &&
               priorCheckpointsComplete
-            )
+            ) {
+              if (event.type === "experiment-recorded") {
+                const record = createExperimentRecord(event.payload, {
+                  instanceId: explorable.instanceId,
+                  checkpointId: checkpoint.id,
+                });
+                if (!record) {
+                  status.textContent =
+                    "The experiment ran, but its evidence record was invalid.";
+                  continue;
+                }
+                dispatch({
+                  type: "record-experiment",
+                  lessonId: lesson.frontmatter.id,
+                  record,
+                });
+              }
               dispatch({
                 type: "complete",
                 lessonId: lesson.frontmatter.id,
                 checkpointId: checkpoint.id,
               });
+            }
           }
         },
         onError: (message) => {
@@ -813,8 +1027,9 @@ function Lesson({
     const resetState = createGuidedState(course);
     const resetSession = createCourseSessionState(course);
     const guidedRemoved = removeBrowserStorage(guidedStorageKey(course));
+    const legacyGuidedRemoved = removeBrowserStorage(legacyGuidedStorageKey(course));
     const sessionRemoved = removeBrowserStorage(courseSessionStorageKey(course));
-    setPersistenceAvailable(guidedRemoved && sessionRemoved);
+    setPersistenceAvailable(guidedRemoved && legacyGuidedRemoved && sessionRemoved);
     setStartupSession(null);
     setHasSavedProgress(false);
     stateRef.current = resetState;
@@ -926,22 +1141,25 @@ function Lesson({
           onReset={resetCourse}
         />
         {guidance && state.mode === "guided" ? (
-          <CheckpointPanel
-            lesson={lesson}
-            state={state}
-            dispatch={dispatch}
-            onRestart={(checkpointId) => {
-              const restarted = restartGuidedStateFrom(
-                course,
-                stateRef.current,
-                lesson.frontmatter.id,
-                checkpointId,
-              );
-              stateRef.current = restarted;
-              dispatch({ type: "reset", state: restarted });
-              navigate(lesson.frontmatter.id);
-            }}
-          />
+          <>
+            <CheckpointPanel
+              lesson={lesson}
+              state={state}
+              dispatch={dispatch}
+              onRestart={(checkpointId) => {
+                const restarted = restartGuidedStateFrom(
+                  course,
+                  stateRef.current,
+                  lesson.frontmatter.id,
+                  checkpointId,
+                );
+                stateRef.current = restarted;
+                dispatch({ type: "reset", state: restarted });
+                navigate(lesson.frontmatter.id);
+              }}
+            />
+            <ExperimentJournal lesson={lesson} state={state} dispatch={dispatch} />
+          </>
         ) : null}
         <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />
         <nav className="lesson-pagination" aria-label="Lesson pagination">

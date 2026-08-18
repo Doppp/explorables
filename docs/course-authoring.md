@@ -1,14 +1,10 @@
 # Course authoring guide
 
-This guide is sufficient to add a seventh lesson or start a new course without
-reading runtime source.
+This guide is sufficient to add a seventh lesson or start a new course without reading runtime source.
 
 ## 1. Define the promise
 
-Write down the audience, prerequisites, observable outcomes, estimated time,
-and explicit non-goals before building interactions. Use an explorable only
-when direct manipulation improves a representation; use an exercise when the
-learner must make the idea survive implementation and tests.
+Write down the audience, prerequisites, observable outcomes, estimated time, and explicit non-goals before building interactions. Use an explorable only when direct manipulation improves a representation; use an exercise when the learner must make the idea survive implementation and tests.
 
 ## 2. Scaffold and run
 
@@ -20,16 +16,11 @@ pnpm install --frozen-lockfile
 pnpm exec explorables start examples/my-course
 ```
 
-The generated course is an Agent Plugins v1 package containing a portable
-`start-course` skill, both thin legacy host adapters, one lesson, one
-explorable, one exercise, and validation/test scripts.
+The generated course is an Agent Plugins v1 package containing a portable `start-course` skill, both thin legacy host adapters, one lesson, one explorable, one exercise, and validation/test scripts.
 
 ## 3. Course structure
 
-Required files are `README.md`, `AGENTS.md`, `CLAUDE.md`, `COURSE.md`,
-`plugin.json`, `skills/start-course/SKILL.md`, `package.json`, and a pnpm
-lockfile (the monorepo examples use the root lock).
-Recommended content directories are:
+Required files are `README.md`, `AGENTS.md`, `CLAUDE.md`, `COURSE.md`, `plugin.json`, `skills/start-course/SKILL.md`, `package.json`, and a pnpm lockfile (the monorepo examples use the root lock). Recommended content directories are:
 
 ```text
 lessons/       plain Markdown
@@ -55,9 +46,7 @@ license: CC-BY-4.0
 2. [Backpressure](lessons/02-backpressure.md)
 ```
 
-Required fields are `id`, `title`, `version`, `summary`, and `license`. IDs use
-lowercase kebab-case. Lesson `id` and `title` are required; `order`,
-`objectives`, and `prerequisites` are optional.
+Required fields are `id`, `title`, `version`, `summary`, and `license`. IDs use lowercase kebab-case. Lesson `id` and `title` are required; `order`, `objectives`, and `prerequisites` are optional.
 
 ### Optional guided course mode
 
@@ -71,15 +60,9 @@ guidance:
   persistLocally: true
 ```
 
-Newly scaffolded courses include this Guided configuration and a four-step
-prediction, interaction, implementation, and explanation checkpoint sequence.
-Authors may remove `guidance` when unrestricted navigation is intentional; the
-runtime still remembers the last visited lesson locally.
+Newly scaffolded courses include this Guided configuration and a four-step prediction, interaction, implementation, and explanation checkpoint sequence. Authors may remove `guidance` when unrestricted navigation is intentional; the runtime still remembers the last visited lesson locally.
 
-Courses without this object retain unrestricted navigation. Guided courses must
-give every lesson at least one checkpoint. A learner checkpoint is an explicit
-acknowledgment; an explorable checkpoint completes only after an exact event
-from an exact stable explorable `id`:
+Courses without this object retain unrestricted navigation. Guided courses must give every lesson at least one checkpoint. A learner checkpoint is an explicit acknowledgment; an explorable checkpoint completes only after an exact event from an exact stable explorable `id`:
 
 ```yaml
 checkpoints:
@@ -99,32 +82,52 @@ checkpoints:
     completion: learner
 ```
 
-The matching directive must declare `id="queue-simulator"` and emit
-`simulation-completed` only after a meaningful learner interaction. Never emit
-the completion event during initial render. Use a learner checkpoint for
-exercise work: the runtime deliberately does not run or grade exercises.
+The matching directive must declare `id="queue-simulator"` and emit `simulation-completed` only after a meaningful learner interaction. Never emit the completion event during initial render. Use a learner checkpoint for exercise work: the runtime deliberately does not run or grade exercises.
 
-Local persistence is browser-profile-only and resettable. It is not suitable
-for assessment evidence, identity, analytics, or cross-device progress.
+Local persistence is browser-profile-only and resettable. It is not suitable for assessment evidence, identity, analytics, or cross-device progress.
 
-The runtime adds a course-session panel without requiring author markup. It
-remembers the last visited lesson for locally persistent courses and identifies
-the first incomplete checkpoint in Guided mode. The panel defines portable
-learner phrases for start/resume, pause/end-session, review, Explore, confirmed
-checkpoint restart, reset, and finish. Course tutor policies should use those
-meanings and treat the browser state as authoritative.
+### Optional discovery cycle
 
-Resume is scoped to the course ID/version, browser profile, and web origin.
-Keep the default strict local port for normal use. A custom port intentionally
-creates a separate progress scope. Course state never contains solutions or
-assessment evidence, and storage failures must leave the course usable with a
-visible non-persistence warning.
+Set `discoveryCycle: true` in lesson frontmatter to apply the stricter profile to one lesson while piloting it. Set `guidance.discoveryCycle: true` to require it in every lesson. A discovery cycle uses ordered `predict`, `experiment`, `apply`, and `reflect` phases. Prediction and reflection capture a bounded browser-local response; the experiment records evidence rather than completing from an incidental parameter change:
+
+```yaml
+discoveryCycle: true
+checkpoints:
+  - id: predict
+    title: Predict the outcome
+    phase: predict
+    completion: learner
+    response:
+      format: short-text
+      prompt: What do you expect, and why?
+  - id: experiment
+    title: Save an experiment
+    phase: experiment
+    completion: explorable-event
+    instanceId: queue-simulator
+    event: experiment-recorded
+  - id: implement
+    title: Apply the model in code
+    phase: apply
+    completion: learner
+  - id: explain
+    title: Explain the evidence and one failure mode
+    phase: reflect
+    completion: learner
+    response:
+      format: long-text
+      prompt: What evidence changed or confirmed your model?
+```
+
+Responses and experiment runs migrate with guided progress, are removed by the same confirmed restart/reset rules, and never leave the browser. They are learning artifacts, not grades or proof of understanding.
+
+The runtime adds a course-session panel without requiring author markup. It remembers the last visited lesson for locally persistent courses and identifies the first incomplete checkpoint in Guided mode. The panel defines portable learner phrases for start/resume, pause/end-session, review, Explore, confirmed checkpoint restart, reset, and finish. Course tutor policies should use those meanings and treat the browser state as authoritative.
+
+Resume is scoped to the course ID/version, browser profile, and web origin. Keep the default strict local port for normal use. A custom port intentionally creates a separate progress scope. Course state never contains solutions or assessment evidence, and storage failures must leave the course usable with a visible non-persistence warning.
 
 ## 4. Write a lesson
 
-Lessons should remain useful on GitHub. A strong sequence is encounter,
-predict, manipulate, inspect, explain, implement, debug, and transfer. Those
-are headings and prose, not additional directives.
+Lessons should remain useful on GitHub. A strong sequence is encounter, predict, manipulate, inspect, explain, implement, debug, and transfer. Those are headings and prose, not additional directives.
 
 ```md
 ---
@@ -149,9 +152,7 @@ Implement the capacity check and run the supplied tests.
 :::
 ```
 
-Only `explorable` and `exercise` are supported. Unknown directives fail
-validation. Relative Markdown links and assets resolve from the lesson file;
-paths may not escape the course root. Raw HTML is sanitised.
+Only `explorable` and `exercise` are supported. Unknown directives fail validation. Relative Markdown links and assets resolve from the lesson file; paths may not escape the course root. Raw HTML is sanitised.
 
 ### Explorable attributes
 
@@ -161,8 +162,7 @@ paths may not escape the course root. Raw HTML is sanitised.
 - `config`: relative JSON file
 - `id`: stable kebab-case instance ID
 
-The directive body is the required text alternative. Describe what the learner
-can observe, not merely “interactive demo here.”
+The directive body is the required text alternative. Describe what the learner can observe, not merely “interactive demo here.”
 
 ### Exercise attributes
 
@@ -183,7 +183,12 @@ const module: ExplorableModule = {
   mount(root, context) {
     const button = document.createElement("button");
     button.textContent = "Take a step";
-    const onClick = () => context.emit({ type: "simulation-completed" });
+    const onClick = () =>
+      context.recordExperiment({
+        label: "one step",
+        inputs: { queueLength: 3 },
+        outputs: { queueLength: 4 },
+      });
     button.addEventListener("click", onClick);
     root.append(button);
     return {
@@ -201,18 +206,13 @@ const module: ExplorableModule = {
 export default module;
 ```
 
-`context` supplies `instanceId`, `lessonId`, JSON-compatible `config`, and a
-local `emit` function. Events are never analytics. Keep mathematical/model code
-separate and unit-test it. `mountForTest` in `@explorables/explorable` provides
-a DOM smoke helper.
+`context` supplies `instanceId`, `lessonId`, JSON-compatible `config`, a local `emit` function, and `recordExperiment`. Experiment records accept bounded scalar input/output fields so the parent can validate, store, and compare them. The parent supplies record IDs and timestamps; the iframe never receives storage access. Events and records are never analytics. Keep mathematical/model code separate and unit-test it. `mountForTest` in `@explorables/explorable` provides a DOM smoke helper.
 
-Every interaction must work with a keyboard, use labels/native controls where
-practical, expose important updates through `aria-live`, avoid colour-only
-meaning, respect reduced motion, and fit a narrow desktop pane.
+For a discovery explorable, provide a baseline/reset, learner-created inputs, visible assumptions and intermediate calculations, a meaningful broken case, and a save-evidence action. Do not call `recordExperiment` during initial render. The authoring review should be able to answer: what new question can a learner investigate that the lesson did not prescribe exactly?
 
-The CLI bundles the entry. Course-owned Vite configuration, external runtime
-CDNs, and browser network access are not allowed. Each artifact runs in an
-opaque-origin iframe with scripts only and `connect-src 'none'`.
+Every interaction must work with a keyboard, use labels/native controls where practical, expose important updates through `aria-live`, avoid colour-only meaning, respect reduced motion, and fit a narrow desktop pane.
+
+The CLI bundles the entry. Course-owned Vite configuration, external runtime CDNs, and browser network access are not allowed. Each artifact runs in an opaque-origin iframe with scripts only and `connect-src 'none'`.
 
 ## 6. Add an exercise
 
@@ -239,24 +239,13 @@ Example manifest:
 }
 ```
 
-Keep tasks focused and deterministic. Include an edge case or intentional
-failure that makes the learner inspect the model. Official-course reference
-solutions remain protected and are used only by CI to prove test validity.
+Keep tasks focused and deterministic. Include an edge case or intentional failure that makes the learner inspect the model. Official-course reference solutions remain protected and are used only by CI to prove test validity.
 
 ## 7. Configure the portable plugin and host adapters
 
-Put launch and tutoring policy in `AGENTS.md`. It must prohibit solving central
-starter files before an attempt and revealing protected paths. `CLAUDE.md`
-should contain `@AGENTS.md` plus only Preview-specific guidance.
-`.claude/launch.json` uses schema version `0.0.1`, runs `pnpm course`, and names
-the preview port. Do not put lesson content in host adapters.
+Put launch and tutoring policy in `AGENTS.md`. It must prohibit solving central starter files before an attempt and revealing protected paths. `CLAUDE.md` should contain `@AGENTS.md` plus only Preview-specific guidance. `.claude/launch.json` uses schema version `0.0.1`, runs `pnpm course`, and names the preview port. Do not put lesson content in host adapters.
 
-Keep `plugin.json` at the course root and target the canonical Agent Plugins v1
-schema. Its `name` and `version` must match `COURSE.md`. Put portable startup
-instructions in `skills/start-course/SKILL.md`; its `name` must match the
-`start-course` directory, and it should read `../../AGENTS.md` rather than copy
-the tutoring policy. MCP is optional in Agent Plugins v1 and is not needed for
-an explorables course.
+Keep `plugin.json` at the course root and target the canonical Agent Plugins v1 schema. Its `name` and `version` must match `COURSE.md`. Put portable startup instructions in `skills/start-course/SKILL.md`; its `name` must match the `start-course` directory, and it should read `../../AGENTS.md` rather than copy the tutoring policy. MCP is optional in Agent Plugins v1 and is not needed for an explorables course.
 
 ## 8. Validate and publish
 
@@ -266,21 +255,13 @@ pnpm exec explorables test path/to/course
 pnpm exec explorables build path/to/course
 ```
 
-Validation checks the Agent Plugin manifest and discovered Agent Skills plus
-course schemas, IDs, links, directive attributes, source/config files,
-exercise manifests, licences/text alternatives, and explorable compilation.
-Diagnostics use `file:line:column`.
+Validation checks the Agent Plugin manifest and discovered Agent Skills plus course schemas, IDs, links, directive attributes, source/config files, exercise manifests, licences/text alternatives, and explorable compilation. Diagnostics use `file:line:column`.
 
-Before publishing, test keyboard use and narrow layout, inspect the text-only
-fallback on GitHub, run from a clean checkout, declare licences for prose/code
-and third-party assets, then tag an immutable release. External compatible
-courses are unreviewed unless explicitly accepted by a catalogue review.
+Before publishing, test keyboard use and narrow layout, inspect the text-only fallback on GitHub, run from a clean checkout, declare licences for prose/code and third-party assets, then tag an immutable release. External compatible courses are unreviewed unless explicitly accepted by a catalogue review.
 
 ## 9. Assemble a local course collection
 
-A repository containing several independent course packages may add
-`explorables.library.json` at its root. The manifest orders learning tracks and
-explicitly allowlists available course directories:
+A repository containing several independent course packages may add `explorables.library.json` at its root. The manifest orders learning tracks and explicitly allowlists available course directories:
 
 ```json
 {
@@ -306,11 +287,7 @@ explicitly allowlists available course directories:
 }
 ```
 
-Available paths must be relative, remain inside the collection root, and point
-to independently valid courses. Their title, summary, version, lesson count,
-duration, and tags come from `COURSE.md`. Planned entries are visibly disabled
-and need enough metadata to explain the future course without implying it is
-installed.
+Available paths must be relative, remain inside the collection root, and point to independently valid courses. Their title, summary, version, lesson count, duration, and tags come from `COURSE.md`. Planned entries are visibly disabled and need enough metadata to explain the future course without implying it is installed.
 
 The normal commands recognize either kind of root:
 
@@ -320,6 +297,4 @@ pnpm exec explorables start path/to/collection
 pnpm exec explorables build path/to/collection
 ```
 
-Collections do not scan the filesystem, clone repositories, install
-dependencies, or replace the plugin manifest and tutoring policy inside each
-course.
+Collections do not scan the filesystem, clone repositories, install dependencies, or replace the plugin manifest and tutoring policy inside each course.

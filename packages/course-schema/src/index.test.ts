@@ -85,6 +85,7 @@ describe("course schemas", () => {
       allowExploreMode: true,
       allowSkipping: true,
       persistLocally: true,
+      discoveryCycle: false,
     });
     expect(
       checkpointSchema.parse({
@@ -95,6 +96,18 @@ describe("course schemas", () => {
         event: "simulation-completed",
       }),
     ).toMatchObject({ completion: "explorable-event" });
+    expect(
+      checkpointSchema.parse({
+        id: "predict",
+        title: "Make a prediction",
+        phase: "predict",
+        completion: "learner",
+        response: {
+          format: "short-text",
+          prompt: "What do you expect, and why?",
+        },
+      }),
+    ).toMatchObject({ phase: "predict", completion: "learner" });
   });
 
   it("parses available and planned collection entries", () => {

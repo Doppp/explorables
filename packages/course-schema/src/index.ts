@@ -76,6 +76,7 @@ export const courseFrontmatterSchema = z.object({
       allowExploreMode: z.boolean().default(true),
       allowSkipping: z.boolean().default(true),
       persistLocally: z.boolean().default(true),
+      discoveryCycle: z.boolean().default(false),
     })
     .optional(),
 });
@@ -113,15 +114,30 @@ export const courseCollectionSchema = z.object({
   tracks: z.array(collectionTrackSchema).min(1),
 });
 
+export const checkpointPhaseSchema = z.enum([
+  "predict",
+  "experiment",
+  "apply",
+  "reflect",
+]);
+
+export const checkpointResponseSchema = z.object({
+  format: z.enum(["short-text", "long-text"]),
+  prompt: z.string().min(1),
+});
+
 export const checkpointSchema = z.discriminatedUnion("completion", [
   z.object({
     id,
     title: z.string().min(1),
+    phase: checkpointPhaseSchema.optional(),
     completion: z.literal("learner"),
+    response: checkpointResponseSchema.optional(),
   }),
   z.object({
     id,
     title: z.string().min(1),
+    phase: checkpointPhaseSchema.optional(),
     completion: z.literal("explorable-event"),
     instanceId: id,
     event: z.string().min(1),
@@ -134,6 +150,7 @@ export const lessonFrontmatterSchema = z.object({
   order: z.number().int().positive().optional(),
   objectives: z.array(z.string().min(1)).optional(),
   prerequisites: z.array(z.string().min(1)).optional(),
+  discoveryCycle: z.boolean().optional(),
   checkpoints: z.array(checkpointSchema).optional(),
 });
 
@@ -200,13 +217,34 @@ export interface RuntimeCourseCollection {
   tracks: RuntimeCollectionTrack[];
 }
 
-export interface GuidedCourseStateV1 {
-  schemaVersion: 1;
+export interface CheckpointResponse {
+  text: string;
+  submittedAt?: string;
+}
+
+export type ExperimentScalar = null | boolean | number | string;
+
+export interface ExperimentRecord {
+  id: string;
+  checkpointId: string;
+  instanceId: string;
+  label?: string;
+  inputs: Record<string, ExperimentScalar>;
+  outputs: Record<string, ExperimentScalar>;
+  summary?: string;
+  recordedAt: string;
+}
+
+export interface GuidedCourseStateV2 {
+  schemaVersion: 2;
   courseId: string;
   courseVersion: string;
   mode: "guided" | "explore";
   activeLessonId: string;
   completedCheckpoints: Record<string, string[]>;
+  checkpointResponses: Record<string, Record<string, CheckpointResponse>>;
+  experimentRuns: Record<string, Record<string, ExperimentRecord[]>>;
+  experimentBaselines: Record<string, Record<string, string>>;
   skippedLessons: string[];
   parkedQuestions: string[];
   updatedAt: string;

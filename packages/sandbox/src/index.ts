@@ -90,6 +90,10 @@ export async function bundleExplorable(
       lessonId,
       config,
       emit: (event) => send({ type: "event", event }),
+      recordExperiment: (record) => send({
+        type: "event",
+        event: { type: "experiment-recorded", payload: record },
+      }),
     })).then((result) => {
       handle = result ?? {};
       send({ type: "ready" });

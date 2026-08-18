@@ -18,8 +18,9 @@ const module: ExplorableModule = {
     const rateOutput = element("output");
     rateLabel.append(rate, rateOutput);
     const takeStep = element("button", "Take one step");
+    const runExperiment = element("button", "Run four steps and save evidence");
     const reset = element("button", "Reset");
-    controls.append(rateLabel, takeStep, reset);
+    controls.append(rateLabel, takeStep, runExperiment, reset);
     const state = element("p");
     state.setAttribute("aria-live", "polite");
     const visual = element("div", undefined, "panel");
@@ -47,9 +48,28 @@ const module: ExplorableModule = {
       parameter = step(parameter, Number(rate.value));
       history.push(parameter);
       render();
-      context.emit({
-        type: "simulation-completed",
-        payload: { parameter, loss: loss(parameter) },
+      context.emit({ type: "parameter-changed", payload: { parameter } });
+    };
+    const onExperiment = () => {
+      parameter = -4;
+      history.splice(0, history.length, parameter);
+      const learningRate = Number(rate.value);
+      for (let index = 0; index < 4; index += 1) {
+        parameter = step(parameter, learningRate);
+        history.push(parameter);
+      }
+      const finalLoss = loss(parameter);
+      const behavior = finalLoss < loss(-4) ? "converging" : "diverging";
+      render();
+      context.recordExperiment({
+        label: `rate ${learningRate.toFixed(2)}`,
+        inputs: { startingTheta: -4, learningRate, steps: 4 },
+        outputs: {
+          finalTheta: Number(parameter.toFixed(3)),
+          finalLoss: Number(finalLoss.toFixed(3)),
+          behavior,
+        },
+        summary: `After four steps the run is ${behavior}.`,
       });
     };
     const onReset = () => {
@@ -60,6 +80,7 @@ const module: ExplorableModule = {
     };
     rate.addEventListener("input", render);
     takeStep.addEventListener("click", onStep);
+    runExperiment.addEventListener("click", onExperiment);
     reset.addEventListener("click", onReset);
     root.append(styles(), title, controls, state, visual, historyText);
     render();
@@ -67,6 +88,7 @@ const module: ExplorableModule = {
       destroy() {
         rate.removeEventListener("input", render);
         takeStep.removeEventListener("click", onStep);
+        runExperiment.removeEventListener("click", onExperiment);
         reset.removeEventListener("click", onReset);
         root.replaceChildren();
       },
