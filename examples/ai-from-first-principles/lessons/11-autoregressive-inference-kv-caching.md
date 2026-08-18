@@ -42,11 +42,13 @@ Append projected keys and values without mutating or dropping history, then comp
 
 The final capstone combines the course's token embeddings, causal attention, residual stream, RMS normalisation, next-token loss, parameter updates, greedy generation, and cached decoding in one deterministic model.
 
-Before opening the atlas, predict which stage first mixes information from multiple token positions. Then select each stage in order and compare your prediction with the exact tensor values.
+Before opening the atlas, predict which stage first mixes information from multiple token positions. Then select each tiny-model stage in order and compare your prediction with the exact tensor values.
 
-:::explorable{src="../explorables/model-atlas/index.ts" config="../explorables/model-atlas/tiny-transformer.json" title="Tiny Transformer 3D model atlas" height="760" id="tiny-transformer-atlas"}
-Walk a fixed three-token prompt through the executable teaching model, then compare its disclosed dimensions with OpenAI's published GPT-2 small baseline. The 3D blocks and semantic stage list stay synchronized; the inspector reports exact values only for the teaching model and remains the complete fallback when WebGL is unavailable.
+:::explorable{src="../explorables/model-atlas/index.ts" config="../explorables/model-atlas/tiny-transformer.json" title="Transformer model family 3D Atlas" height="1100" id="tiny-transformer-atlas"}
+Walk a fixed three-token prompt through the executable teaching model, compare its disclosed dimensions with OpenAI's published GPT-2 small baseline, then tour the source-gated DeepSeek V4, Kimi K3, Qwen 3, MiniMax M1, and GLM 5.2 family views. The 3D blocks and semantic stage list stay synchronized. Exact tensor values appear only for the teaching model; unfrozen family counts remain explicitly undisclosed.
 :::
+
+Use the same three-question tour for each frontier family: Which published mechanism changes the information path? Which evidence label supports it? Which tempting numerical comparison is unavailable because the course source freeze is incomplete? The absence of a number is part of the lesson, not a missing visual.
 
 :::explorable{src="../explorables/tiny-transformer/index.ts" title="Tiny Transformer training and generation capstone" height="760" id="tiny-transformer-capstone"}
 Train a one-layer language model on a fixed cyclic corpus. Inspect its loss, generated tokens, cached-versus-uncached result, and final hidden state. Broken residual and evaluation modes reveal why a plausible result may not support the intended claim.
