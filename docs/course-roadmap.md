@@ -2,6 +2,8 @@
 
 Status: accepted; foundation complete, frontier family planned, DeepSeek V4 and GLM 5.2 refresh complete Planning date: 17 August 2026
 
+The foundation course now includes a source-grounded 3D Model Atlas for comparing the executable tiny Transformer with published GPT configurations and candidate mechanism views of the planned frontier families. This shared view does not make the planned model-family courses runnable or complete their source/licence freezes; unfrozen numerical topology remains explicitly undisclosed.
+
 ## Purpose
 
 `AI from First Principles` is the common foundation for a family of advanced courses about open-weight frontier-model research:

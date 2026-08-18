@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 import { fireEvent } from "@testing-library/dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 

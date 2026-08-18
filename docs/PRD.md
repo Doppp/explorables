@@ -981,6 +981,16 @@ Each explorable should include:
 - An accessibility check
 - A browser screenshot or visual regression test for first-party courses
 
+## 10.7 Source-grounded 3D Model Atlas
+
+Courses may use `@explorables/model-atlas` when spatial structure materially helps a learner understand repeated blocks, routing, residual paths, caches, or differences between model families. The Atlas is an explorable module, not a new Markdown directive or lesson language.
+
+Every Atlas descriptor is inert versioned data. Each stage identifies its evidence as `executable`, `configuration-derived`, `report-derived`, `conceptual`, or `undisclosed` and references a reviewed source revision. Exact tensor traces are separate and may come only from tested teaching code or committed deterministic fixtures. A convincing scene must never turn a conceptual aggregation, candidate source, or proprietary gap into an architecture claim.
+
+The 3D canvas is progressive enhancement. The same learning task must remain available through native stage controls, a semantic outline, provenance text, comparison tables, and exact tensor tables where a trace exists. WebGL failure or context loss falls back to this representation. Large model counts are aggregated within validated scene budgets; production weights, runtime downloads, remote assets, analytics, and new iframe permissions are not required.
+
+The first reference Atlas covers the deterministic tiny Transformer, published GPT-1/2/3 configurations, GPT-4's explicit disclosure boundary, and source-gated candidate mechanism views for DeepSeek V4, Kimi K3, Qwen 3, MiniMax M1, and GLM 5.2. Candidate family views omit unfrozen numerical topology until their course-local source and licence gates are complete.
+
 ---
 
 # 11. Sandboxing and security
@@ -1313,6 +1323,8 @@ explorables/
 │   │   └── src/
 │   ├── explorable-sdk/
 │   │   └── src/
+│   ├── model-atlas/
+│   │   └── src/
 │   ├── sandbox/
 │   │   └── src/
 │   ├── validator/
@@ -1390,6 +1402,14 @@ Zod schemas and TypeScript types for:
 - Event protocol
 - Test utilities
 - Optional adapters
+
+### `@explorables/model-atlas`
+
+- Inert architecture-descriptor and deterministic-trace schemas
+- Evidence and reviewed-source boundaries
+- Bounded Three.js rendering behind the explorable contract
+- Semantic stage, tensor, fallback, and comparison representations
+- Deterministic WebGL/resource lifecycle
 
 ### `@explorables/sandbox`
 

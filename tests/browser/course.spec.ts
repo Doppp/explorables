@@ -573,7 +573,33 @@ test("inference and capstone preserve cache equivalence and expose invalid claim
     cacheFrame.getByText(/current query can no longer attend to earlier tokens/),
   ).toBeVisible();
 
-  const capstoneFrame = page.frameLocator("iframe").nth(1);
+  const atlasFrame = page.frameLocator("iframe").nth(1);
+  await expect(
+    atlasFrame.getByRole("heading", {
+      name: "Walk one prediction through the model compared with GPT-2 small",
+    }),
+  ).toBeVisible();
+  await expect(atlasFrame.getByText("1.000", { exact: true })).toBeVisible();
+  await atlasFrame
+    .getByLabel("Model shown in the atlas")
+    .selectOption({ label: "GPT-4 disclosure boundary" });
+  await expect(
+    atlasFrame.getByRole("heading", { name: "GPT-4 disclosure boundary" }).last(),
+  ).toBeVisible();
+  await atlasFrame
+    .getByRole("button", { name: "2. Architecture intentionally undisclosed" })
+    .click();
+  await expect(atlasFrame.getByText("undisclosed evidence")).toBeVisible();
+  await expect(atlasFrame.getByRole("table").first()).toContainText(
+    "Not disclosed here",
+  );
+  await atlasFrame
+    .getByLabel("Model shown in the atlas")
+    .selectOption({ label: "DeepSeek V4 family" });
+  await atlasFrame.getByRole("button", { name: "2. CSA/HCA hybrid attention" }).click();
+  await expect(atlasFrame.getByText("report-derived evidence")).toBeVisible();
+
+  const capstoneFrame = page.frameLocator("iframe").nth(2);
   await expect(
     capstoneFrame.getByRole("heading", {
       name: "Train, generate, and challenge the claim",
@@ -646,4 +672,13 @@ test("course shell passes axe and fits a narrow preview pane", async ({ page }) 
       (documentElement) => documentElement.scrollWidth > documentElement.clientWidth,
     );
   expect(inferenceOverflow).toBe(false);
+
+  const atlasFrame = page.frameLocator("iframe").nth(1);
+  await expect(atlasFrame.getByLabel("Model shown in the atlas")).toBeVisible();
+  const atlasOverflow = await atlasFrame
+    .locator("html")
+    .evaluate(
+      (documentElement) => documentElement.scrollWidth > documentElement.clientWidth,
+    );
+  expect(atlasOverflow).toBe(false);
 });

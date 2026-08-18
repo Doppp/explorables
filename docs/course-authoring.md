@@ -210,6 +210,14 @@ export default module;
 
 For a discovery explorable, provide a baseline/reset, learner-created inputs, visible assumptions and intermediate calculations, a meaningful broken case, and a save-evidence action. Do not call `recordExperiment` during initial render. The authoring review should be able to answer: what new question can a learner investigate that the lesson did not prescribe exactly?
 
+### Source-grounded 3D model views
+
+Use `@explorables/model-atlas` only when spatial structure clarifies a relationship that prose, a matrix, or a small 2D diagram does not. Keep lesson narration in Markdown and mount the Atlas through the ordinary `explorable` directive. Do not add a 3D-specific directive.
+
+Author descriptors as inert data and validate them with `parseModelAtlasDescriptor`. Every stage needs a reviewed source and one evidence label: `executable`, `configuration-derived`, `report-derived`, `conceptual`, or `undisclosed`. Keep exact tensor traces separate and derive them from tested teaching code. If a model card or report does not publish a count, width, schedule, or internal topology, omit it and add an explicit undisclosed stage. Product names and benchmark behavior are not architecture evidence.
+
+The shared renderer supplies keyboard-operable stage controls, a semantic outline, evidence/source text, tensor tables, comparison tables, WebGL fallback, and resource cleanup. Authors still provide a useful Markdown fallback, a prediction or comparison task, descriptor/trace unit tests, narrow-layout browser coverage, and a source/licence freeze before promoting a candidate family descriptor to exact configuration-derived content. Never load production weights, remote textures, fonts, shaders, or data from an Atlas explorable.
+
 Every interaction must work with a keyboard, use labels/native controls where practical, expose important updates through `aria-live`, avoid colour-only meaning, respect reduced motion, and fit a narrow desktop pane.
 
 The CLI bundles the entry. Course-owned Vite configuration, external runtime CDNs, and browser network access are not allowed. Each artifact runs in an opaque-origin iframe with scripts only and `connect-src 'none'`.
