@@ -26,6 +26,7 @@ await build({
 
 await build({
   entryPoints: {
+    "model-atlas": "packages/model-atlas/src/index.ts",
     "sandbox-client": "packages/sandbox/src/client.ts",
     runtime: "packages/runtime/src/index.tsx",
   },

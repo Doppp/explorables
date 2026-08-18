@@ -1,0 +1,60 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "qwen-3-family",
+  "name": "Qwen 3 family",
+  "version": "candidate-view-7a2f61f",
+  "summary": "A family-level comparison boundary for Qwen 3; the planned course must still select exact dense and MoE checkpoints and licences.",
+  "sources": [
+    {
+      "id": "qwen3-repository",
+      "label": "QwenLM Qwen3 repository",
+      "reference": "https://github.com/QwenLM/Qwen3/tree/7a2f61ffc7a20d47efcd2bf97f6f2bf52729042e",
+      "evidence": "configuration-derived",
+      "revision": "7a2f61ffc7a20d47efcd2bf97f6f2bf52729042e"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Token sequence",
+      "summary": "A common conceptual input stage supports family comparison without selecting an unfrozen tokenizer artifact.",
+      "kind": "tokens",
+      "evidence": "conceptual",
+      "sourceIds": ["qwen3-repository"]
+    },
+    {
+      "id": "attention",
+      "title": "Causal attention path",
+      "summary": "The decoder attention path is shown conceptually; exact dimensions depend on the checkpoint selected later.",
+      "kind": "attention",
+      "evidence": "conceptual",
+      "sourceIds": ["qwen3-repository"]
+    },
+    {
+      "id": "dense-or-moe",
+      "title": "Dense or MoE feed-forward path",
+      "summary": "Qwen 3 includes dense and MoE variants. This fork stays explicit instead of merging their topology.",
+      "kind": "undisclosed",
+      "evidence": "undisclosed",
+      "sourceIds": ["qwen3-repository"]
+    },
+    {
+      "id": "reasoning-mode",
+      "title": "Hybrid reasoning behavior",
+      "summary": "Reasoning mode is a behavior and post-training concern, not a fabricated 3D architecture block.",
+      "kind": "other",
+      "evidence": "conceptual",
+      "sourceIds": ["qwen3-repository"]
+    },
+    {
+      "id": "output",
+      "title": "Output distribution",
+      "summary": "The selected model produces next-token scores; this view executes no Qwen weights.",
+      "kind": "output",
+      "evidence": "conceptual",
+      "sourceIds": ["qwen3-repository"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}

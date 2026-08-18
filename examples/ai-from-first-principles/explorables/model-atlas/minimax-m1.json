@@ -1,0 +1,60 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "minimax-m1",
+  "name": "MiniMax M1",
+  "version": "candidate-view-2abb4f4",
+  "summary": "A source-gated mechanism view of MiniMax M1's hybrid attention and long-context reasoning path.",
+  "sources": [
+    {
+      "id": "minimax-m1-repository",
+      "label": "MiniMax M1 repository",
+      "reference": "https://github.com/MiniMax-AI/MiniMax-M1/tree/2abb4f45a9df4154b4bde024d51874bd127edcee",
+      "evidence": "configuration-derived",
+      "revision": "2abb4f45a9df4154b4bde024d51874bd127edcee"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Long-context token sequence",
+      "summary": "The candidate view identifies the sequence path without asserting an unfrozen context limit.",
+      "kind": "tokens",
+      "evidence": "conceptual",
+      "sourceIds": ["minimax-m1-repository"]
+    },
+    {
+      "id": "hybrid-attention",
+      "title": "Hybrid attention",
+      "summary": "The family combines attention mechanisms for long-context processing; the exact schedule remains gated.",
+      "kind": "attention",
+      "evidence": "report-derived",
+      "sourceIds": ["minimax-m1-repository"]
+    },
+    {
+      "id": "reasoning",
+      "title": "Reasoning post-training",
+      "summary": "Reasoning behavior is kept separate from architectural structure in the visual grammar.",
+      "kind": "other",
+      "evidence": "conceptual",
+      "sourceIds": ["minimax-m1-repository"]
+    },
+    {
+      "id": "undisclosed-scale",
+      "title": "Exact checkpoint topology not frozen",
+      "summary": "Counts, dimensions, weights, and evaluation protocol remain behind the planned source gate.",
+      "kind": "undisclosed",
+      "evidence": "undisclosed",
+      "sourceIds": ["minimax-m1-repository"]
+    },
+    {
+      "id": "output",
+      "title": "Output distribution",
+      "summary": "The view stops at conceptual next-token output and runs no production weights.",
+      "kind": "output",
+      "evidence": "conceptual",
+      "sourceIds": ["minimax-m1-repository"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}

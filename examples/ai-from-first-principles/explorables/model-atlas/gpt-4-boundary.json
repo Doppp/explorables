@@ -1,0 +1,52 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "gpt-4-boundary",
+  "name": "GPT-4 disclosure boundary",
+  "version": "2023-technical-report",
+  "summary": "OpenAI describes GPT-4 as a Transformer-style next-token model but explicitly withholds architecture and model-size details.",
+  "sources": [
+    {
+      "id": "gpt4-report",
+      "label": "GPT-4 Technical Report",
+      "reference": "https://cdn.openai.com/papers/gpt-4.pdf",
+      "evidence": "report-derived",
+      "revision": "OpenAI 2023 technical report"
+    }
+  ],
+  "stages": [
+    {
+      "id": "input",
+      "title": "Published input boundary",
+      "summary": "The report establishes a next-token pre-training objective and vision capability, but not an internal topology.",
+      "kind": "tokens",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt4-report"]
+    },
+    {
+      "id": "undisclosed-interior",
+      "title": "Architecture intentionally undisclosed",
+      "summary": "Model size, layers, widths, attention layout, hardware, training compute, and similar details are not published in the report.",
+      "kind": "undisclosed",
+      "evidence": "undisclosed",
+      "sourceIds": ["gpt4-report"]
+    },
+    {
+      "id": "post-training",
+      "title": "Published post-training boundary",
+      "summary": "The report identifies reinforcement learning from human feedback without disclosing the full training method.",
+      "kind": "other",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt4-report"]
+    },
+    {
+      "id": "output",
+      "title": "System output",
+      "summary": "Capabilities, limitations, and safety evaluations are published at the system boundary rather than as architecture claims.",
+      "kind": "output",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt4-report"]
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 64 }
+}

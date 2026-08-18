@@ -17,6 +17,7 @@ COURSE.md + lessons + modules + exercises
 - `@explorables/course-schema`: Zod schemas and shared data types. It knows no filesystem or UI details.
 - `@explorables/markdown`: parses frontmatter and plain Markdown, recognizes only `explorable` and `exercise`, sanitises HTML, and preserves source positions for diagnostics.
 - `@explorables/explorable`: the framework-neutral module/event/handle contract plus mount test helpers.
+- `@explorables/model-atlas`: inert model/trace schemas, evidence-aware comparison, semantic fallback, and bounded Three.js rendering behind the ordinary explorable contract.
 - `@explorables/sandbox`: controlled TypeScript bundling, iframe document/CSP, message validation, lifecycle, and cleanup.
 - `@explorables/validator`: filesystem and cross-file checks that produce actionable diagnostics.
 - `@explorables/runtime`: the React reading/navigation shell and directive UI.
@@ -43,6 +44,12 @@ The CLI owns esbuild options. A course supplies an entry `.ts` module and JSON c
 The iframe CSP defaults to no capabilities: `default-src 'none'` and `connect-src 'none'`, with only inline/blob scripts and styles plus data/blob images and data fonts needed for bundled modules. A bootstrap imports the bundle, calls its default `mount`, catches failures, and exchanges only versioned `ready`, `event`, `error`, `resize`, and `destroy` messages. Both sides validate message shape and instance ID. Unmount removes listeners, invokes `destroy`, revokes resources, and removes the iframe.
 
 This protects the course document context and blocks browser networking. It does not make installing an arbitrary dependency safe; external courses remain unreviewed code and the CLI must display that trust boundary before any future remote-install feature.
+
+### Model Atlas boundary
+
+Model Atlas descriptors are JSON-compatible data with strict keys, IDs, source references, evidence labels, stage-reference integrity, and scene budgets. They cannot contain HTML, CSS, shaders, executable callbacks, or runtime asset URLs. Deterministic tensor traces use a separate schema and must match a descriptor and its stage IDs.
+
+Three.js is an internal renderer dependency. It is bundled by the same controlled pipeline, runs in the same opaque-origin `allow-scripts` iframe, and retains `connect-src 'none'`. The renderer creates no remote requests and loads no model weights. Its canvas is `aria-hidden`; native stage buttons, provenance, comparison rows, and tensor tables are the complete semantic representation. WebGL initialization failure or context loss replaces only the canvas. Destroy disconnects observers, removes listeners, cancels pending frames, and disposes geometries, materials, and the renderer.
 
 ## Exercise boundary
 

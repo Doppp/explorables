@@ -12,6 +12,7 @@
   "devDependencies": {
     "@explorables/cli": "workspace:*",
     "@explorables/explorable": "workspace:*",
+    "@explorables/model-atlas": "workspace:*",
     "vitest": "4.1.10"
   }
 }

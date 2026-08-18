@@ -1,0 +1,74 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "gpt-2-small",
+  "name": "GPT-2 small",
+  "version": "released-124m-checkpoint",
+  "summary": "OpenAI's released baseline uses a 12-block decoder-only Transformer with learned token and position embeddings.",
+  "sources": [
+    {
+      "id": "openai-gpt2-code",
+      "label": "OpenAI GPT-2 model.py",
+      "reference": "https://github.com/openai/gpt-2/blob/9b63575ef42771a015060c964af2c3da4cf7c8ab/src/model.py",
+      "evidence": "configuration-derived",
+      "revision": "9b63575ef42771a015060c964af2c3da4cf7c8ab"
+    },
+    {
+      "id": "openai-gpt2-report",
+      "label": "Language Models are Unsupervised Multitask Learners",
+      "reference": "https://cdn.openai.com/better-language-models/language-models.pdf",
+      "evidence": "report-derived",
+      "revision": "February 2019 report"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Byte-pair token IDs",
+      "summary": "Byte-level BPE produces IDs for a 50,257-entry vocabulary.",
+      "kind": "tokens",
+      "evidence": "configuration-derived",
+      "sourceIds": ["openai-gpt2-code"],
+      "dimensions": { "vocabulary": 50257, "context": 1024 }
+    },
+    {
+      "id": "embedding",
+      "title": "Token and position embeddings",
+      "summary": "Learned token and position tables produce a width-768 residual stream.",
+      "kind": "embedding",
+      "evidence": "configuration-derived",
+      "sourceIds": ["openai-gpt2-code"],
+      "dimensions": { "width": 768, "vocabulary": 50257, "context": 1024 }
+    },
+    {
+      "id": "attention",
+      "title": "Masked self-attention",
+      "summary": "Each of 12 repeated blocks uses 12 causal attention heads and a residual update.",
+      "kind": "attention",
+      "evidence": "configuration-derived",
+      "sourceIds": ["openai-gpt2-code", "openai-gpt2-report"],
+      "count": 12,
+      "dimensions": { "width": 768, "heads": 12, "context": 1024 }
+    },
+    {
+      "id": "feed-forward",
+      "title": "Position-wise MLP",
+      "summary": "Each repeated block applies GELU between width-768 and width-3,072 projections.",
+      "kind": "feed-forward",
+      "evidence": "configuration-derived",
+      "sourceIds": ["openai-gpt2-code"],
+      "count": 12,
+      "dimensions": { "width": 768, "expansion": 3072 }
+    },
+    {
+      "id": "output",
+      "title": "Final norm and tied output",
+      "summary": "Final layer normalisation feeds logits through the transposed token-embedding table.",
+      "kind": "output",
+      "evidence": "configuration-derived",
+      "sourceIds": ["openai-gpt2-code"],
+      "dimensions": { "width": 768, "vocabulary": 50257 }
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}
