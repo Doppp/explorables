@@ -67,6 +67,11 @@ export function compareModelDescriptors(
       label: "Vocabulary entries",
       read: (value) => dimension(value, "vocabulary"),
     },
+    {
+      key: "parameters-millions",
+      label: "Published parameters (millions)",
+      read: (value) => dimension(value, "parameters-millions"),
+    },
   ];
   return fields.map((field) => {
     const leftValue = field.read(left);

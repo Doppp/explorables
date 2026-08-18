@@ -1,0 +1,67 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "gpt-3-175b",
+  "name": "GPT-3 175B",
+  "version": "arxiv-2005.14165",
+  "summary": "The GPT-3 paper published the largest model's scale and its alternating dense and locally banded sparse attention pattern.",
+  "sources": [
+    {
+      "id": "gpt3-paper",
+      "label": "Language Models are Few-Shot Learners",
+      "reference": "https://arxiv.org/abs/2005.14165",
+      "evidence": "report-derived",
+      "revision": "arXiv:2005.14165"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "Token sequence",
+      "summary": "The paper reports a 2,048-token context window.",
+      "kind": "tokens",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt3-paper"],
+      "dimensions": { "context": 2048, "parameters-millions": 175000 }
+    },
+    {
+      "id": "embedding",
+      "title": "Width-12,288 residual stream",
+      "summary": "Embedding output enters the published model width.",
+      "kind": "embedding",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt3-paper"],
+      "dimensions": { "width": 12288, "context": 2048 }
+    },
+    {
+      "id": "attention",
+      "title": "Dense and locally banded attention",
+      "summary": "Ninety-six layers alternate dense and locally banded sparse attention and use 96 heads.",
+      "kind": "attention",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt3-paper"],
+      "count": 96,
+      "dimensions": { "width": 12288, "heads": 96, "context": 2048 }
+    },
+    {
+      "id": "feed-forward",
+      "title": "Feed-forward path",
+      "summary": "The paper states that feed-forward width is four times the model width.",
+      "kind": "feed-forward",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt3-paper"],
+      "count": 96,
+      "dimensions": { "width": 12288, "expansion": 49152 }
+    },
+    {
+      "id": "output",
+      "title": "Few-shot language-model output",
+      "summary": "Tasks and demonstrations are supplied through text without gradient updates during evaluation.",
+      "kind": "output",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt3-paper"],
+      "dimensions": { "width": 12288 }
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 256 }
+}

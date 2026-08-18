@@ -45,7 +45,7 @@ The final capstone combines the course's token embeddings, causal attention, res
 Before opening the atlas, predict which stage first mixes information from multiple token positions. Then select each tiny-model stage in order and compare your prediction with the exact tensor values.
 
 :::explorable{src="../explorables/model-atlas/index.ts" config="../explorables/model-atlas/tiny-transformer.json" title="Transformer model family 3D Atlas" height="1100" id="tiny-transformer-atlas"}
-Walk a fixed three-token prompt through the executable teaching model, compare its disclosed dimensions with OpenAI's published GPT-2 small baseline, then tour the source-gated DeepSeek V4, Kimi K3, Qwen 3, MiniMax M1, and GLM 5.2 family views. The 3D blocks and semantic stage list stay synchronized. Exact tensor values appear only for the teaching model; unfrozen family counts remain explicitly undisclosed.
+Walk a fixed three-token prompt through the executable teaching model; compare the published GPT-1, GPT-2, and GPT-3 configurations; inspect GPT-4's explicit disclosure boundary; then tour the source-gated DeepSeek V4, Kimi K3, Qwen 3, MiniMax M1, and GLM 5.2 family views. The 3D blocks and semantic stage list stay synchronized. Exact tensor values appear only for the teaching model; unpublished or unfrozen counts remain explicitly undisclosed.
 :::
 
 Use the same three-question tour for each frontier family: Which published mechanism changes the information path? Which evidence label supports it? Which tempting numerical comparison is unavailable because the course source freeze is incomplete? The absence of a number is part of the lesson, not a missing visual.

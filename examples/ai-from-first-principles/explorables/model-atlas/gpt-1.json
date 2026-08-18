@@ -1,0 +1,67 @@
+{
+  "kind": "model-atlas",
+  "schemaVersion": 1,
+  "id": "gpt-1",
+  "name": "GPT-1",
+  "version": "2018-published-configuration",
+  "summary": "OpenAI's first GPT report published a 12-layer decoder-only Transformer configuration and a 512-token training sequence length.",
+  "sources": [
+    {
+      "id": "gpt1-paper",
+      "label": "Improving Language Understanding by Generative Pre-Training",
+      "reference": "https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf",
+      "evidence": "report-derived",
+      "revision": "2018 paper"
+    }
+  ],
+  "stages": [
+    {
+      "id": "tokens",
+      "title": "BPE token sequence",
+      "summary": "BPE tokens and learned positions enter in contiguous sequences of 512 tokens.",
+      "kind": "tokens",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt1-paper"],
+      "dimensions": { "context": 512 }
+    },
+    {
+      "id": "embedding",
+      "title": "Token and position embeddings",
+      "summary": "Learned embeddings produce width-768 states.",
+      "kind": "embedding",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt1-paper"],
+      "dimensions": { "width": 768, "context": 512 }
+    },
+    {
+      "id": "attention",
+      "title": "Masked self-attention",
+      "summary": "Twelve decoder layers each use 12 masked self-attention heads.",
+      "kind": "attention",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt1-paper"],
+      "count": 12,
+      "dimensions": { "width": 768, "heads": 12, "context": 512 }
+    },
+    {
+      "id": "feed-forward",
+      "title": "GELU feed-forward path",
+      "summary": "Each layer uses a width-3,072 position-wise inner state.",
+      "kind": "feed-forward",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt1-paper"],
+      "count": 12,
+      "dimensions": { "width": 768, "expansion": 3072 }
+    },
+    {
+      "id": "output",
+      "title": "Language-model output",
+      "summary": "Pre-training predicts the next token before task-specific fine-tuning.",
+      "kind": "output",
+      "evidence": "report-derived",
+      "sourceIds": ["gpt1-paper"],
+      "dimensions": { "width": 768 }
+    }
+  ],
+  "budgets": { "maxSceneObjects": 16, "maxInstances": 128 }
+}
