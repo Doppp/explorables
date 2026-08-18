@@ -44,7 +44,7 @@ Updated: 18 August 2026
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation and local hardening are complete; clean-checkout verification and pull-request CI remain.
+The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, and clean-checkout verification are complete; pull-request CI remains.
 
 `AI from First Principles` `0.3.0-guided.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local course-library milestone are implemented. The course UI redesign and its responsive/theme follow-up are complete. The library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation increment remains the shared-core source freeze and its five research/comparison lessons, followed by the pinned model-specific courses. External DNS and learner-study evidence also remain.
 
@@ -71,6 +71,8 @@ The v0.1 runtime MVP remains verified. Course-session continuity now provides a 
 18 Aug pnpm test:browser              pass (15 tests; Atlas model switching, GPT-4 undisclosed boundary, frontier evidence, narrow layout, sandbox, and existing flows)
 18 Aug pnpm site:test / audit         pass (2 tests; no known high-severity vulnerabilities)
 18 Aug in-app browser inspection      pass (ten model choices, semantic stage/tensor tables, comparison disclosure, and intact capstone layout)
+18 Aug clean Node 24/pnpm 11 clone    pass (frozen install, 33 suites/100 tests, validation, package/collection/minimal/site builds)
+18 Aug clean Node 22/pnpm 10 clone    pass (frozen reinstall, same 33 suites/100 tests, validation, and all builds)
 17 Aug model-source refresh             pass (official DeepSeek V4 and GLM 5.2 reports/cards/configs/licences; reviewed commits recorded)
 17 Aug pnpm check                       pass (26 suites/83 tests plus collection/course validation; Node 26.7.0 shell emitted the expected unsupported-engine warning)
 17 Aug pnpm build                       pass (packages, collection, standalone course, and static site; same Node 26 warning)
