@@ -12,6 +12,8 @@
   "devDependencies": {
     "@explorables/cli": "workspace:*",
     "@explorables/explorable": "workspace:*",
+    "@types/three": "0.185.4",
+    "three": "0.185.1",
     "vitest": "4.1.10"
   }
 }
