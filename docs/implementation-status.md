@@ -71,7 +71,7 @@ The v0.1 runtime MVP remains verified. Course-session continuity now provides a 
 ## Latest verification
 
 ```text
-19 Aug canonical foundations       pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)
+19 Aug foundations + PRD v0.4     pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)
 19 Aug general library redesign      pass (typecheck, 7 suites/29 targeted tests, collection validation/build, 15 browser tests, 2 site tests, axe, light/dark visual QA at 843px and 320px)
 18 Aug Model Atlas unit/integration    pass (33 suites/100 tests; strict descriptors, exact traces, comparisons, renderer lifecycle, validator, and real catalogue bundle)
 18 Aug pnpm check / build             pass (Node 26 shell emitted expected unsupported-engine warning; supported Node lines verified separately)
