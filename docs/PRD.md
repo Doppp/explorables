@@ -1,8 +1,8 @@
 # Explorables: Open Explorable Course Runtime
 ## Product Requirements, Technical Specification, and Course Authoring Guide
 
-**Status:** Draft v0.3
-**Date:** 12 August 2026
+**Status:** Draft v0.4
+**Date:** 19 August 2026
 **Display name:** `Explorables`
 **Supported initial hosts:** Codex and Claude Code Desktop  
 **Public site:** `https://explorables.ai`  
@@ -322,20 +322,30 @@ The intended desktop experience is:
 
 The browser or preview pane is the primary reading and interaction surface. The coding-agent workspace is the primary tutoring and implementation surface.
 
+This is also a content boundary. Definitions, prerequisite bridges, notation, worked explanations,
+and exercise context belong in the lesson Markdown rendered in the browser. The coding agent may
+adapt, question, restate, and clarify that material, but a course must not depend on chat as the
+only place where a learner can obtain the foundational explanation.
+
 ## 6.3 Typical lesson flow
 
 A lesson should usually follow this sequence:
 
-1. **Encounter** — show a phenomenon before fully explaining it.
-2. **Predict** — ask the learner what they think will happen.
-3. **Manipulate** — let the learner alter the system.
-4. **Inspect** — reveal internal values, state, or execution.
-5. **Explain** — introduce the underlying concept.
-6. **Implement** — ask the learner to write a focused piece of code.
-7. **Debug** — provide a broken system or failed test.
-8. **Transfer** — apply the idea in a different situation.
+1. **Orient** — state why the concept exists, bridge only the required prior knowledge, and define
+   the terms and notation needed for the prediction.
+2. **Encounter** — show a phenomenon before fully explaining its mechanism.
+3. **Predict** — ask the learner what they think will happen.
+4. **Manipulate** — let the learner alter the system.
+5. **Inspect** — reveal internal values, state, or execution.
+6. **Explain** — connect the evidence to the formal mechanism and work through intermediate values.
+7. **Implement** — ask the learner to write a focused piece of code.
+8. **Debug** — provide a broken system or failed test.
+9. **Recap and transfer** — ask the learner to explain the invariant and apply it elsewhere.
 
 These stages are pedagogical guidance, not mandatory runtime primitives. Most can be written as ordinary Markdown around one or two interactive embeds.
+
+Terms and notation required for a meaningful prediction must appear before it. The full mechanism
+may remain until after the learner has generated evidence.
 
 ## 6.4 Course sessions and learner language
 
@@ -581,6 +591,10 @@ This repository contains an interactive course.
 ## Tutoring behaviour
 
 - Teach through questions, prediction, inspection, and debugging.
+- Treat lesson Markdown as the canonical explanation. Point to its definitions, worked example,
+  and recap before supplementing it.
+- Check only the prerequisite vocabulary needed for the active checkpoint. Explain a missing term
+  briefly, return to the lesson, and do not make chat the only source of a core concept.
 - Do not complete the central exercise implementation for the learner.
 - Give the smallest useful hint first.
 - Refer to the current lesson and rendered explorable.
@@ -730,12 +744,30 @@ By the end of the course, you should be able to:
 
 A lesson must be useful as plain Markdown.
 
+Lesson Markdown is the canonical teaching material, not an outline that requires a coding agent to
+supply the missing lecture. The runtime adds interactivity and the tutor adds adaptation, but the
+durable explanation remains reviewable in the course repository.
+
 The runtime adds interactivity, but the source should still communicate:
 
 - What is being taught
 - What the learner should do
-- What the fallback explanation is
+- What explanation and context lets the learner understand the interaction without tutor chat
 - Which exercise is associated with the lesson
+
+For a lesson that introduces a foundational concept, the Markdown must also provide:
+
+- the prerequisite bridge and plain-language definitions needed to understand the prediction;
+- definitions for new notation before the learner is asked to use it;
+- a worked example with enough intermediate values to inspect the mechanism;
+- an explanation that connects the explorable's observed values to the formal concept;
+- a bridge from the representation to relevant code responsibilities or data shapes;
+- at least one deliberate failure and the invariant it violates; and
+- a concise recap or self-check that asks the learner to explain rather than merely recognise.
+
+This contract does not imply a minimum word count or rigid heading vocabulary. Automated validation
+continues to check structure, paths, fallbacks, and executable contracts; editorial review and
+learner playtesting determine whether the explanation is sufficient for the declared audience.
 
 ## 9.2 Lesson frontmatter
 
@@ -1757,27 +1789,52 @@ objectives:
 
 # Gradient Descent
 
-A model learns by changing its parameters to reduce a measured error.
+A **parameter** is a number the model can adjust. In this example the parameter is `x`, and the
+**loss** `L(x) = x²` measures how far it is from the minimum at `x = 0`. The **gradient** is the
+slope of the loss; here it is `2x`. A positive **learning rate** `α` controls the size of one update:
 
-Before using the controls, predict what will happen when the learning
-rate becomes ten times larger.
+`next x = x − α × gradient`
+
+> **Predict:** Starting from `x = 3`, will `α = 0.1` and `α = 1` make the distance from the minimum
+> shrink, stay fixed, or grow? Will either update cross the minimum?
 
 :::explorable{src="../explorables/loss-surface/index.ts" height="520" title="Gradient descent explorer"}
-Change the learning rate and take repeated optimisation steps. A very
-large learning rate may cross the minimum repeatedly instead of settling.
+Change the learning rate and take repeated optimisation steps. Compare the parameter, gradient,
+loss, and step history for at least two rates.
 :::
 
-## What changed?
+## Explain the evidence
 
-Explain why a larger step can make convergence less reliable.
+At `x = 3`, the gradient is `2 × 3 = 6`.
+
+- With `α = 0.1`, the next parameter is `3 − 0.1 × 6 = 2.4`, and the loss falls from `9` to `5.76`.
+- With `α = 1`, the next parameter is `3 − 1 × 6 = −3`, and the loss remains `9`. The following
+  step returns to `3`, so the parameter crosses the minimum but repeats at a constant distance.
+
+The deliberate `α = 1` case violates the intended progress invariant: a valid update is computed,
+but repeated steps do not approach the minimum. Crossing the minimum is not itself the failure;
+failing to reduce the distance is.
+
+## Bridge to code
+
+The implementation receives the current `parameter` and `learningRate`, calculates
+`gradient = 2 * parameter`, and returns the next parameter. It should reject a learning rate that
+is non-positive or non-finite before applying the arithmetic.
 
 :::exercise{path="../exercises/gradient-descent"}
 Implement one parameter update and run the supplied tests.
 :::
 
+## Recap
+
+- The gradient supplies a local direction and scale; the learning rate decides how much to move.
+- A step can cross the minimum and still converge if its distance shrinks.
+- Tests should cover both the update arithmetic and the learning-rate boundary.
+
 ## Transfer
 
-How would the update change if the model had two parameters instead of one?
+Why does a learning rate of `1` oscillate at constant distance for this loss, and how would the
+update representation change if the model had two parameters instead of one?
 ```
 
 ## 18.5 Build an explorable
@@ -1872,7 +1929,9 @@ Specify:
 - How to run tests
 - Subject-specific expectations
 
-Do not put lesson explanations in either instruction file. The coding agent should read the lesson currently being taught.
+Do not put lesson explanations in instruction files or leave them only in tutor chat. Core
+definitions, notation, worked examples, and recaps belong in lesson Markdown. The coding agent
+reads, references, adapts, and clarifies the active lesson.
 
 ## 18.9 Preview
 
@@ -1939,6 +1998,11 @@ Optionally submit the tagged release to the catalogue repository through a pull 
 ## 19.1 Show before explaining
 
 Whenever possible, let the learner encounter a surprising behaviour before presenting the formal definition.
+
+“Show before explaining” means delaying the full mechanism until the learner has evidence to
+explain. It does not mean asking for a prediction with undefined vocabulary or notation, and it does
+not move the eventual explanation into tutor chat. Supply the prerequisites needed for a meaningful
+prediction, then formalise the observed relationship in the canonical lesson Markdown.
 
 ## 19.2 Require predictions
 
@@ -2636,6 +2700,11 @@ See how it works. Build it yourself.
 
 - [ ] Six vertical-slice lessons are complete.
 - [ ] Each includes an explorable, exercise, failure case, and explanation prompt.
+- [ ] Every released foundational lesson is understandable from its Markdown for the declared
+  audience and prerequisites; tutor chat is not the only source of a core concept.
+- [ ] Each foundational lesson defines prediction prerequisites before the prompt and provides an
+  observed-value explanation, worked example, implementation bridge, deliberate failure, and
+  explanation-based recap.
 - [ ] At least five target learners complete two lessons.
 - [ ] Setup failures and authoring friction are documented.
 - [ ] Feedback informs the v1 format before the full course is produced.

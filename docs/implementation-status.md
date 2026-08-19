@@ -22,6 +22,9 @@ Updated: 19 August 2026
 - Implemented the final v0.2 foundation increment: prefill and autoregressive decoding, equivalent cached and uncached attention, explicit cache memory and work accounting, and a deterministic tiny Transformer capstone with gradient checks, decreasing loss, generation, intermediate traces, and testable masking, shape, residual, and evaluation failures.
 - Completed all thirteen `AI from First Principles` v0.2 lessons and connected the inference result to decoding policy and claim-aligned evaluation.
 - Expanded all thirteen lessons into the self-contained `AI from First Principles` `0.4.0-foundations.1` course: lesson Markdown now carries the canonical definitions, notation, worked examples, implementation bridges, deliberate failures, and explanation-based recaps that the tutor adapts and reinforces.
+- Codified the browser-first teaching boundary in the PRD: foundational explanations remain in
+  canonical lesson Markdown, predictions receive the vocabulary they require, and instructional
+  depth stays an editorial and learner-playtesting concern rather than a word-count validator.
 - Implemented reusable opt-in Guided Course Mode with ordered learner and explorable-event checkpoints, locked future navigation, deep-link recovery, explicit skipping, confirmed Explore mode, reset, a question parking lot, and versioned browser-only resume state.
 - Applied four ordered checkpoints and focus-aware tutor policy to all thirteen `AI from First Principles` lessons without changing sandbox permissions or automatic exercise execution.
 - Kept courses without guidance backward-compatible and added schema, reducer, validator, browser, accessibility, persistence, and recovery coverage.
@@ -46,7 +49,7 @@ Updated: 19 August 2026
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, and clean-checkout verification are complete; pull-request CI remains.
+The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, clean-checkout verification, and pull-request CI are complete.
 
 `AI from First Principles` `0.4.0-foundations.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local course-library milestone are implemented. The course UI redesign and its responsive/theme follow-up are complete. The library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation increment remains the shared-core source freeze and its five research/comparison lessons, followed by the pinned model-specific courses. External DNS and learner-study evidence also remain.
 
@@ -68,7 +71,7 @@ The v0.1 runtime MVP remains verified. Course-session continuity now provides a 
 ## Latest verification
 
 ```text
-19 Aug canonical foundations       pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)
+19 Aug foundations + PRD v0.4     pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)
 19 Aug general library redesign      pass (typecheck, 7 suites/29 targeted tests, collection validation/build, 15 browser tests, 2 site tests, axe, light/dark visual QA at 843px and 320px)
 18 Aug Model Atlas unit/integration    pass (33 suites/100 tests; strict descriptors, exact traces, comparisons, renderer lifecycle, validator, and real catalogue bundle)
 18 Aug pnpm check / build             pass (Node 26 shell emitted expected unsupported-engine warning; supported Node lines verified separately)

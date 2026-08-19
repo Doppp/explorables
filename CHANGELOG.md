@@ -25,7 +25,12 @@ All notable changes to `explorables` are documented here.
 - `AI from First Principles` is versioned as `0.4.0-foundations.1`, with self-contained canonical
   lesson prose, prerequisite bridges, worked examples, implementation connections, failure modes,
   and explanation-based recaps across all thirteen lessons. Because browser progress is scoped to
-  the course version, existing `0.3.0-guided.1` progress does not resume in this new edition.
+  the course version, existing `0.3.0-guided.1` progress does not resume in this new edition. The
+  browser-rendered Markdown supplies the foundational explanation; the coding-agent tutor adapts,
+  questions, and clarifies it instead of acting as the only source of definitions or concepts.
+- The course-format requirements now define browser-rendered lesson Markdown as the canonical
+  explanation and align the lesson-flow, tutor-policy, authoring, and acceptance examples with that
+  boundary.
 - The product requirements, architecture, authoring guide, implementation plan, status, and model-learning roadmap now include guided delivery.
 - The local course server now treats its default port as strict. An occupied port fails with an actionable message instead of silently changing the browser-storage origin.
 - First-party and scaffolded host adapters now use browser course state as the progress authority and distinguish pausing from finishing or resetting.
