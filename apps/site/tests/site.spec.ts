@@ -3,6 +3,8 @@ import { expect, test } from "@playwright/test";
 
 test("landing page content, links, and accessibility", async ({ page }) => {
   await page.goto("/");
+  await expect(page).toHaveTitle(/Explorables/);
+  await expect(page.getByRole("link", { name: "Explorables home" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "See how it works",
   );

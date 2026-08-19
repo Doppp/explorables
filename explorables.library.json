@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "title": "explorables Model-Learning Path",
-  "summary": "Build a language model from first principles, learn to evaluate frontier-model evidence, then choose a model-family specialization.",
+  "title": "Learn by exploring, coding, and testing.",
+  "summary": "Choose a course, manipulate live explanations, then work with real code alongside your coding agent.",
   "tracks": [
     {
       "id": "foundations",
-      "title": "Foundations",
+      "title": "AI foundations",
       "summary": "Build, train, run, and evaluate a small decoder-only Transformer.",
       "courses": [
         {
@@ -17,7 +17,7 @@
     },
     {
       "id": "research-skills",
-      "title": "Research Skills",
+      "title": "Frontier-model research",
       "summary": "Learn to inspect real releases and make controlled, source-grounded comparisons.",
       "courses": [
         {

@@ -12,8 +12,8 @@ function App() {
   return (
     <>
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="explorables home">
-          explorables<span>.</span>
+        <a className="wordmark" href="#top" aria-label="Explorables home">
+          Explorables<span>.</span>
         </a>
         <nav aria-label="Primary navigation">
           <a href="#how">How it works</a>
@@ -239,7 +239,7 @@ function App() {
 
       <footer>
         <a className="wordmark" href="#top">
-          explorables<span>.</span>
+          Explorables<span>.</span>
         </a>
         <div>
           <a href={github}>GitHub</a>

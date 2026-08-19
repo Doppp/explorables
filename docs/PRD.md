@@ -1,9 +1,9 @@
-# explorables: Open Explorable Course Runtime
+# Explorables: Open Explorable Course Runtime
 ## Product Requirements, Technical Specification, and Course Authoring Guide
 
 **Status:** Draft v0.3
 **Date:** 12 August 2026
-**Product name:** `explorables`  
+**Display name:** `Explorables`
 **Supported initial hosts:** Codex and Claude Code Desktop  
 **Public site:** `https://explorables.ai`  
 **Canonical repository:** `git@github.com:Doppp/explorables.git`  
@@ -11,13 +11,15 @@
 **First course:** *AI from First Principles*  
 **Tagline:** *See how it works. Build it yourself.*
 
-> `explorables` is styled in lowercase in product copy, package names, and documentation.
+> Use `Explorables` in visible product UI and marketing copy. Keep `explorables` for
+> technical identifiers such as the CLI, package scope, repository, domain, filenames,
+> and storage keys.
 
 ---
 
 # 1. Executive summary
 
-`explorables` is a small, open-source runtime and file format for interactive technical courses that run naturally alongside agentic coding environments. Its initial host integrations target Codex and Claude Code Desktop.
+Explorables is a small, open-source runtime and file format for interactive technical courses that run naturally alongside agentic coding environments. Its initial host integrations target Codex and Claude Code Desktop.
 
 A course is a normal folder containing:
 
@@ -187,11 +189,11 @@ The course format must not require private Codex or Claude APIs.
 
 ## 3.8 Optional local course collections
 
-A repository may contain `explorables.library.json` to present an ordered local learning path across multiple self-contained course packages. The manifest is an explicit allowlist of relative course roots; it is not a hosted catalogue, filesystem scan, marketplace, or remote installer.
+A repository may contain `explorables.library.json` to present a local course library across multiple self-contained course packages. Groups may represent subjects, learning paths, or delivery status, but the library home remains product-general rather than inheriting the identity of one course family. The manifest is an explicit allowlist of relative course roots; it is not a hosted catalogue, filesystem scan, marketplace, or remote installer.
 
 The collection interface may also show clearly labelled planned courses so the curriculum path is visible. Planned entries cannot be opened. Every available course remains independently valid and runnable with its own `COURSE.md`, Agent Plugin manifest, portable skill, host adapters, exercises, and version.
 
-The model-learning collection is structured as a vendor-neutral foundation, a shared frontier-research course, and separately versioned model-family case studies. Foundation lessons may include brief real-model connections in ordinary Markdown; release-specific reconstruction belongs in the appropriate case-study course.
+The model-learning collection is structured as a vendor-neutral foundation, a shared frontier-research course, and separately versioned model-family case studies. It appears as one subject area within the general library and does not define the scope of Explorables. Foundation lessons may include brief real-model connections in ordinary Markdown; release-specific reconstruction belongs in the appropriate case-study course.
 
 ---
 
@@ -365,7 +367,7 @@ It is not the hosted course player and it does not track learning. It is a light
 The v1 site may be a single page with anchored sections:
 
 1. **Hero**
-   - Product name: `explorables`
+   - Product display name: `Explorables`
    - A concise explanation of the idea
    - Primary action: view the first course
    - Secondary action: view the GitHub repository
@@ -2531,20 +2533,21 @@ Only after demand is clear:
 
 # 24. Brand
 
-## 24.1 Product name
+## 24.1 Product display name
 
-The product, runtime, CLI, public site, and open-source project are called:
+The user-facing product is displayed as:
 
 ```text
-explorables
+Explorables
 ```
 
-The name is styled in lowercase.
+Technical identifiers remain lowercase so existing commands, package names, URLs, files,
+protocol fields, and browser storage do not change.
 
 ## 24.2 Public identity
 
 ```text
-Product: explorables
+Display name: Explorables
 Website: https://explorables.ai
 Repository: git@github.com:Doppp/explorables.git
 CLI: explorables
@@ -2565,10 +2568,11 @@ See how it works. Build it yourself.
 
 ## 24.5 Naming conventions
 
-- Use `explorables` in prose and headings.
+- Use `Explorables` in visible UI, page titles, accessibility labels, marketing copy, and natural-language product headings.
 - Use `@explorables/*` for npm packages.
 - Use `explorables` for the CLI executable.
 - Use `explorables.ai` for the public site.
+- Keep filenames, repository paths, storage keys, protocol fields, and code identifiers lowercase.
 - Avoid legacy working names in code, files, and documentation.
 
 ---

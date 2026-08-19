@@ -24,19 +24,25 @@ async function openFoundation(page: Page) {
   ).toBeVisible();
 }
 
-test("presents the local learning path and planned specializations honestly", async ({
+test("presents a general course library and planned specializations honestly", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 720, height: 900 });
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "explorables Model-Learning Path",
+      name: "Learn by exploring, coding, and testing.",
       level: 1,
     }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Research Skills" })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Explorables course library" }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Available now" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "On the roadmap" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Frontier-model research" }),
+  ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Model Specializations" }),
   ).toBeVisible();
@@ -45,7 +51,8 @@ test("presents the local learning path and planned specializations honestly", as
       name: "Inside Kimi: From K2 and Kimi Linear to K3",
     }),
   ).toBeVisible();
-  await expect(page.getByText("Not yet available")).toHaveCount(6);
+  await expect(page.getByText("Coming later")).toHaveCount(6);
+  await expect(page.getByText("explorables Model-Learning Path")).toHaveCount(0);
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
   );
@@ -59,7 +66,7 @@ test("presents the local learning path and planned specializations honestly", as
   await page.getByRole("button", { name: "All courses" }).click();
   await expect(
     page.getByRole("heading", {
-      name: "explorables Model-Learning Path",
+      name: "Learn by exploring, coding, and testing.",
       level: 1,
     }),
   ).toBeVisible();
@@ -90,21 +97,21 @@ test("follows the system theme, syncs explorables, and persists an override", as
   });
   const typography = await page.evaluate(() => {
     const body = getComputedStyle(document.body);
-    const action = document.querySelector<HTMLElement>(".library-primary-action");
-    if (!action) throw new Error("Expected the primary course action");
-    const primaryAction = getComputedStyle(action);
+    const action = document.querySelector<HTMLElement>(".course-action");
+    if (!action) throw new Error("Expected a course action");
+    const courseAction = getComputedStyle(action);
     return {
       fontFamily: body.fontFamily,
       fontSmoothing: body.getPropertyValue("-webkit-font-smoothing"),
       textRendering: body.textRendering,
-      primaryActionWeight: primaryAction.fontWeight,
+      courseActionWeight: courseAction.fontWeight,
     };
   });
   expect(typography.fontFamily).not.toContain("Avenir");
   expect(typography).toMatchObject({
     fontSmoothing: "antialiased",
     textRendering: "auto",
-    primaryActionWeight: "700",
+    courseActionWeight: "700",
   });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 
@@ -151,36 +158,36 @@ test("follows the system theme, syncs explorables, and persists an override", as
   ).toEqual([]);
 });
 
-test("lets the library header use its full responsive container", async ({ page }) => {
+test("keeps the general course library responsive", async ({ page }) => {
   for (const width of [320, 720, 1156, 1427]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await expect(page.locator("h1.library-title")).toHaveText(
-      "explorables Model-Learning Path",
+      "Learn by exploring, coding, and testing.",
     );
     const metrics = await page.evaluate(() => {
       const library = document.querySelector<HTMLElement>(".course-library");
       const hero = document.querySelector<HTMLElement>(".library-hero");
       const note = document.querySelector<HTMLElement>(".local-note");
       const title = document.querySelector<HTMLElement>(".library-title");
-      if (!library || !hero || !note || !title)
+      const available = document.querySelector<HTMLElement>(".available-courses");
+      if (!library || !hero || !note || !title || !available)
         throw new Error("Expected library header elements");
-      const titleStyles = getComputedStyle(title);
       return {
         overflow:
           document.documentElement.scrollWidth > document.documentElement.clientWidth,
         libraryWidth: library.getBoundingClientRect().width,
         heroWidth: hero.getBoundingClientRect().width,
         noteWidth: note.getBoundingClientRect().width,
-        titleHeight: title.getBoundingClientRect().height,
-        titleLineHeight: Number.parseFloat(titleStyles.lineHeight),
+        titleWidth: title.getBoundingClientRect().width,
+        availableWidth: available.getBoundingClientRect().width,
       };
     });
     expect(metrics.overflow).toBe(false);
     expect(Math.abs(metrics.heroWidth - metrics.libraryWidth)).toBeLessThan(1);
-    expect(Math.abs(metrics.noteWidth - metrics.heroWidth)).toBeLessThan(1);
-    if (width >= 1156)
-      expect(metrics.titleHeight / metrics.titleLineHeight).toBeLessThan(1.5);
+    expect(Math.abs(metrics.availableWidth - metrics.libraryWidth)).toBeLessThan(1);
+    expect(metrics.noteWidth).toBeLessThanOrEqual(metrics.heroWidth);
+    expect(metrics.titleWidth).toBeLessThanOrEqual(metrics.heroWidth);
   }
 });
 

@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 18 August 2026
+Updated: 19 August 2026
 
 ## Completed
 
@@ -29,6 +29,7 @@ Updated: 18 August 2026
 - Added an optional, explicit local course collection with ordered learning tracks, safe contained paths, planned-course cards, course-scoped routes and static artifacts, accessible selection, deep links, and standalone-course compatibility.
 - Connected all thirteen foundation lessons to real-model mechanisms in ordinary Markdown while preserving shared research skills and pinned model reconstructions as separate courses.
 - Reworked the local course library and lesson shell as a quiet, editorial learning interface with accessible pastel color roles, lesson-first hierarchy, explicit navigation states, compact course contents below 992px, and visually consistent sandbox controls. The course shell now reflows at 320px without putting the full lesson list ahead of the active lesson.
+- Reframed the local collection home as a product-general, status-first course library. Available courses now lead the page, planned AI courses are subordinate roadmap content, and the visible display name is `Explorables` while lowercase technical identifiers remain stable.
 - Added an explicit, persistent light/dark theme control to the course library and lesson shell, including live theme synchronization into already-mounted sandboxed explorables. Retuned the dark pastel roles, restored the library hero and local-data notice to the full responsive content width, and corrected title casing while preserving the lowercase `explorables` wordmark.
 - Retained Node.js 24/pnpm 11 as the default toolchain while adding an enforced, CI-tested compatibility floor of Node.js 22.22.2 and pnpm 10.26.0.
 - Refreshed the planned `Inside DeepSeek` course through DeepSeek V4 Pro/Flash while retaining V3/R1 as lineage, and refreshed `Inside GLM` through GLM 5.2 while retaining GLM 5 as the available architecture/post-training lineage. The revised briefs add hybrid long-context attention, mHC, Muon, mixed precision and policy consolidation for DeepSeek, plus DSA/IndexShare, multi-token prediction, serving ablations, and long-horizon evaluation for GLM.
@@ -66,6 +67,7 @@ The v0.1 runtime MVP remains verified. Course-session continuity now provides a 
 ## Latest verification
 
 ```text
+19 Aug general library redesign      pass (typecheck, 7 suites/29 targeted tests, collection validation/build, 15 browser tests, 2 site tests, axe, light/dark visual QA at 843px and 320px)
 18 Aug Model Atlas unit/integration    pass (33 suites/100 tests; strict descriptors, exact traces, comparisons, renderer lifecycle, validator, and real catalogue bundle)
 18 Aug pnpm check / build             pass (Node 26 shell emitted expected unsupported-engine warning; supported Node lines verified separately)
 18 Aug pnpm test:browser              pass (15 tests; Atlas model switching, GPT-4 undisclosed boundary, frontier evidence, narrow layout, sandbox, and existing flows)

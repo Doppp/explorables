@@ -94,7 +94,8 @@ Follow these unless the PRD explicitly says otherwise:
 - No hosted execution
 - No plugin marketplace
 - No visual course editor
-- The project and product name is `explorables`, styled in lowercase.
+- The visible product name is `Explorables`; technical identifiers such as the CLI,
+  package scope, repository, domain, filenames, and storage keys remain `explorables`.
 - The canonical public repository is `Doppp/explorables`.
 - The default branch is `master`.
 - The canonical SSH remote is `git@github.com:Doppp/explorables.git`.

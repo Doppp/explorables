@@ -2,6 +2,8 @@
 
 Status: accepted Date: 12 August 2026
 
+Presentation amended by ADR 0010.
+
 ## Context
 
 The runtime originally accepted exactly one course root. That remains the right distribution boundary for an independently installable Agent Plugin, but the main repository now defines a family of prerequisite and model-specialization courses. Learners need to see that path and select locally available courses without a hosted LMS, account, database, remote catalogue, or filesystem scan.

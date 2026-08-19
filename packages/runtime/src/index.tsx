@@ -31,6 +31,7 @@ import {
   createCourseSessionState,
   parseCourseSessionState,
 } from "./course-session.ts";
+import { createExperimentRecord } from "./experiment-record.ts";
 import {
   createGuidedState,
   guidedCourseReducer,
@@ -41,7 +42,6 @@ import {
   parseGuidedState,
   restartGuidedStateFrom,
 } from "./guided-state.ts";
-import { createExperimentRecord } from "./experiment-record.ts";
 import { lessonBodyHtml } from "./lesson-html.ts";
 
 const LessonArticle = memo(function LessonArticle({
@@ -1057,7 +1057,7 @@ function Lesson({
               </button>
             ) : (
               <a className="brand" href="#/">
-                explorables
+                Explorables
               </a>
             )}
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
@@ -1224,57 +1224,80 @@ function LibraryHome({
   theme: Theme;
   onToggleTheme: () => void;
 }) {
-  const firstAvailableCourse = collection.tracks
+  const availableCourses = collection.tracks
     .flatMap((track) => track.courses)
-    .find((course) => course.status === "available");
+    .filter((course) => course.status === "available");
+  const plannedTracks = collection.tracks
+    .map((track) => ({
+      ...track,
+      courses: track.courses.filter((course) => course.status === "planned"),
+    }))
+    .filter((track) => track.courses.length > 0);
+  const plannedCourseCount = plannedTracks.reduce(
+    (total, track) => total + track.courses.length,
+    0,
+  );
+
   return (
     <main id="library" className="course-library">
       <header className="library-hero">
         <div className="library-masthead">
-          <a className="brand" href="#/courses">
-            explorables
+          <a className="brand" href="#/courses" aria-label="Explorables course library">
+            Explorables
           </a>
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-        </div>
-        <p className="eyebrow library-eyebrow">Local Course Library</p>
-        <h1 className="library-title">{collection.title}</h1>
-        <p className="library-summary">{collection.summary}</p>
-        <p className="local-note">
-          Courses, exercises, and progress stay on this computer. Planned courses are
-          shown so the learning path is visible without pretending they are available.
-        </p>
-        {firstAvailableCourse ? (
-          <a
-            className="library-primary-action"
-            href={`#/courses/${encodeURIComponent(firstAvailableCourse.id)}`}
-          >
-            Start {firstAvailableCourse.title} <span aria-hidden="true">→</span>
-          </a>
-        ) : null}
-      </header>
-      {collection.tracks.map((track, trackIndex) => (
-        <section className="library-track" key={track.id} aria-labelledby={track.id}>
-          <div className="track-heading">
-            <div>
-              <p className="track-kicker">Part {trackIndex + 1}</p>
-              <h2 className="track-title" id={track.id}>
-                {track.title}
-              </h2>
-              <p className="track-summary">{track.summary}</p>
-            </div>
+          <div className="library-masthead-actions">
+            <nav className="library-navigation" aria-label="Course library">
+              <a href="#available-courses">Courses</a>
+              {plannedCourseCount > 0 ? <a href="#course-roadmap">Roadmap</a> : null}
+            </nav>
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           </div>
-          <div className="course-grid">
-            {track.courses.map((course) => (
+        </div>
+        <div className="library-hero-content">
+          <div>
+            <p className="eyebrow library-eyebrow">Interactive technical courses</p>
+            <h1 className="library-title">{collection.title}</h1>
+          </div>
+          <div className="library-introduction">
+            <p className="library-summary">{collection.summary}</p>
+            <ul
+              className="library-principles"
+              aria-label="How Explorables courses work"
+            >
+              <li>Manipulate live explanations</li>
+              <li>Work with real code and tests</li>
+              <li>Learn with a coding-agent tutor</li>
+            </ul>
+          </div>
+        </div>
+        <p className="local-note">
+          <strong>Runs locally.</strong> Course files, exercises, and progress stay on
+          this computer.
+        </p>
+      </header>
+
+      <section
+        className="library-section available-courses"
+        id="available-courses"
+        aria-labelledby="available-courses-title"
+      >
+        <div className="library-section-heading">
+          <p className="track-kicker">
+            {availableCourses.length}{" "}
+            {availableCourses.length === 1 ? "course" : "courses"}
+          </p>
+          <h2 id="available-courses-title">Available now</h2>
+          <p>Choose a course and continue at your own pace.</p>
+        </div>
+        {availableCourses.length > 0 ? (
+          <div className="course-grid available-course-grid">
+            {availableCourses.map((course) => (
               <article
-                className={`course-card course-${course.status}${
-                  course.featured ? " featured-course" : ""
-                }`}
+                className={`course-card course-available${course.featured ? " featured-course" : ""}`}
                 key={course.id}
               >
                 <div className="course-card-heading">
-                  <p className="course-status">
-                    {course.status === "available" ? "Available locally" : "Planned"}
-                  </p>
+                  <p className="course-status">Ready to start</p>
                   {course.version ? <small>v{course.version}</small> : null}
                 </div>
                 <h3>{course.title}</h3>
@@ -1296,21 +1319,76 @@ function LibraryHome({
                     ))}
                   </ul>
                 ) : null}
-                {course.status === "available" ? (
-                  <a
-                    className="course-action"
-                    href={`#/courses/${encodeURIComponent(course.id)}`}
-                  >
-                    Open course
-                  </a>
-                ) : (
-                  <span className="planned-label">Not yet available</span>
-                )}
+                <a
+                  className="course-action"
+                  href={`#/courses/${encodeURIComponent(course.id)}`}
+                >
+                  Open course <span aria-hidden="true">→</span>
+                </a>
               </article>
             ))}
           </div>
+        ) : (
+          <p className="empty-library-state">No courses are available yet.</p>
+        )}
+      </section>
+
+      {plannedCourseCount > 0 ? (
+        <section
+          className="library-section course-roadmap"
+          id="course-roadmap"
+          aria-labelledby="course-roadmap-title"
+        >
+          <div className="library-section-heading">
+            <p className="track-kicker">{plannedCourseCount} planned courses</p>
+            <h2 id="course-roadmap-title">On the roadmap</h2>
+            <p>
+              These courses show where the library is headed. They are not available to
+              open yet.
+            </p>
+          </div>
+          <div className="roadmap-groups">
+            {plannedTracks.map((track) => (
+              <section
+                className="roadmap-group"
+                key={track.id}
+                aria-labelledby={`${track.id}-roadmap`}
+              >
+                <div className="track-heading">
+                  <h3 className="track-title" id={`${track.id}-roadmap`}>
+                    {track.title}
+                  </h3>
+                  <p className="track-summary">{track.summary}</p>
+                </div>
+                <div className="roadmap-list">
+                  {track.courses.map((course) => (
+                    <article className="roadmap-card" key={course.id}>
+                      <div className="roadmap-card-copy">
+                        <div className="course-card-heading">
+                          <p className="course-status">Planned</p>
+                          {course.estimatedHours ? (
+                            <small>about {course.estimatedHours} hours</small>
+                          ) : null}
+                        </div>
+                        <h4>{course.title}</h4>
+                        <p>{course.summary}</p>
+                        {course.tags.length ? (
+                          <ul className="course-tags" aria-label="Topics">
+                            {course.tags.map((tag) => (
+                              <li key={tag}>{tag}</li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                      <span className="planned-label">Coming later</span>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
         </section>
-      ))}
+      ) : null}
     </main>
   );
 }
@@ -1437,7 +1515,7 @@ export function CourseApp() {
   if (error)
     return (
       <main className="fatal-error" role="alert">
-        Could not load explorables: {error}
+        Could not load Explorables: {error}
       </main>
     );
   if (collection)
@@ -1452,7 +1530,7 @@ export function CourseApp() {
     return <Lesson course={course} theme={theme} onToggleTheme={toggleTheme} />;
   return (
     <main className="loading" aria-busy="true">
-      Loading explorables…
+      Loading Explorables…
     </main>
   );
 }
