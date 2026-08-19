@@ -49,7 +49,7 @@ Updated: 19 August 2026
 
 ## Current work
 
-The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, and clean-checkout verification are complete; pull-request CI remains.
+The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, clean-checkout verification, and pull-request CI are complete.
 
 `AI from First Principles` `0.4.0-foundations.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local course-library milestone are implemented. The course UI redesign and its responsive/theme follow-up are complete. The library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation increment remains the shared-core source freeze and its five research/comparison lessons, followed by the pinned model-specific courses. External DNS and learner-study evidence also remain.
 
