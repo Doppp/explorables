@@ -1,6 +1,8 @@
 # v0.1 implementation plan
 
-This plan turns the acceptance criteria in `docs/PRD.md` into six coherent, independently verifiable milestones. Work proceeds in order and each milestone is committed and pushed to `master` after its checks pass.
+This plan turns the acceptance criteria in `docs/PRD.md` into coherent, independently verifiable
+milestones. Work proceeds in order and each milestone is committed and pushed to `master` after its
+checks pass.
 
 ## Constraints carried through every milestone
 
@@ -154,3 +156,25 @@ Deliverables:
 - Authoring rubric, validator coverage, security/state tests, and a human playtest protocol before wider lesson rollout.
 
 Exit check: complete all four phases in each pilot, reload and compare saved evidence, restart before the experiment and verify later work is removed, reject malformed records, validate a scaffolded discovery course, and pass the full check/build/browser/accessibility suite.
+
+## Milestone 12 — traceable model-learning interactions
+
+Detailed plan: [`model-visualisation-implementation-plan.md`](model-visualisation-implementation-plan.md)
+
+Deliverables:
+
+- Course-local exact Transformer replay with named shaped tensors, typed information paths, one
+  synchronized selection state, and an accessible semantic fallback.
+- Transfer of the replay/drill-down grammar to Backpropagation, Self-Attention, and Multi-Head
+  Attention before shared infrastructure is promoted.
+- Backward-compatible, source-grounded Model Atlas topology, coverage-aware aligned structural
+  comparison, and bounded inert resource snapshots after the pilot gate passes.
+- Exact KV-cache work/memory lenses and an accessible local focus pilot, followed by host-level
+  prose focus only when playtesting justifies the protocol addition.
+- Frontier-course adoption guidance plus accessibility, security, lifecycle, bundle-budget,
+  supported-toolchain, documentation, and clean-checkout hardening.
+
+Exit check: learners can locate the first cross-token mixing stage, follow the residual identity
+path, reconstruct one attention output, identify the broken backpropagation factor, distinguish GPT
+scale/topology/nondisclosure, and derive KV-cache memory; the complete repository verification matrix
+in the detailed plan passes without widening iframe permissions or breaking schema version 1.
