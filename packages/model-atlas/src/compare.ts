@@ -20,7 +20,12 @@ function count(
 ): number | undefined {
   const stages = descriptor.stages.filter((stage) => stage.kind === kind);
   if (stages.length === 0) return undefined;
-  return stages.reduce((total, stage) => total + (stage.count ?? 1), 0);
+  let total = 0;
+  for (const stage of stages) {
+    if (stage.count === undefined) return undefined;
+    total += stage.count;
+  }
+  return total;
 }
 
 function display(value: number | undefined): string {

@@ -22,7 +22,9 @@ All notable changes to `explorables` are documented here.
 ### Changed
 
 - Reframed the local collection home as a general, status-first course library: available courses are primary, planned AI courses sit in a quieter roadmap, and visible product branding now uses `Explorables` while technical identifiers remain lowercase.
-- `AI from First Principles` is versioned as `0.3.0-guided.1`.
+- `AI from First Principles` is versioned as `0.4.0-foundations.1`, with self-contained canonical
+  lesson prose, prerequisite bridges, worked examples, implementation connections, failure modes,
+  and explanation-based recaps across all thirteen lessons.
 - The product requirements, architecture, authoring guide, implementation plan, status, and model-learning roadmap now include guided delivery.
 - The local course server now treats its default port as strict. An occupied port fails with an actionable message instead of silently changing the browser-storage origin.
 - First-party and scaffolded host adapters now use browser course state as the progress authority and distinguish pausing from finishing or resetting.

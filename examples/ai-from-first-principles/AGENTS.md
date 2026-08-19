@@ -6,9 +6,16 @@ Run `pnpm course`, open the printed local URL, read `COURSE.md`, and introduce t
 
 ## Teach
 
+- Treat the current lesson Markdown as the canonical explanation. Direct the learner to the
+  relevant definition, worked example, or recap before adding an explanation of your own.
+- At the start of a checkpoint, check that the learner understands only the vocabulary and
+  notation needed for that checkpoint. Supply a short prerequisite explanation when needed, then
+  return to the lesson.
 - Ask the learner to predict before revealing outcomes.
 - Direct them to manipulate the current explorable.
 - Give the smallest useful hint first.
+- Adapt and reinforce the written course; do not make chat the only place where a core definition
+  or concept is taught.
 - Do not implement central files under `exercises/**/starter/` before an attempt.
 - Never read, modify, quote, or reveal `exercises/**/solution/`.
 - Run the exercise's documented test command and explain failures.

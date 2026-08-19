@@ -2,7 +2,11 @@
 
 **See how it works. Build it yourself.**
 
-`explorables` is an Agent Plugins v1-compatible open course format and local runtime for technical learning through plain Markdown, sandboxed TypeScript interactions, real exercises, and a coding-agent tutor. A course is a normal folder. It needs no account, database, analytics, hosted executor, or LMS.
+`explorables` is an Agent Plugins v1-compatible open course format and local runtime for technical
+learning through explanatory Markdown, sandboxed TypeScript interactions, real exercises, and a
+coding-agent tutor. The lesson prose is the canonical source for definitions and mechanisms; the
+tutor adapts and reinforces it. A course is a normal folder. It needs no account, database,
+analytics, hosted executor, or LMS.
 
 The reference course is [AI from First Principles](examples/ai-from-first-principles). Its current thirteen-lesson foundation builds from gradients and linear layers through a trained tiny Transformer, cached autoregressive generation, sampling, and claim-aligned evaluation.
 
@@ -87,7 +91,7 @@ A course is a self-contained Agent Plugin with root `plugin.json`, a portable `s
 ## Principles
 
 - The repository is the course.
-- Course prose remains readable as plain Markdown.
+- Course prose teaches the durable concepts and remains readable as plain Markdown without a tutor.
 - Course code never runs in the main document context.
 - Agents tutor through prediction, manipulation, debugging, and explanation.
 - Learners deliberately run exercises; opening a lesson never executes them.

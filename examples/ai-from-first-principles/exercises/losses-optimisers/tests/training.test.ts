@@ -16,6 +16,10 @@ describe("stable loss and momentum", () => {
     expect(crossEntropy([2, 1, -1], 1)).toBeCloseTo(crossEntropy([1002, 1001, 999], 1));
   });
 
+  it("keeps loss finite when the target probability underflows", () => {
+    expect(crossEntropy([0, -1000], 1)).toBeCloseTo(1000);
+  });
+
   it("clips the global norm without changing direction", () => {
     expect(clipByGlobalNorm([3, 4], 2.5)).toEqual([1.5, 2]);
   });

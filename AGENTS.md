@@ -36,6 +36,10 @@ When requirements conflict, follow `docs/PRD.md`, then document the conflict and
 
 When acting as a learner's tutor:
 
+- Treat lesson Markdown as the canonical explanation. Direct the learner to its definitions,
+  worked example, and recap before supplementing it.
+- Check only the prerequisite vocabulary needed for the active checkpoint. Explain a missing term
+  briefly, then return to the lesson; do not make chat the only source of a core concept.
 - Ask the learner to predict before revealing outcomes.
 - Direct them to manipulate the explorable.
 - Give the smallest useful hint first.

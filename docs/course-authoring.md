@@ -127,7 +127,36 @@ Resume is scoped to the course ID/version, browser profile, and web origin. Keep
 
 ## 4. Write a lesson
 
-Lessons should remain useful on GitHub. A strong sequence is encounter, predict, manipulate, inspect, explain, implement, debug, and transfer. Those are headings and prose, not additional directives.
+Lessons should remain useful on GitHub. The lesson Markdown is the canonical teaching material, not
+an outline that depends on a coding agent to supply the missing lecture. A learner should be able to
+identify the important terms, follow a concrete example, and understand the explorable's result by
+reading the lesson without opening chat. The tutor then diagnoses missing prerequisites, asks
+questions, gives hints, and helps the learner connect that material to code and tests.
+
+A strong sequence is encounter, predict, manipulate, inspect, explain, implement, debug, and
+transfer. “Encounter before explaining” means delaying the full mechanism until the learner has a
+phenomenon to explain; it does not mean asking them to predict with undefined vocabulary or
+notation. These stages are headings and prose, not additional directives.
+
+Before the prediction, give the learner:
+
+- a reason the concept exists;
+- the prerequisite bridge from the prior lesson;
+- plain-language definitions for every new term or symbol needed to make the prediction; and
+- a small, concrete setup whose values can be inspected by hand.
+
+After the interaction, include:
+
+- an explanation that connects the observed values to the formal mechanism;
+- at least one worked example with intermediate steps;
+- a bridge from the representation to the relevant data shapes or code responsibility;
+- the deliberate failure and why it violates the intended invariant; and
+- a concise recap or self-check that requires explanation, not recognition alone.
+
+There is no universal minimum word count. Reviewers should judge whether the stated audience and
+prerequisites are enough to follow the lesson without an unstated chat-only explanation. Automated
+validation should continue to check structure, paths, fallbacks, and execution; instructional depth
+requires editorial review and learner playtesting.
 
 ```md
 ---
@@ -140,16 +169,32 @@ objectives:
 
 # Queues
 
-> Before running it, predict when the queue begins to grow.
+A **queue** stores work that has arrived but has not finished. The **arrival rate** is how many new
+items enter per second; the **service rate** is how many items leave per second. If arrivals add 5
+items per second while service removes 3, the queue grows by `5 - 3 = 2` items each second until it
+reaches a limit.
+
+> **Predict:** With an arrival rate of 5 and a service rate of 3, what happens to a queue that starts
+> with 4 items after two seconds? Record the intermediate queue length before running it.
 
 :::explorable{src="../explorables/queue/index.ts" height="440" title="Queue simulator"}
 Requests arrive on the left and leave at the configured service rate. When
 arrival exceeds service, queue length increases until capacity is reached.
 :::
 
+## Explain the result
+
+Each simulated step applies `next = current + arrivals - serviced`, then enforces the queue's lower
+and upper bounds. The growing queue is therefore evidence of a rate imbalance, not evidence that
+the service has stopped entirely.
+
 :::exercise{path="../exercises/bounded-queue" command="pnpm test" title="Bound the queue"}
 Implement the capacity check and run the supplied tests.
 :::
+
+## Check your understanding
+
+Why can a queue grow even while the service is successfully completing work?
 ```
 
 Only `explorable` and `exercise` are supported. Unknown directives fail validation. Relative Markdown links and assets resolve from the lesson file; paths may not escape the course root. Raw HTML is sanitised.
