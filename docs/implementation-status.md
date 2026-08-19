@@ -22,6 +22,9 @@ Updated: 19 August 2026
 - Implemented the final v0.2 foundation increment: prefill and autoregressive decoding, equivalent cached and uncached attention, explicit cache memory and work accounting, and a deterministic tiny Transformer capstone with gradient checks, decreasing loss, generation, intermediate traces, and testable masking, shape, residual, and evaluation failures.
 - Completed all thirteen `AI from First Principles` v0.2 lessons and connected the inference result to decoding policy and claim-aligned evaluation.
 - Expanded all thirteen lessons into the self-contained `AI from First Principles` `0.4.0-foundations.1` course: lesson Markdown now carries the canonical definitions, notation, worked examples, implementation bridges, deliberate failures, and explanation-based recaps that the tutor adapts and reinforces.
+- Codified the browser-first teaching boundary in the PRD: foundational explanations remain in
+  canonical lesson Markdown, predictions receive the vocabulary they require, and instructional
+  depth stays an editorial and learner-playtesting concern rather than a word-count validator.
 - Implemented reusable opt-in Guided Course Mode with ordered learner and explorable-event checkpoints, locked future navigation, deep-link recovery, explicit skipping, confirmed Explore mode, reset, a question parking lot, and versioned browser-only resume state.
 - Applied four ordered checkpoints and focus-aware tutor policy to all thirteen `AI from First Principles` lessons without changing sandbox permissions or automatic exercise execution.
 - Kept courses without guidance backward-compatible and added schema, reducer, validator, browser, accessibility, persistence, and recovery coverage.
