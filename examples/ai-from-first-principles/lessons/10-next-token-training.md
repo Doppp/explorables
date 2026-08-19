@@ -62,7 +62,8 @@ not establish that the objective represents the intended task.
 
 ## Shift inputs and targets
 
-Let a tokenised window be `x₀, x₁, ..., x_{T−1}`. At position `t`, the input
+Let a tokenised window be `x₀, x₁, ..., x_{T−1}`, where capital `T` is the
+sequence length and lowercase `t` is a position index. At position `t`, the input
 contains token `xₜ`, and the training target is the token one step to its right,
 `xₜ₊₁`. The valid aligned pairs are therefore
 

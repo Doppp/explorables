@@ -188,6 +188,11 @@ Each simulated step applies `next = current + arrivals - serviced`, then enforce
 and upper bounds. The growing queue is therefore evidence of a rate imbalance, not evidence that
 the service has stopped entirely.
 
+For the predicted case, the intermediate lengths are `4 + 5 - 3 = 6` after one second and
+`6 + 5 - 3 = 8` after two. In code, `current`, `arrivals`, and `serviced` are numeric inputs to one
+update, while `capacity` supplies its upper bound. A deliberately broken update that returns `8`
+when capacity is `7` violates the bounded-queue invariant; the correct result is `min(8, 7) = 7`.
+
 :::exercise{path="../exercises/bounded-queue" command="pnpm test" title="Bound the queue"}
 Implement the capacity check and run the supplied tests.
 :::
@@ -195,6 +200,12 @@ Implement the capacity check and run the supplied tests.
 ## Check your understanding
 
 Why can a queue grow even while the service is successfully completing work?
+
+## Recap
+
+- Queue growth is the difference between arrivals and completed work.
+- Each update must enforce both the empty-queue lower bound and the configured capacity.
+- A passing ordinary example is not evidence that boundary cases are correct.
 ```
 
 Only `explorable` and `exercise` are supported. Unknown directives fail validation. Relative Markdown links and assets resolve from the lesson file; paths may not escape the course root. Raw HTML is sanitised.
