@@ -33,6 +33,34 @@ describe("shifted next-token training", () => {
     ).toBeCloseTo(1.3132617);
   });
 
+  it("keeps cross-entropy finite when the target softmax probability underflows", () => {
+    expect(
+      meanLoss(
+        [
+          [0, -1000],
+          [0, 0],
+        ],
+        [0, 1],
+      ),
+    ).toBeCloseTo(1000);
+  });
+
+  it("averages accumulated gradients across all valid positions", () => {
+    expect(
+      trainStep(
+        [
+          [0, 0],
+          [0, 0],
+        ],
+        [0, 1, 1],
+        1,
+      ),
+    ).toEqual([
+      [-0.25, 0.25],
+      [-0.25, 0.25],
+    ]);
+  });
+
   it("reduces the correctly shifted objective", () => {
     const sequence = [0, 1, 0, 2];
     let weights = identityBiased;

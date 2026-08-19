@@ -33,12 +33,9 @@ checkpoints:
 
 # Introduction
 
-A **function** accepts an input and returns an output. This lesson uses a doubling function: it
-multiplies every finite input by `2`. The input `3`, for example, produces `3 × 2 = 6`.
-
-The important contract is not just one remembered answer. The same rule must work for positive,
-negative, and fractional inputs, while the program must decide what to do with values such as
-`Infinity` that are not finite.
+A **function** accepts an input and returns an output. This lesson investigates a function named
+`double`. Its name is a clue, but the saved runs are the evidence you will use to infer its exact
+rule. The explorer accepts positive, negative, and fractional finite numbers.
 
 > **Predict:** What output do you expect for an input of 4, and which single rule supports your
 > prediction?
@@ -49,9 +46,11 @@ Choose an input, observe the output, and save at least two runs to infer the rel
 
 ## Explain the evidence
 
-Compare the saved runs. If both satisfy `output = input × 2`, one rule accounts for more than a
-single example. A few matching examples do not prove the implementation handles every JavaScript
-number, so the exercise tests the boundary as well as the ordinary calculation.
+Compare the saved runs. They should support the rule `output = input × 2`: an input of `3`, for
+example, produces `3 × 2 = 6`. One rule now accounts for more than a single remembered answer. A
+few matching examples do not prove the implementation handles every JavaScript number, so the
+exercise tests the boundary as well as the ordinary calculation. In particular, a non-finite input
+such as `Infinity` must be rejected rather than passed through the multiplication.
 
 For an input named `value`, the implementation responsibility is:
 

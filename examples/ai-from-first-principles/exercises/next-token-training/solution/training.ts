@@ -17,6 +17,16 @@ function softmax(logits: number[]): number[] {
   return exponents.map((value) => value / total);
 }
 
+function crossEntropy(logits: number[], target: number): number {
+  const maximum = Math.max(...logits);
+  const shiftedTarget = (logits[target] ?? Number.NEGATIVE_INFINITY) - maximum;
+  const shiftedExponentialSum = logits.reduce(
+    (sum, logit) => sum + Math.exp(logit - maximum),
+    0,
+  );
+  return Math.log(shiftedExponentialSum) - shiftedTarget;
+}
+
 function validate(weights: number[][], tokenIds: number[]): number {
   if (weights.length === 0) throw new RangeError("weights must not be empty");
   const vocabularySize = weights.length;
@@ -41,10 +51,10 @@ export function meanLoss(weights: number[][], tokenIds: number[]): number {
   validate(weights, tokenIds);
   const pairs = nextTokenPairs(tokenIds);
   return (
-    pairs.reduce((sum, pair) => {
-      const probabilities = softmax(weights[pair.input] ?? []);
-      return sum - Math.log(probabilities[pair.target] ?? 0);
-    }, 0) / pairs.length
+    pairs.reduce(
+      (sum, pair) => sum + crossEntropy(weights[pair.input] ?? [], pair.target),
+      0,
+    ) / pairs.length
   );
 }
 
