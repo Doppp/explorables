@@ -6,8 +6,9 @@ const module: ExplorableModule = {
     label.textContent = "Input";
     const input = document.createElement("input");
     input.type = "range";
-    input.min = "0";
+    input.min = "-10";
     input.max = "10";
+    input.step = "0.5";
     input.value = "2";
     const output = document.createElement("output");
     output.setAttribute("aria-live", "polite");
