@@ -1,6 +1,6 @@
 import type { ExplorableModule } from "@explorables/explorable";
 import { element, styles } from "../shared.ts";
-import { gradient, loss, step } from "./model.ts";
+import { classifyLossTrend, gradient, loss, step } from "./model.ts";
 
 const module: ExplorableModule = {
   mount(root, context) {
@@ -59,7 +59,7 @@ const module: ExplorableModule = {
         history.push(parameter);
       }
       const finalLoss = loss(parameter);
-      const behavior = finalLoss < loss(-4) ? "converging" : "diverging";
+      const behavior = classifyLossTrend(loss(-4), finalLoss);
       render();
       context.recordExperiment({
         label: `rate ${learningRate.toFixed(2)}`,
@@ -69,7 +69,7 @@ const module: ExplorableModule = {
           finalLoss: Number(finalLoss.toFixed(3)),
           behavior,
         },
-        summary: `After four steps the run is ${behavior}.`,
+        summary: `After four steps the run shows ${behavior}.`,
       });
     };
     const onReset = () => {

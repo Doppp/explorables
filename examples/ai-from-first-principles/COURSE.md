@@ -1,8 +1,8 @@
 ---
 id: ai-from-first-principles
 title: AI from First Principles
-version: 0.3.0-guided.1
-summary: See, implement, and debug the foundations behind modern language models.
+version: 0.4.0-foundations.1
+summary: Learn, inspect, implement, and debug the foundations behind modern language models.
 license: CC-BY-4.0
 audience:
   - software developers
@@ -10,7 +10,7 @@ audience:
 prerequisites:
   - basic TypeScript
   - algebra and arrays
-estimatedHours: 15
+estimatedHours: 18
 repository: https://github.com/Doppp/explorables
 language: en
 tags:
@@ -25,7 +25,10 @@ guidance:
 
 # AI from First Principles
 
-Use the browser to form an intuition, then make that intuition survive code and tests. The coding agent is your tutor and debugger, not your substitute.
+The lesson prose teaches the durable definitions, notation, and mechanisms. Use the browser to
+form an intuition, then make that intuition survive experiments, code, and tests. The coding agent
+adapts the explanation and helps you debug; it is your tutor, not the source of a hidden parallel
+course and not your substitute.
 
 ## Lessons
 

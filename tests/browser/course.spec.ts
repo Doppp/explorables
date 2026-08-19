@@ -236,7 +236,9 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
       .filter({ hasText: "Attempt the exercise and run its tests" }),
   ).toContainText("Available after the prior checkpoint");
   await page
-    .getByLabel("Will a rate of 1.1 converge, oscillate, or diverge—and why?")
+    .getByLabel(
+      "Will a rate of 1.1 make the distance from the minimum shrink, stay fixed, or grow—and will θ cross the minimum?",
+    )
     .fill("It will diverge because each step overshoots farther.");
   await page.getByRole("button", { name: "Save response" }).click();
   await frame.getByRole("button", { name: "Run four steps and save evidence" }).click();
@@ -304,7 +306,9 @@ test("explains session phrases and confirms checkpoint rollback", async ({ page 
     await expect(page.getByText(phrase, { exact: true })).toBeVisible();
 
   await page
-    .getByLabel("Will a rate of 1.1 converge, oscillate, or diverge—and why?")
+    .getByLabel(
+      "Will a rate of 1.1 make the distance from the minimum shrink, stay fixed, or grow—and will θ cross the minimum?",
+    )
     .fill("It will diverge.");
   await page.getByRole("button", { name: "Save response" }).click();
   await page.reload();
@@ -322,7 +326,9 @@ test("removes later discovery evidence when restarting its checkpoint", async ({
 }) => {
   await openFoundation(page);
   await page
-    .getByLabel("Will a rate of 1.1 converge, oscillate, or diverge—and why?")
+    .getByLabel(
+      "Will a rate of 1.1 make the distance from the minimum shrink, stay fixed, or grow—and will θ cross the minimum?",
+    )
     .fill("It will diverge.");
   await page.getByRole("button", { name: "Save response" }).click();
   const frame = page.frameLocator("iframe").first();

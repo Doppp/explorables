@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { compareModelDescriptors } from "./compare.ts";
 import { parseModelAtlasDescriptor } from "./schema.ts";
 
-const descriptor = (id: string, width?: number) =>
+const descriptor = (id: string, width?: number, discloseCount = true) =>
   parseModelAtlasDescriptor({
     kind: "model-atlas",
     schemaVersion: 1,
@@ -26,7 +26,7 @@ const descriptor = (id: string, width?: number) =>
         kind: "attention",
         evidence: "configuration-derived",
         sourceIds: ["source"],
-        count: 12,
+        ...(discloseCount ? { count: 12 } : {}),
         ...(width ? { dimensions: { width, heads: 12 } } : {}),
       },
     ],
@@ -38,6 +38,19 @@ describe("model descriptor comparison", () => {
     expect(rows.find((row) => row.key === "attention-blocks")?.relation).toBe("same");
     expect(rows.find((row) => row.key === "width")).toMatchObject({
       left: "768",
+      right: "Not disclosed here",
+      relation: "undisclosed",
+    });
+  });
+
+  it("keeps an omitted stage count undisclosed", () => {
+    const rows = compareModelDescriptors(
+      descriptor("published", 768),
+      descriptor("omitted", 768, false),
+    );
+
+    expect(rows.find((row) => row.key === "attention-blocks")).toMatchObject({
+      left: "12",
       right: "Not disclosed here",
       relation: "undisclosed",
     });

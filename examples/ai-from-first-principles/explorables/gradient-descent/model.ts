@@ -16,3 +16,13 @@ export function step(parameter: number, learningRate: number): number {
   }
   return parameter - learningRate * gradient(parameter);
 }
+
+export function classifyLossTrend(
+  initialLoss: number,
+  finalLoss: number,
+): "converging" | "constant-distance oscillation" | "diverging" {
+  const tolerance = Number.EPSILON * Math.max(1, initialLoss, finalLoss) * 16;
+  if (finalLoss < initialLoss - tolerance) return "converging";
+  if (finalLoss > initialLoss + tolerance) return "diverging";
+  return "constant-distance oscillation";
+}
