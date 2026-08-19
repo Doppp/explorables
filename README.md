@@ -15,19 +15,7 @@ The simplest learner experience uses **Codex in the ChatGPT desktop app**. Open 
 ```text
 Install and launch explorables from https://github.com/Doppp/explorables.
 
-Create a new `explorables` folder in my Documents folder. If that folder
-already exists, do not overwrite it; ask me what to do. Clone the repository
-using HTTPS, read its `AGENTS.md`, and follow its instructions.
-
-Check for Node.js 22.22.2 or newer in the 22.x line, or Node.js 24.15.0 or
-newer in the 24.x line, and pnpm 10.26.0+ (10.x) or pnpm 11, but ask before
-installing or changing system software.
-
-Install the locked dependencies with `pnpm install --frozen-lockfile`, run
-`pnpm course`, and open the printed local course library. Help me choose a
-course, then read that course's `AGENTS.md` and follow its tutoring policy.
-Ask me to predict, let me attempt exercises, run tests, and give the smallest
-useful hint before showing more.
+Create a new `explorables` folder in my Documents folder. If that folder already exists, do not overwrite it; ask me what to do. Clone the repository using HTTPS, read its `AGENTS.md`, and follow its instructions. Check for Node.js 22.22.2 or newer in the 22.x line, or Node.js 24.15.0 or newer in the 24.x line, and pnpm 10.26.0+ (10.x) or pnpm 11, but ask before installing or changing system software. Install the locked dependencies with `pnpm install --frozen-lockfile`, run `pnpm course`, and open the printed local course library. Help me choose a course, then read that course's `AGENTS.md` and follow its tutoring policy. Ask me to predict, let me attempt exercises, run tests, and give the smallest useful hint before showing more.
 ```
 
 Codex will ask for permission before running some commands or accessing a folder. Review and approve the actions needed to clone the public repository, install its dependencies, and start the local course. It should stop and ask instead of replacing an existing folder or installing missing system software.
