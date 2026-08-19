@@ -322,6 +322,11 @@ The intended desktop experience is:
 
 The browser or preview pane is the primary reading and interaction surface. The coding-agent workspace is the primary tutoring and implementation surface.
 
+This is also a content boundary. Definitions, prerequisite bridges, notation, worked explanations,
+and exercise context belong in the lesson Markdown rendered in the browser. The coding agent may
+adapt, question, restate, and clarify that material, but a course must not depend on chat as the
+only place where a learner can obtain the foundational explanation.
+
 ## 6.3 Typical lesson flow
 
 A lesson should usually follow this sequence:
@@ -730,12 +735,30 @@ By the end of the course, you should be able to:
 
 A lesson must be useful as plain Markdown.
 
+Lesson Markdown is the canonical teaching material, not an outline that requires a coding agent to
+supply the missing lecture. The runtime adds interactivity and the tutor adds adaptation, but the
+durable explanation remains reviewable in the course repository.
+
 The runtime adds interactivity, but the source should still communicate:
 
 - What is being taught
 - What the learner should do
 - What the fallback explanation is
 - Which exercise is associated with the lesson
+
+For a lesson that introduces a foundational concept, the Markdown should also provide:
+
+- the prerequisite bridge and plain-language definitions needed to understand the prediction;
+- definitions for new notation before the learner is asked to use it;
+- a worked example with enough intermediate values to inspect the mechanism;
+- an explanation that connects the explorable's observed values to the formal concept;
+- a bridge from the representation to relevant code responsibilities or data shapes;
+- at least one deliberate failure and the invariant it violates; and
+- a concise recap or self-check that asks the learner to explain rather than merely recognise.
+
+This contract does not imply a minimum word count or rigid heading vocabulary. Automated validation
+continues to check structure, paths, fallbacks, and executable contracts; editorial review and
+learner playtesting determine whether the explanation is sufficient for the declared audience.
 
 ## 9.2 Lesson frontmatter
 
@@ -1939,6 +1962,11 @@ Optionally submit the tagged release to the catalogue repository through a pull 
 ## 19.1 Show before explaining
 
 Whenever possible, let the learner encounter a surprising behaviour before presenting the formal definition.
+
+“Show before explaining” means delaying the full mechanism until the learner has evidence to
+explain. It does not mean asking for a prediction with undefined vocabulary or notation, and it does
+not move the eventual explanation into tutor chat. Supply the prerequisites needed for a meaningful
+prediction, then formalise the observed relationship in the canonical lesson Markdown.
 
 ## 19.2 Require predictions
 
