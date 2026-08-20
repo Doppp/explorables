@@ -4,14 +4,16 @@
 
 `explorables` is an Agent Plugins v1-compatible open course format and local runtime for technical
 learning through explanatory Markdown, sandboxed TypeScript interactions, real exercises, and a
-coding-agent tutor. The lesson prose is the canonical source for definitions and mechanisms; the
-tutor adapts and reinforces it. A course is a normal folder. It needs no account, database,
-analytics, hosted executor, or LMS.
+coding-agent tutor. In tutor-led courses the coding agent is the primary adaptive teacher and the
+browser is the explorable, evidence, and progress workbench; complete Markdown remains available as
+the durable reference. A course is a normal folder. It needs no account, database, analytics,
+hosted executor, or LMS.
 
 The reference course is [AI from First Principles](examples/ai-from-first-principles). Its current
-fourteen-lesson foundation begins with a plain-language learning loop, then builds from gradients
-and linear layers through a trained tiny Transformer, cached autoregressive generation, sampling,
-and claim-aligned evaluation.
+sixteen-lesson foundation begins by distinguishing generative AI, LLMs, and chatbot products,
+steps through next-token generation and the learning loop, then builds from gradients and linear
+layers through a trained tiny Transformer, cached autoregressive generation, sampling, and
+claim-aligned evaluation.
 
 The accepted [model-learning roadmap](docs/course-roadmap.md) continues through `Open Frontier Models: Shared Techniques`, then separate `Inside DeepSeek`, `Inside Kimi`, `Inside Qwen`, `Inside MiniMax`, and `Inside GLM` courses. Each model course uses pinned primary sources and a controlled reconstruction rather than treating one umbrella survey as a substitute for studying the lab.
 

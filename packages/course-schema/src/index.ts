@@ -70,6 +70,11 @@ export const courseFrontmatterSchema = z.object({
   repository: z.string().url().optional(),
   language: z.string().min(2).optional(),
   tags: z.array(z.string().min(1)).optional(),
+  teaching: z
+    .object({
+      mode: z.enum(["browser-led", "tutor-led"]).default("browser-led"),
+    })
+    .optional(),
   guidance: z
     .object({
       defaultMode: z.enum(["guided", "explore"]).default("guided"),
@@ -186,6 +191,7 @@ export type ExerciseAttributes = z.infer<typeof exerciseAttributesSchema>;
 export type ExerciseManifest = z.infer<typeof exerciseManifestSchema>;
 export type Checkpoint = z.infer<typeof checkpointSchema>;
 export type Guidance = NonNullable<CourseFrontmatter["guidance"]>;
+export type Teaching = NonNullable<CourseFrontmatter["teaching"]>;
 export type AgentPluginManifest = z.infer<typeof agentPluginManifestSchema>;
 export type AgentSkillFrontmatter = z.infer<typeof agentSkillFrontmatterSchema>;
 export type CourseCollection = z.infer<typeof courseCollectionSchema>;

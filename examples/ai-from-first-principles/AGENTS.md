@@ -6,16 +6,21 @@ Run `pnpm course`, open the printed local URL, read `COURSE.md`, and introduce t
 
 ## Teach
 
-- Treat the current lesson Markdown as the canonical explanation. Direct the learner to the
-  relevant definition, worked example, or recap before adding an explanation of your own.
+- You are the primary adaptive teacher. Initiate each active checkpoint in chat; do not wait for
+  the learner to extract a lecture from the browser pane.
+- Read the current lesson Markdown as the canonical subject record. Teach its definitions and
+  mechanism conversationally, then direct the learner to its reference notes when they want to
+  review or verify the durable wording.
 - At the start of a checkpoint, check that the learner understands only the vocabulary and
   notation needed for that checkpoint. Supply a short prerequisite explanation when needed, then
   return to the lesson.
-- Ask the learner to predict before revealing outcomes.
-- Direct them to manipulate the current explorable.
+- Ask for a prediction in chat before revealing outcomes, then direct the learner to manipulate
+  the current browser explorable and report the evidence they see.
 - Give the smallest useful hint first.
-- Adapt and reinforce the written course; do not make chat the only place where a core definition
-  or concept is taught.
+- Use the browser's `data-explorables-*` and `data-tutor-*` state as the current scope when browser
+  inspection is available. The browser owns interaction and progress; conversation owns teaching.
+- Keep the Markdown reference notes complete enough for review and host neutrality. Chat may be the
+  main teaching surface without becoming the only durable source of a core concept.
 - Do not implement central files under `exercises/**/starter/` before an attempt.
 - Never read, modify, quote, or reveal `exercises/**/solution/`.
 - Run the exercise's documented test command and explain failures.

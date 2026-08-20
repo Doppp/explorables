@@ -1,7 +1,7 @@
 ---
 id: gradient-descent
 title: Gradient descent
-order: 2
+order: 4
 discoveryCycle: true
 checkpoints:
   - id: predict

@@ -28,45 +28,31 @@ test("orients a beginner before the first prediction and technical lesson", asyn
   await page.getByRole("button", { name: "Start course" }).click();
 
   await expect(
-    page.getByRole("heading", { name: "How machines learn", level: 1 }),
+    page.getByRole("heading", {
+      name: "Generative AI and language models",
+      level: 1,
+    }),
   ).toBeVisible();
-  const lesson = page.locator(".discovery-lesson-body");
+  await expect(page.locator("#lesson")).toHaveAttribute(
+    "data-explorables-teaching-mode",
+    "tutor-led",
+  );
+  const lesson = page.locator(".tutor-led-lesson-body");
   await expect(
-    lesson.getByRole("heading", { name: "What “AI” means in this course" }),
+    lesson
+      .locator(".tutor-handoff")
+      .getByRole("heading", { name: "Classify a familiar AI product" }),
   ).toBeVisible();
+  await expect(lesson.locator(".tutor-handoff")).toHaveAttribute(
+    "data-tutor-checkpoint-id",
+    "predict",
+  );
+  const notes = lesson.locator(".lesson-reference-notes");
+  await expect(notes).not.toHaveAttribute("open", "");
+  await notes.getByText("Open lesson reference notes").click();
   await expect(
-    lesson.getByRole("heading", { name: "The six pieces of a learning loop" }),
+    notes.getByRole("heading", { name: "A nested map, not a bag of synonyms" }),
   ).toBeVisible();
-  await expect(
-    lesson.getByText(/A machine-learning model instead contains adjustable values/),
-  ).toBeVisible();
-  await expect(
-    lesson.getByText(/During training, the system has an example and its target/),
-  ).toBeVisible();
-
-  const sequence = await lesson.evaluate((root) => {
-    const definitions = [...root.querySelectorAll("h2")].find(
-      (heading) => heading.textContent?.trim() === "The six pieces of a learning loop",
-    );
-    const checkpoint = root.querySelector(".checkpoint-control-predict");
-    const explorable = root.querySelector("[data-explorable]");
-    if (!definitions || !checkpoint || !explorable) return null;
-    return {
-      definitionsBeforeCheckpoint: Boolean(
-        definitions.compareDocumentPosition(checkpoint) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      ),
-      checkpointBeforeExplorable: Boolean(
-        checkpoint.compareDocumentPosition(explorable) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      ),
-    };
-  });
-
-  expect(sequence).toEqual({
-    definitionsBeforeCheckpoint: true,
-    checkpointBeforeExplorable: true,
-  });
 
   await page.getByRole("button", { name: "Switch to Explore mode" }).click();
   await page.getByRole("button", { name: "Enter Explore mode" }).click();
@@ -79,4 +65,23 @@ test("orients a beginner before the first prediction and technical lesson", asyn
       name: "The smallest possible learning problem",
     }),
   ).toBeVisible();
+  await expect(page.locator(".tutor-handoff")).toHaveCount(0);
+});
+
+test("keeps ordered-list markers inside explorable panels", async ({ page }) => {
+  await page.setViewportSize({ width: 420, height: 820 });
+  await page.goto("/");
+  await page.getByRole("link", { name: "Open course" }).click();
+  await page.getByRole("button", { name: "Start course" }).click();
+  await page.locator("details.compact-course-contents > summary").click();
+  await page.getByRole("button", { name: "Switch to Explore mode" }).click();
+  await page.getByRole("button", { name: "Enter Explore mode" }).click();
+  await page.getByRole("link", { name: "The next-token loop" }).click();
+  const list = page.frameLocator("iframe").first().locator("ol.panel");
+  await expect(list).toBeVisible();
+  expect(
+    await list.evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).paddingInlineStart),
+    ),
+  ).toBeGreaterThanOrEqual(30);
 });

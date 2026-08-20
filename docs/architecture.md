@@ -42,6 +42,21 @@ or Resume destination; it does not create a second progress store.
 
 Raw HTML, event attributes, script URLs, and unknown directives are not passed through. Source file and AST position follow every typed directive so build and runtime errors identify the authoring location.
 
+## Tutor-led presentation
+
+`teaching.mode: tutor-led` changes presentation, not the course source format. The runtime splits
+the already sanitised lesson around its existing explorable and exercise placeholders. It renders a
+compact tutor handoff, the active checkpoint control, the explorable, evidence, and exercise as the
+default activity surface. The remaining introduction, worked explanation, and recap stay available
+inside an accessible reference-notes disclosure. Explore mode intentionally renders the complete
+lesson for self-directed review.
+
+The lesson root exposes course/version, teaching mode, visible lesson, Guided position, active
+checkpoint, mode, and persistence through read-only `data-explorables-*` attributes. The handoff
+adds `data-tutor-*` lesson, checkpoint, and phase fields. A coding-agent host may inspect these
+values and teach from the corresponding Markdown. No runtime package invokes a private host API,
+transmits a conversation, or accepts chat claims as checkpoint evidence.
+
 ## Explorable compilation and sandbox
 
 The CLI owns esbuild options. A course supplies an entry `.ts` module and JSON configuration, never executable Vite configuration. The result is embedded in an iframe `srcdoc` with `sandbox="allow-scripts"`; `allow-same-origin` is not granted.
@@ -86,7 +101,7 @@ The visible session panel is the host-neutral continuity surface. The lesson roo
 
 Each distributable course root is an Agent Plugins v1 package. Root `plugin.json` declares portable identity and `skills/start-course/SKILL.md` is the single portable component. The skill locates the course root, reads `AGENTS.md` and `COURSE.md`, starts `pnpm course`, and then follows the active lesson. No MCP server is needed because the existing CLI and local files supply the workflow without another process or permission surface.
 
-`AGENTS.md` remains the canonical host-neutral tutoring policy. Codex can read it directly or activate the portable skill. Claude Code Desktop retains a thin `CLAUDE.md` adapter and the officially supported `.claude/launch.json` preview configuration. Both open localhost, read the same files, and run the same tests. No runtime package calls private host APIs.
+`AGENTS.md` remains the canonical host-neutral tutoring policy. Codex can read it directly or activate the portable skill. Claude Code Desktop retains a thin `CLAUDE.md` adapter and the officially supported `.claude/launch.json` preview configuration. Both open localhost, inspect the same active-state attributes, teach from the same Markdown, and run the same tests. No runtime package calls private host APIs.
 
 ## Local course collections
 

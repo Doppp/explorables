@@ -1,7 +1,7 @@
 ---
 id: multi-head-attention
 title: Multi-head attention
-order: 9
+order: 11
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate the attention heads", completion: explorable-event, instanceId: multi-head-workbench, event: parameter-changed }

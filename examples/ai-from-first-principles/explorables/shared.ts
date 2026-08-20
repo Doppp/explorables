@@ -37,6 +37,7 @@ export function styles(): HTMLStyleElement {
     th { background:var(--surface); }
     th:first-child, td:first-child { text-align:left; }
     .panel { margin-top:1rem; padding:.85rem; border:1px solid var(--border); border-radius:.45rem; background:var(--surface-tint); }
+    ol.panel, ul.panel { padding-inline-start:2.35rem; }
     .tokens { display:flex; flex-wrap:wrap; gap:.35rem; margin:.5rem 0; }
     .token { padding:.25rem .45rem; border:1px solid var(--border-strong); border-radius:.3rem; background:var(--surface); font:.78rem ui-monospace,monospace; }
     .warning { color:#8c3640; font-weight:700; }

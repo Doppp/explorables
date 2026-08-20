@@ -6,6 +6,14 @@ All notable changes to `explorables` are documented here.
 
 ### Added
 
+- Opt-in `teaching.mode: tutor-led` presentation: the coding-agent conversation leads the live
+  lesson while the browser defaults to checkpoint, explorable, evidence, exercise, and collapsed
+  reference notes. Stable `data-tutor-*` state keeps host inspection provider-neutral.
+- Two beginner lessons before the learning loop: `Generative AI and language models` and `The
+  next-token loop`, each with a deterministic accessible explorable and guided discovery cycle.
+- ADR 0011 and a reviewed beginner-curriculum research note covering the supplied sources and their
+  relevant linked learning paths.
+- Shared explorable list padding that keeps ordered markers inside panel borders at narrow widths.
 - A learner-facing course overview route compiled from `COURSE.md`, with audience, prerequisites,
   estimated effort, lesson count, and browser-local Start/Resume behavior before Lesson 1.
 - Contextual discovery checkpoint controls that preserve definition → prediction → explorable →
@@ -28,6 +36,11 @@ All notable changes to `explorables` are documented here.
 
 ### Changed
 
+- `AI from First Principles` is versioned as `0.6.0-tutor-led.1`, now contains sixteen lessons, and
+  uses Codex/Claude conversation as the primary teaching surface. Its browser-progress namespace is
+  intentionally fresh; earlier local progress remains untouched under its prior course version.
+- Scaffolded courses now opt into tutor-led delivery while existing courses without `teaching`
+  retain browser-led full-lesson rendering.
 - `AI from First Principles` is versioned as `0.5.0-onboarding.1`, now contains fourteen lessons,
   and explicitly supports technical learners with no prior machine-learning or calculus knowledge.
   The new course version intentionally creates a fresh browser-progress namespace while leaving

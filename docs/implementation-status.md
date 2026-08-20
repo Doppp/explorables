@@ -26,6 +26,14 @@ Updated: 20 August 2026
   sanitised `COURSE.md` overview before Lesson 1, discovery controls appear in instructional order,
   the reusable template documents the same contract, and `AI from First Principles` begins with a
   four-checkpoint `How machines learn` lesson and one-parameter learning-loop explorable.
+- Added the `0.6.0-tutor-led.1` course correction: Codex/Claude conversation now leads the live
+  teaching loop, Guided browser pages prioritise task, explorable, evidence, and progress, and the
+  complete canonical Markdown remains available as collapsed reference notes.
+- Added a beginner runway covering the AI/ML/generative-AI/LLM/chat-product term map and the
+  autoregressive next-token loop before training mathematics, backed by two tested explorables and
+  the reviewed curriculum source note.
+- Added stable `data-tutor-*` checkpoint scope, tutor-led schema/scaffold/adapter coverage, and an
+  ordered-list containment regression for narrow sandbox panels.
 - Codified the browser-first teaching boundary in the PRD: foundational explanations remain in
   canonical lesson Markdown, predictions receive the vocabulary they require, and instructional
   depth stays an editorial and learner-playtesting concern rather than a word-count validator.
@@ -56,7 +64,7 @@ Updated: 20 August 2026
 
 The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, clean-checkout verification, and pull-request CI are complete.
 
-`AI from First Principles` `0.5.0-onboarding.1`, Guided Course Mode, Agent Plugins v1 packaging, the
+`AI from First Principles` `0.6.0-tutor-led.1`, Guided Course Mode, Agent Plugins v1 packaging, the
 general local course library, course overview, and contextual discovery flow are implemented. The
 library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM
 specializations as planned rather than runnable. Its DeepSeek and GLM cards reflect the V4 and 5.2
@@ -82,6 +90,7 @@ learner-study evidence also remain.
 ## Latest verification
 
 ```text
+20 Aug tutor-led LLM runway           pass (clean pnpm 11 worktree: format/lint/typecheck, 36 suites/109 tests, collection and minimal validation, all builds, 20 course suites/61 model tests, 14 starter/reference exercise pairs, 17 browser tests including tutor state/reference notes/ordered-list containment/320px/axe, and 2 site tests)
 20 Aug course orientation              pass (clean Node 24/pnpm 11 worktree: format/lint/typecheck, 34 suites/105 tests, collection and minimal validation, all builds, 18 course suites/57 tests, 14 starter/reference pairs, 16 browser tests including overview/contextual order/320px/axe, and 2 site tests)
 20 Aug compact library hero          pass (16 browser tests; 320×700, 720×800, 900×700, 1100×760, and 1427×900 geometry; light/dark in-app Codex visual QA; scoped format/lint, typecheck, 33 suites/102 tests, validation, and all builds)
 19 Aug foundations + PRD v0.4     pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)

@@ -36,12 +36,16 @@ When requirements conflict, follow `docs/PRD.md`, then document the conflict and
 
 When acting as a learner's tutor:
 
-- Treat lesson Markdown as the canonical explanation. Direct the learner to its definitions,
-  worked example, and recap before supplementing it.
+- Be the primary adaptive teacher for tutor-led courses. Initiate the active checkpoint in chat;
+  use the browser as the explorable, evidence, and progress surface.
+- Treat lesson Markdown as the canonical subject record. Teach from it conversationally and direct
+  the learner to the browser's reference notes for durable definitions, worked examples, and recap.
 - Check only the prerequisite vocabulary needed for the active checkpoint. Explain a missing term
   briefly, then return to the lesson; do not make chat the only source of a core concept.
-- Ask the learner to predict before revealing outcomes.
+- Ask the learner to predict in chat before revealing outcomes.
 - Direct them to manipulate the explorable.
+- Inspect `data-explorables-*` and `data-tutor-*` browser state when available so the conversation
+  stays aligned with the active lesson and checkpoint.
 - Give the smallest useful hint first.
 - Do not implement the central exercise for them before an attempt.
 - Do not reveal reference solutions.

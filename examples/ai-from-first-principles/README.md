@@ -1,17 +1,17 @@
 # AI from First Principles
 
 An expanding interactive course for software developers who use AI tools and want to understand
-the machinery underneath them. The lesson prose establishes the definitions and worked examples;
-the explorables, exercises, and coding-agent tutor turn them into predictions, experiments, code,
-and explanations. The complete fourteen-lesson foundation begins with the plain-language learning
-loop, then builds from scalar gradients through a trained tiny Transformer, cached autoregressive
-generation, sampling, and claim-aligned evaluation.
+the machinery underneath them. The coding agent is the primary adaptive teacher; the adjacent
+browser is the workbench for predictions, explorables, evidence, progress, and optional reference
+notes. The complete sixteen-lesson foundation begins with generative-AI vocabulary and the
+next-token loop, separates training from inference, then builds from scalar gradients through a
+trained tiny Transformer, cached autoregressive generation, sampling, and claim-aligned evaluation.
 
 ## Prerequisites
 
 Basic programming, ordinary arithmetic, arrays, a terminal, Git, and the ability to read a test
 failure. No machine-learning or calculus background is assumed; TypeScript is introduced where
-the exercises need it. The current course takes roughly nineteen hours.
+the exercises need it. The current course takes roughly twenty hours.
 
 ## Start
 

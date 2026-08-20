@@ -9,6 +9,8 @@ audience:
 prerequisites:
   - Describe only the knowledge required before Lesson 1
 estimatedHours: 1
+teaching:
+  mode: tutor-led
 guidance:
   defaultMode: guided
   allowExploreMode: true

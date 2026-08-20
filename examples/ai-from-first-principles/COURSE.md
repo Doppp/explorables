@@ -1,7 +1,7 @@
 ---
 id: ai-from-first-principles
 title: AI from First Principles
-version: 0.5.0-onboarding.1
+version: 0.6.0-tutor-led.1
 summary: Learn, inspect, implement, and debug the foundations behind modern language models.
 license: CC-BY-4.0
 audience:
@@ -11,12 +11,14 @@ prerequisites:
   - basic programming and terminal use
   - ordinary arithmetic and arrays
   - no prior machine-learning or calculus knowledge
-estimatedHours: 19
+estimatedHours: 20
 repository: https://github.com/Doppp/explorables
 language: en
 tags:
   - machine-learning
   - language-models
+teaching:
+  mode: tutor-led
 guidance:
   defaultMode: guided
   allowExploreMode: true
@@ -26,11 +28,10 @@ guidance:
 
 # AI from First Principles
 
-Start with the course orientation and the small learning loop before meeting its mathematical
-machinery. The lesson prose teaches the durable definitions, notation, and mechanisms. Use the
-browser to form an intuition, then make that intuition survive experiments, code, and tests. The
-coding agent adapts the explanation and helps you debug; it is your tutor, not the source of a
-hidden parallel course and not your substitute.
+Start by locating generative AI, language models, and chat products on the same map. Then trace the
+next-token loop and ask how training improves its probabilities before meeting the mathematical
+machinery. The coding agent teaches and adapts the active checkpoint in conversation. The browser
+is the adjacent workbench for predictions, manipulation, evidence, and durable reference notes.
 
 ## What you will learn
 
@@ -41,24 +42,26 @@ to use it.
 
 ## How to use the course
 
-Read the setup before answering each prediction. Manipulate the explorable, save evidence, then
-move into the linked repository exercise when one is present. Guided checkpoints remain local to
-this browser and are not grades. The coding agent can clarify the active lesson, run tests after
-your attempt, and give progressively stronger hints without revealing protected solutions.
+Ask the coding-agent tutor to introduce the active checkpoint. Answer its prediction in chat, use
+the browser explorable to generate evidence, then return to conversation to explain what happened.
+Open the browser's reference notes whenever you want the canonical definitions or worked example.
+Guided checkpoints remain local to this browser and are not grades.
 
 ## Lessons
 
-1. [How machines learn](lessons/00-how-machines-learn.md)
-2. [Gradient descent](lessons/01-gradient-descent.md)
-3. [Backpropagation](lessons/02-backpropagation.md)
-4. [Vectors, matrices, and linear layers](lessons/03-vectors-matrices-linear-layers.md)
-5. [Losses and optimisers](lessons/04-losses-optimisers.md)
-6. [BPE tokenisation](lessons/05-bpe-tokenisation.md)
-7. [Embeddings and positional information](lessons/06-embeddings-positional-information.md)
-8. [Self-attention](lessons/07-self-attention.md)
-9. [Multi-head attention](lessons/08-multi-head-attention.md)
-10. [The Transformer block](lessons/09-transformer-block.md)
-11. [Next-token training](lessons/10-next-token-training.md)
-12. [Autoregressive inference and KV caching](lessons/11-autoregressive-inference-kv-caching.md)
-13. [Sampling and generation](lessons/12-sampling.md)
-14. [Evaluation leakage](lessons/13-evaluation-leakage.md)
+1. [Generative AI and language models](lessons/00-generative-ai-and-llms.md)
+2. [The next-token loop](lessons/00-next-token-loop.md)
+3. [How machines learn](lessons/00-how-machines-learn.md)
+4. [Gradient descent](lessons/01-gradient-descent.md)
+5. [Backpropagation](lessons/02-backpropagation.md)
+6. [Vectors, matrices, and linear layers](lessons/03-vectors-matrices-linear-layers.md)
+7. [Losses and optimisers](lessons/04-losses-optimisers.md)
+8. [BPE tokenisation](lessons/05-bpe-tokenisation.md)
+9. [Embeddings and positional information](lessons/06-embeddings-positional-information.md)
+10. [Self-attention](lessons/07-self-attention.md)
+11. [Multi-head attention](lessons/08-multi-head-attention.md)
+12. [The Transformer block](lessons/09-transformer-block.md)
+13. [Next-token training](lessons/10-next-token-training.md)
+14. [Autoregressive inference and KV caching](lessons/11-autoregressive-inference-kv-caching.md)
+15. [Sampling and generation](lessons/12-sampling.md)
+16. [Evaluation leakage](lessons/13-evaluation-leakage.md)

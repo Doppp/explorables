@@ -1,7 +1,7 @@
 ---
 id: vectors-matrices-linear-layers
 title: Vectors, matrices, and linear layers
-order: 4
+order: 6
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate the linear projection", completion: explorable-event, instanceId: linear-projection, event: parameter-changed }

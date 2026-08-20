@@ -195,3 +195,56 @@ Exit check: a new learner sees audience, prerequisites, course promise, and lear
 Lesson 1; prerequisite definitions precede the prediction control in DOM and keyboard order; the
 four-phase Guided flow, persistence, restart/reset, standalone build, accessibility, and supported
 toolchain checks remain green.
+
+## Milestone 14 — tutor-led learning and beginner LLM runway
+
+This milestone corrects the division of teaching responsibility after reviewing the first runnable
+course in Codex. The coding-agent conversation becomes the primary adaptive teacher. The browser is
+the learner's activity surface: it presents the current task, explorable, evidence, and progress,
+with complete Markdown retained as an explicitly opened reference rather than the default lecture.
+
+### 14.1 Product and host contract
+
+- Add an opt-in `teaching.mode: tutor-led` course profile without adding a Markdown directive or a
+  provider-specific API.
+- Expose stable, non-secret active lesson/checkpoint metadata in the rendered page so a host tutor
+  can inspect the current learning state.
+- Add a compact tutor handoff that tells the learner what to discuss in chat and what to manipulate
+  in the browser.
+- Update canonical `AGENTS.md`, portable skills, and thin Claude adapters so the host initiates each
+  checkpoint, checks vocabulary, asks for a prediction, sends the learner to the explorable, and
+  returns to chat for explanation/debugging.
+- Keep lesson Markdown canonical, GitHub-readable, and available in the browser as reference notes;
+  do not make progress depend on a private bridge or conversation transcript.
+
+Exit check: a tutor-led and a browser-led course both render; the tutor-led page defaults to the
+activity surface while reference notes remain keyboard accessible; active state changes with the
+lesson/checkpoint and is covered by unit and browser tests.
+
+### 14.2 Beginner Generative AI sequence
+
+- Add `Generative AI and language models` before any training mathematics: distinguish AI,
+  machine learning, generative AI, language models, and chat products, and make the model/system
+  boundary visible.
+- Add `The next-token loop`: move from prompt to tokens to next-token probabilities, sampling, and
+  repeated generation before asking how those probabilities were learned.
+- Follow with the existing `How machines learn` lesson, then gradients, backpropagation, numerical
+  representations, Transformer internals, inference, sampling, and evaluation.
+- Use tiny deterministic interactions to teach the mechanism while explicitly separating the tiny
+  architecture from data curation, scale, post-training, product scaffolding, and evaluation.
+- Record the reviewed source sequence and pedagogical conclusions in a curriculum research note.
+
+Exit check: a learner with programming experience but no ML vocabulary can explain the nested term
+map, distinguish a model from a chatbot system, trace one autoregressive generation step, and then
+state why training is a separate activity before entering gradient descent.
+
+### 14.3 Visual regression and release
+
+- Keep ordered-list markers inside shared explorable panels at narrow widths.
+- Add focused model, runtime, browser, accessibility, validation, and responsive-layout coverage.
+- Update the PRD, architecture, authoring guide, implementation status, and changelog.
+- Commit the plan, runtime boundary, curriculum, and hardening as coherent milestones on a feature
+  branch; open a pull request, wait for required CI, and merge without force-pushing.
+
+Exit check: the full check/build/course/browser/site matrix passes; the pull request is merged only
+after required CI is green.
