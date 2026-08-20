@@ -1,7 +1,7 @@
 ---
 id: how-machines-learn
 title: How machines learn
-order: 1
+order: 3
 discoveryCycle: true
 checkpoints:
   - id: predict

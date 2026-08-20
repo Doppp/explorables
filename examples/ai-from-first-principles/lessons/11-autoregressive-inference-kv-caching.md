@@ -1,7 +1,7 @@
 ---
 id: autoregressive-inference-kv-caching
 title: Autoregressive inference and KV caching
-order: 12
+order: 14
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate the KV-cache trace", completion: explorable-event, instanceId: kv-cache-lab, event: parameter-changed }

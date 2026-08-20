@@ -1,7 +1,7 @@
 ---
 id: backpropagation
 title: Backpropagation
-order: 3
+order: 5
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate the computation graph", completion: explorable-event, instanceId: backprop-graph, event: parameter-changed }

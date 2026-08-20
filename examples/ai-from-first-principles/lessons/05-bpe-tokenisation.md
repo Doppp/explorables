@@ -1,7 +1,7 @@
 ---
 id: bpe-tokenisation
 title: BPE tokenisation
-order: 6
+order: 8
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Run one BPE merge", completion: explorable-event, instanceId: bpe-workbench, event: simulation-completed }

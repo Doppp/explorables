@@ -1,7 +1,7 @@
 ---
 id: transformer-block
 title: The Transformer block
-order: 10
+order: 12
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate the residual stream", completion: explorable-event, instanceId: transformer-block-trace, event: parameter-changed }
