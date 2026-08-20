@@ -159,8 +159,14 @@ test("follows the system theme, syncs explorables, and persists an override", as
 });
 
 test("keeps the general course library responsive", async ({ page }) => {
-  for (const width of [320, 720, 1156, 1427]) {
-    await page.setViewportSize({ width, height: 900 });
+  for (const viewport of [
+    { width: 320, height: 700 },
+    { width: 720, height: 800 },
+    { width: 900, height: 700 },
+    { width: 1100, height: 760 },
+    { width: 1427, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
     await page.goto("/");
     await expect(page.locator("h1.library-title")).toHaveText(
       "Learn by exploring, coding, and testing.",
@@ -170,17 +176,43 @@ test("keeps the general course library responsive", async ({ page }) => {
       const hero = document.querySelector<HTMLElement>(".library-hero");
       const note = document.querySelector<HTMLElement>(".local-note");
       const title = document.querySelector<HTMLElement>(".library-title");
+      const masthead = document.querySelector<HTMLElement>(".library-masthead");
+      const eyebrow = document.querySelector<HTMLElement>(".library-eyebrow");
+      const introduction = document.querySelector<HTMLElement>(".library-introduction");
       const available = document.querySelector<HTMLElement>(".available-courses");
-      if (!library || !hero || !note || !title || !available)
+      if (
+        !library ||
+        !hero ||
+        !note ||
+        !title ||
+        !masthead ||
+        !eyebrow ||
+        !introduction ||
+        !available
+      )
         throw new Error("Expected library header elements");
+      const titleStyles = getComputedStyle(title);
+      const titleLineHeight = Number.parseFloat(titleStyles.lineHeight);
+      const titleRect = title.getBoundingClientRect();
+      const introductionRect = introduction.getBoundingClientRect();
       return {
         overflow:
           document.documentElement.scrollWidth > document.documentElement.clientWidth,
         libraryWidth: library.getBoundingClientRect().width,
         heroWidth: hero.getBoundingClientRect().width,
         noteWidth: note.getBoundingClientRect().width,
-        titleWidth: title.getBoundingClientRect().width,
+        titleWidth: titleRect.width,
         availableWidth: available.getBoundingClientRect().width,
+        mastheadToContentGap:
+          eyebrow.getBoundingClientRect().top - masthead.getBoundingClientRect().bottom,
+        heroToCoursesGap:
+          available.getBoundingClientRect().top - note.getBoundingClientRect().bottom,
+        titleLines: titleRect.height / titleLineHeight,
+        introductionTop: introductionRect.top,
+        introductionLeft: introductionRect.left,
+        titleBottom: titleRect.bottom,
+        titleLeft: titleRect.left,
+        titleRight: titleRect.right,
       };
     });
     expect(metrics.overflow).toBe(false);
@@ -188,6 +220,16 @@ test("keeps the general course library responsive", async ({ page }) => {
     expect(Math.abs(metrics.availableWidth - metrics.libraryWidth)).toBeLessThan(1);
     expect(metrics.noteWidth).toBeLessThanOrEqual(metrics.heroWidth);
     expect(metrics.titleWidth).toBeLessThanOrEqual(metrics.heroWidth);
+    expect(metrics.mastheadToContentGap).toBeLessThanOrEqual(70);
+    expect(metrics.heroToCoursesGap).toBeLessThanOrEqual(70);
+    if (viewport.width >= 720) expect(metrics.titleLines).toBeLessThanOrEqual(3.1);
+    if (viewport.width <= 1120) {
+      expect(metrics.introductionTop).toBeGreaterThan(metrics.titleBottom);
+      expect(Math.abs(metrics.introductionLeft - metrics.titleLeft)).toBeLessThan(1);
+    } else {
+      expect(metrics.introductionLeft).toBeGreaterThan(metrics.titleLeft);
+      expect(metrics.introductionLeft - metrics.titleRight).toBeLessThan(200);
+    }
   }
 });
 

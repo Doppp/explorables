@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 19 August 2026
+Updated: 20 August 2026
 
 ## Completed
 
@@ -35,6 +35,7 @@ Updated: 19 August 2026
 - Reworked the local course library and lesson shell as a quiet, editorial learning interface with accessible pastel color roles, lesson-first hierarchy, explicit navigation states, compact course contents below 992px, and visually consistent sandbox controls. The course shell now reflows at 320px without putting the full lesson list ahead of the active lesson.
 - Reframed the local collection home as a product-general, status-first course library. Available courses now lead the page, planned AI courses are subordinate roadmap content, and the visible display name is `Explorables` while lowercase technical identifiers remain stable.
 - Added an explicit, persistent light/dark theme control to the course library and lesson shell, including live theme synchronization into already-mounted sandboxed explorables. Retuned the dark pastel roles, restored the library hero and local-data notice to the full responsive content width, and corrected title casing while preserving the lowercase `explorables` wordmark.
+- Tightened the course-library hero into a compact responsive composition: wide screens use a smaller, content-filled column gutter, while Codex-sized panes stack the introduction below a two-line headline before the layout becomes squeezed. Reduced the masthead and section whitespace so the available-course section begins within the first compact-browser viewport.
 - Retained Node.js 24/pnpm 11 as the default toolchain while adding an enforced, CI-tested compatibility floor of Node.js 22.22.2 and pnpm 10.26.0.
 - Refreshed the planned `Inside DeepSeek` course through DeepSeek V4 Pro/Flash while retaining V3/R1 as lineage, and refreshed `Inside GLM` through GLM 5.2 while retaining GLM 5 as the available architecture/post-training lineage. The revised briefs add hybrid long-context attention, mHC, Muon, mixed precision and policy consolidation for DeepSeek, plus DSA/IndexShare, multi-token prediction, serving ablations, and long-horizon evaluation for GLM.
 - Recorded exact reviewed official model-artifact commits, report revisions, and code/weight licence signals for DeepSeek V4 and GLM 5.2 in the candidate source register without misrepresenting them as immutable course-local source freezes.
@@ -51,7 +52,7 @@ Updated: 19 August 2026
 
 The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, clean-checkout verification, and pull-request CI are complete.
 
-`AI from First Principles` `0.4.0-foundations.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local course-library milestone are implemented. The course UI redesign and its responsive/theme follow-up are complete. The library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation increment remains the shared-core source freeze and its five research/comparison lessons, followed by the pinned model-specific courses. External DNS and learner-study evidence also remain.
+`AI from First Principles` `0.4.0-foundations.1`, Guided Course Mode, Agent Plugins v1 packaging, and the local course-library milestone are implemented. The course UI redesign and its responsive/theme follow-up are complete, including compact embedded-browser hero spacing. The library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM specializations as planned rather than runnable. Its DeepSeek and GLM cards now reflect the V4 and 5.2 endpoints. The next implementation increment remains the shared-core source freeze and its five research/comparison lessons, followed by the pinned model-specific courses. External DNS and learner-study evidence also remain.
 
 ## Decisions
 
@@ -71,6 +72,7 @@ The v0.1 runtime MVP remains verified. Course-session continuity now provides a 
 ## Latest verification
 
 ```text
+20 Aug compact library hero          pass (16 browser tests; 320×700, 720×800, 900×700, 1100×760, and 1427×900 geometry; light/dark in-app Codex visual QA; scoped format/lint, typecheck, 33 suites/102 tests, validation, and all builds)
 19 Aug foundations + PRD v0.4     pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)
 19 Aug general library redesign      pass (typecheck, 7 suites/29 targeted tests, collection validation/build, 15 browser tests, 2 site tests, axe, light/dark visual QA at 843px and 320px)
 18 Aug Model Atlas unit/integration    pass (33 suites/100 tests; strict descriptors, exact traces, comparisons, renderer lifecycle, validator, and real catalogue bundle)
