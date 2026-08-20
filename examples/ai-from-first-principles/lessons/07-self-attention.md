@@ -1,7 +1,7 @@
 ---
 id: self-attention
 title: Self-attention
-order: 7
+order: 8
 discoveryCycle: true
 checkpoints:
   - id: predict

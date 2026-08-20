@@ -1,7 +1,7 @@
 ---
 id: embeddings-positional-information
 title: Embeddings and positional information
-order: 6
+order: 7
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate token position", completion: explorable-event, instanceId: embedding-position, event: parameter-changed }

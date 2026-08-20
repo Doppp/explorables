@@ -20,6 +20,34 @@ async function openFoundation(page: Page) {
   await page.goto("/");
   await page.getByRole("link", { name: "Open course" }).click();
   await expect(
+    page.getByRole("heading", { name: "AI from First Principles", level: 1 }),
+  ).toBeVisible();
+  await expect(page.getByText("Course overview", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Start course" }).click();
+  await expect(
+    page.getByRole("heading", { name: "How machines learn", level: 1 }),
+  ).toBeVisible();
+  await page
+    .getByLabel(
+      "Which value should training change: the input, the target, or the model parameter—and should inference change it too?",
+    )
+    .fill(
+      "Training should change the model parameter; inference should leave it fixed.",
+    );
+  await page.getByRole("button", { name: "Save response" }).click();
+  const frame = page.frameLocator("iframe").first();
+  await frame.getByRole("button", { name: "Train one step and save evidence" }).click();
+  await page.getByRole("button", { name: "Mark complete" }).click();
+  await page
+    .getByLabel(
+      "In your own words, how do prediction, target, loss, and parameter update form a training loop, and what is missing during inference?",
+    )
+    .fill(
+      "Training compares a prediction with a target, measures loss, and updates a parameter. Inference has no target or update.",
+    );
+  await page.getByRole("button", { name: "Save response" }).click();
+  await page.getByRole("button", { name: "Gradient descent →" }).click();
+  await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
 }
@@ -61,8 +89,13 @@ test("presents a general course library and planned specializations honestly", a
   expect(results.violations).toEqual([]);
   await page.getByRole("link", { name: "Open course" }).click();
   await expect(
-    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+    page.getByRole("heading", { name: "AI from First Principles", level: 1 }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "What you will learn" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Start course" })).toBeVisible();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByRole("button", { name: "All courses" }).click();
   await expect(
     page.getByRole("heading", {
@@ -133,9 +166,10 @@ test("follows the system theme, syncs explorables, and persists an override", as
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.getByRole("link", { name: "Open course" }).click();
+  await page.getByRole("button", { name: "Start course" }).click();
   const frame = page.frameLocator("iframe").first();
   await expect(
-    frame.getByRole("heading", { name: "Walk the loss curve" }),
+    frame.getByRole("heading", { name: "Trace one learning step" }),
   ).toBeVisible();
   await expect(frame.locator("html")).toHaveAttribute("data-theme", "light");
 
@@ -263,6 +297,29 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
     page.locator(".lesson-locked").filter({ hasText: "Backpropagation" }),
   ).toContainText("Locked");
   await expect(page.getByRole("button", { name: "Backpropagation →" })).toBeDisabled();
+  const predictionControl = page.locator(".checkpoint-control-predict");
+  const lessonBody = page.locator(".discovery-lesson-body");
+  await expect(predictionControl).toBeVisible();
+  expect(
+    await lessonBody.evaluate((root) => {
+      const setup = [...root.querySelectorAll("h2")].find(
+        (heading) =>
+          heading.textContent?.trim() === "The smallest possible learning problem",
+      );
+      const checkpoint = root.querySelector(".checkpoint-control-predict");
+      const explorable = root.querySelector("[data-explorable]");
+      if (!setup || !checkpoint || !explorable) return false;
+      return (
+        Boolean(
+          setup.compareDocumentPosition(checkpoint) & Node.DOCUMENT_POSITION_FOLLOWING,
+        ) &&
+        Boolean(
+          checkpoint.compareDocumentPosition(explorable) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        )
+      );
+    }),
+  ).toBe(true);
   const iframe = page.locator("iframe").first();
   await expect(iframe).toHaveAttribute("sandbox", "allow-scripts");
   await expect(iframe).not.toHaveAttribute("sandbox", /allow-same-origin/);
@@ -303,8 +360,7 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
     "gradient-descent-learning-journal.json",
   );
   await page
-    .getByRole("listitem")
-    .filter({ hasText: "Attempt the exercise and run its tests" })
+    .locator(".checkpoint-control-apply")
     .getByRole("button", { name: "Mark complete" })
     .click();
   await page
@@ -459,7 +515,7 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
 }) => {
   await page.goto("/#/courses/ai-from-first-principles/lessons/sampling");
   await expect(
-    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+    page.getByRole("heading", { name: "How machines learn", level: 1 }),
   ).toBeVisible();
   await expect(page.getByText(/That lesson is still ahead/)).toBeVisible();
   await page.getByText("Question parking lot (0)").click();
@@ -468,7 +524,7 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
   await expect(page.getByText("Question parking lot (1)")).toBeVisible();
   await page.getByRole("button", { name: "Skip lesson" }).click();
   await expect(
-    page.getByRole("heading", { name: "Backpropagation", level: 1 }),
+    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
   await enterExploreMode(page);
   await page.getByRole("link", { name: "Sampling and generation" }).click();
@@ -477,13 +533,13 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
   ).toBeVisible();
   await page.getByRole("button", { name: "Return to Guided mode" }).click();
   await expect(
-    page.getByRole("heading", { name: "Backpropagation", level: 1 }),
+    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
   await page.getByText("How to pause, resume, or change position").click();
   await page.getByRole("button", { name: "Reset this course" }).click();
   await page.getByRole("button", { name: "Reset course", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Gradient descent", level: 1 }),
+    page.getByRole("heading", { name: "How machines learn", level: 1 }),
   ).toBeVisible();
   await expect(page.getByText("Question parking lot (0)")).toBeVisible();
 });

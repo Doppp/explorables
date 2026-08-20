@@ -1,7 +1,7 @@
 ---
 id: backpropagation
 title: Backpropagation
-order: 2
+order: 3
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Manipulate the computation graph", completion: explorable-event, instanceId: backprop-graph, event: parameter-changed }
@@ -15,7 +15,9 @@ objectives:
 
 # Backpropagation
 
-Gradient descent needs the slope of the loss with respect to every parameter. In the first lesson one formula gave that slope directly. A real model is a chain of many small operations, so we need a reliable way to combine their slopes.
+Gradient descent needs the slope of the loss with respect to every parameter. In the prior lesson
+one formula gave that slope directly. A real model is a chain of many small operations, so we need
+a reliable way to combine their slopes.
 
 You need only multiplication, addition, and the gradient idea from lesson 1. The notation `dy/dw` means “how sensitively does `y` change when `w` changes?” It is read as “the derivative of y with respect to w.”
 

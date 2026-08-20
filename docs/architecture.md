@@ -35,6 +35,11 @@ COURSE.md + lessons + modules + exercises
 5. Transform the two approved directives to typed runtime placeholders. Their fallback bodies remain visible until or when interaction is unavailable.
 6. Rewrite safe relative links/assets through course-scoped server routes.
 
+The compiled runtime course retains the sanitised body of `COURSE.md` as `introductionHtml`.
+Collection and standalone course roots render that introduction as a course overview before a
+lesson route is selected. The overview reads the existing session/Guided records to choose a Start
+or Resume destination; it does not create a second progress store.
+
 Raw HTML, event attributes, script URLs, and unknown directives are not passed through. Source file and AST position follow every typed directive so build and runtime errors identify the authoring location.
 
 ## Explorable compilation and sandbox
@@ -64,6 +69,12 @@ The runtime reducer owns the active lesson, completed checkpoints, explicit skip
 Only an explicit learner action or an exact `(instanceId, event)` sandbox message can complete a checkpoint. Sandboxed modules retain the same permissions and cannot access the parent document's state. Exercises remain deliberate learner or host actions; the runtime's learner acknowledgment is not automated grading.
 
 Discovery-cycle lessons add semantic checkpoint phases without adding Markdown directives. `recordExperiment` wraps the existing local event channel with bounded scalar inputs and outputs. The parent validates the payload, supplies its ID and timestamp, retains at most twenty records per explorable, and renders baseline/latest comparisons. The iframe cannot select storage keys, read prior records, or bypass its opaque origin and `connect-src 'none'` boundary.
+
+The checkpoint summary and active control are separate runtime components. Sanitised lesson HTML
+is split around its existing `data-explorable` and `data-exercise` placeholders: prediction is
+rendered before the explorable, experiment guidance after it, application after the exercise, and
+reflection after the conclusion. All controls dispatch to the same Guided reducer. Non-discovery
+lessons keep the original unified checkpoint panel.
 
 Guided-state schema v2 stores submitted responses, experiment runs, and selected baselines. Parsing migrates valid schema-v1 progress. Confirmed restart removes responses and evidence at or after the chosen checkpoint; reset removes both v2 and legacy keys. These artifacts are explicitly ungraded and local-only.
 

@@ -178,3 +178,20 @@ Exit check: learners can locate the first cross-token mixing stage, follow the r
 path, reconstruct one attention output, identify the broken backpropagation factor, distinguish GPT
 scale/topology/nondisclosure, and derive KV-cache memory; the complete repository verification matrix
 in the detailed plan passes without widening iframe permissions or breaking schema version 1.
+
+## Milestone 13 — course orientation and contextual guidance
+
+Deliverables:
+
+- A course overview route backed by the existing sanitised `COURSE.md` introduction and current
+  browser-local progress records.
+- Start/Resume routing that preserves collection, standalone, and direct-lesson behavior.
+- Contextual discovery controls placed around existing explorable and exercise anchors without a
+  new Markdown directive or a second progress store.
+- A reusable authoring/template orientation contract and a plain-language `How machines learn`
+  entry lesson for `AI from First Principles`.
+
+Exit check: a new learner sees audience, prerequisites, course promise, and learning workflow before
+Lesson 1; prerequisite definitions precede the prediction control in DOM and keyboard order; the
+four-phase Guided flow, persistence, restart/reset, standalone build, accessibility, and supported
+toolchain checks remain green.

@@ -6,6 +6,13 @@ All notable changes to `explorables` are documented here.
 
 ### Added
 
+- A learner-facing course overview route compiled from `COURSE.md`, with audience, prerequisites,
+  estimated effort, lesson count, and browser-local Start/Resume behavior before Lesson 1.
+- Contextual discovery checkpoint controls that preserve definition → prediction → explorable →
+  application → reflection order without adding another Markdown directive.
+- A new beginner orientation, `How machines learn`, and a one-parameter training-loop explorable
+  before Gradient Descent in `AI from First Principles`.
+
 - `@explorables/model-atlas`, a source-grounded 3D architecture and trace renderer with strict inert schemas, evidence labels, reviewed source references, semantic controls, exact tensor tables, WebGL fallback, comparison mode, and deterministic cleanup.
 - A learner-facing Transformer Model Atlas in `AI from First Principles` covering the exact tiny teaching model, published GPT-1/2/3 configurations, GPT-4's explicit disclosure boundary, and source-gated DeepSeek V4, Kimi K3, Qwen 3, MiniMax M1, and GLM 5.2 mechanism views.
 - Model Atlas descriptor validation, scene/bundle budgets, renderer and comparison tests, and first-party browser interaction/accessibility coverage.
@@ -20,6 +27,13 @@ All notable changes to `explorables` are documented here.
 - Visible browser-storage availability and same-origin resume guidance.
 
 ### Changed
+
+- `AI from First Principles` is versioned as `0.5.0-onboarding.1`, now contains fourteen lessons,
+  and explicitly supports technical learners with no prior machine-learning or calculus knowledge.
+  The new course version intentionally creates a fresh browser-progress namespace while leaving
+  earlier version data untouched.
+- Discovery lessons now keep their checkpoint summary near the lesson header while placing the
+  active learner control in the lesson's instructional context.
 
 - Reframed the local collection home as a general, status-first course library: available courses are primary, planned AI courses sit in a quieter roadmap, and visible product branding now uses `Explorables` while technical identifiers remain lowercase.
 - `AI from First Principles` is versioned as `0.4.0-foundations.1`, with self-contained canonical

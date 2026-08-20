@@ -1,7 +1,7 @@
 ---
 id: gradient-descent
 title: Gradient descent
-order: 1
+order: 2
 discoveryCycle: true
 checkpoints:
   - id: predict
@@ -28,7 +28,9 @@ objectives:
 
 # Gradient descent
 
-You need only ordinary arithmetic and the idea that a graph can slope up or down for this lesson. We will build the vocabulary used throughout the course before asking a model to learn one number.
+The orientation showed a model changing one parameter toward a target. This lesson explains how a
+training system calculates that direction instead of being handed a halfway adjustment. You need
+only ordinary arithmetic and the idea that a graph can slope up or down.
 
 ## The smallest possible learning problem
 

@@ -121,13 +121,13 @@ These are separate course packages with separate `COURSE.md` files. They share t
 Status: complete.
 
 - Deliver the v0.1 runtime and authoring format.
-- Complete the thirteen-lesson foundation course and tiny Transformer.
+- Complete the fourteen-lesson foundation course and tiny Transformer.
 - Verify deterministic training, generation, caching, evaluation, sandboxing, accessibility, and clean builds.
 
 ### Milestone 1 — guided course delivery
 
 - Add reusable opt-in checkpoints, ordered navigation, explicit skip/Explore controls, local resume state, and tutor focus rules.
-- Apply the complete guided loop to all thirteen foundation lessons.
+- Apply the complete guided loop to all fourteen foundation lessons.
 - Preserve unrestricted navigation for existing courses that do not opt in.
 
 ### Milestone 2 — course-family and source freeze

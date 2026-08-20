@@ -437,6 +437,103 @@ h3 {
   padding: clamp(1.25rem, 4vw, 2.25rem) 0 5rem;
 }
 
+.course-overview {
+  width: min(100% - 2.5rem, 72rem);
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 2.25rem) 0 5rem;
+}
+
+.course-overview-masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.course-overview-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.65fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  padding: clamp(3rem, 7vw, 6rem) 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+.course-overview-hero h1 {
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 5.7rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.course-overview-summary {
+  max-width: 43rem;
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+}
+
+.course-overview-facts {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+}
+
+.course-overview-facts div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.course-overview-facts dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.course-overview-facts dd {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.course-overview-start {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--sage);
+}
+
+.course-overview-start h2,
+.course-overview-start p {
+  margin: 0;
+}
+
+.course-overview-start h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.course-overview-start p:last-child {
+  margin-top: 0.45rem;
+  color: var(--muted);
+}
+
+.course-overview-body {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
 .library-hero {
   width: 100%;
   margin-bottom: clamp(2.5rem, 4vw, 4rem);
@@ -1022,6 +1119,58 @@ pre {
   font-size: 0.73rem;
 }
 
+.checkpoint-control {
+  margin: 2rem 0;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  background: var(--sage);
+}
+
+.checkpoint-control-experiment {
+  background: var(--blue);
+}
+
+.checkpoint-control .eyebrow,
+.checkpoint-control h2,
+.checkpoint-control > p:last-child {
+  margin-top: 0;
+}
+
+.checkpoint-control h2 {
+  margin-bottom: 0.65rem;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+}
+
+.checkpoint-control .checkpoint-response-form {
+  grid-column: auto;
+  width: 100%;
+  padding-top: 0;
+}
+
+.checkpoint-control button {
+  width: fit-content;
+  min-height: 2.65rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.checkpoint-control button:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--surface-soft);
+}
+
+.checkpoint-control button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .automatic-checkpoint {
   max-width: 12rem;
   text-align: right;
@@ -1352,6 +1501,16 @@ pre code {
   .lesson {
     padding-top: 2.5rem;
   }
+
+  .course-overview-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .course-overview-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 42rem) {
@@ -1370,6 +1529,24 @@ pre code {
   .course-library {
     width: min(100% - 2rem, 72rem);
     padding-top: 1.5rem;
+  }
+
+  .course-overview {
+    width: min(100% - 2rem, 72rem);
+    padding-top: 1.5rem;
+  }
+
+  .course-overview-hero {
+    padding: 2.5rem 0;
+  }
+
+  .course-overview-hero h1 {
+    font-size: clamp(2.6rem, 13vw, 3.8rem);
+  }
+
+  .course-overview-facts,
+  .course-overview-start {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .library-hero {

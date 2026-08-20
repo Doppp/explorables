@@ -1,7 +1,7 @@
 ---
 id: losses-optimisers
 title: Losses and optimisers
-order: 4
+order: 5
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Take a training step", completion: explorable-event, instanceId: optimiser-lab, event: simulation-completed }

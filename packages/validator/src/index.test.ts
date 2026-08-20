@@ -201,7 +201,7 @@ describe("course validator", () => {
     expect(collection.runtime.tracks[0]?.courses[0]).toMatchObject({
       id: "ai-from-first-principles",
       status: "available",
-      lessonCount: 13,
+      lessonCount: 14,
     });
     expect(JSON.stringify(collection.runtime)).not.toContain(root);
     expect(await validateCourseCollection(root)).toEqual([]);
