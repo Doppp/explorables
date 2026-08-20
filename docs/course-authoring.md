@@ -4,7 +4,7 @@ This guide is sufficient to add a seventh lesson or start a new course without r
 
 ## 1. Define the promise
 
-Write down the audience, prerequisites, observable outcomes, estimated time, and explicit non-goals before building interactions. Use an explorable only when direct manipulation improves a representation; use an exercise when the learner must make the idea survive implementation and tests.
+Write down the audience, prerequisites, observable outcomes, estimated time, and explicit non-goals before building interactions. The body of `COURSE.md` is the learner-facing orientation shown before Lesson 1, so explain what the course teaches, how it works, and what the learner needs before asking them to start. Use an explorable only when direct manipulation improves a representation; use an exercise when the learner must make the idea survive implementation and tests.
 
 ## 2. Scaffold and run
 
@@ -38,7 +38,20 @@ title: Systems Course
 version: 0.1.0
 summary: Inspect and implement one small system at a time.
 license: CC-BY-4.0
+audience:
+  - software developers new to queueing systems
+prerequisites:
+  - basic programming and arithmetic
+estimatedHours: 3
 ---
+
+# Systems Course
+
+Learn why queues grow, how backpressure limits them, and how to implement the invariants in code.
+
+## How to use this course
+
+Read each setup, record a prediction, manipulate the system, then test the matching implementation.
 
 ## Lessons
 
@@ -47,6 +60,10 @@ license: CC-BY-4.0
 ```
 
 Required fields are `id`, `title`, `version`, `summary`, and `license`. IDs use lowercase kebab-case. Lesson `id` and `title` are required; `order`, `objectives`, and `prerequisites` are optional.
+
+Opening a course renders this introduction, the declared audience and prerequisites, estimated
+time, and lesson count before entering Lesson 1. Keep the orientation useful in plain Markdown;
+do not move the course promise or essential setup into tutor instructions.
 
 ### Optional guided course mode
 
@@ -120,6 +137,12 @@ checkpoints:
 ```
 
 Responses and experiment runs migrate with guided progress, are removed by the same confirmed restart/reset rules, and never leave the browser. They are learning artifacts, not grades or proof of understanding.
+
+For discovery lessons, the runtime keeps a compact progress summary near the lesson header but
+places the active control in the lesson flow: prediction before the referenced explorable,
+experiment guidance with that explorable, application after the exercise, and reflection after the
+conclusion. This uses the existing phases and the existing `explorable` and `exercise` directives;
+authors must not add checkpoint directives or put prerequisite definitions in checkpoint prompts.
 
 The runtime adds a course-session panel without requiring author markup. It remembers the last visited lesson for locally persistent courses and identifies the first incomplete checkpoint in Guided mode. The panel defines portable learner phrases for start/resume, pause/end-session, review, Explore, confirmed checkpoint restart, reset, and finish. Course tutor policies should use those meanings and treat the browser state as authoritative.
 

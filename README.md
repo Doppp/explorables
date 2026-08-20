@@ -8,7 +8,10 @@ coding-agent tutor. The lesson prose is the canonical source for definitions and
 tutor adapts and reinforces it. A course is a normal folder. It needs no account, database,
 analytics, hosted executor, or LMS.
 
-The reference course is [AI from First Principles](examples/ai-from-first-principles). Its current thirteen-lesson foundation builds from gradients and linear layers through a trained tiny Transformer, cached autoregressive generation, sampling, and claim-aligned evaluation.
+The reference course is [AI from First Principles](examples/ai-from-first-principles). Its current
+fourteen-lesson foundation begins with a plain-language learning loop, then builds from gradients
+and linear layers through a trained tiny Transformer, cached autoregressive generation, sampling,
+and claim-aligned evaluation.
 
 The accepted [model-learning roadmap](docs/course-roadmap.md) continues through `Open Frontier Models: Shared Techniques`, then separate `Inside DeepSeek`, `Inside Kimi`, `Inside Qwen`, `Inside MiniMax`, and `Inside GLM` courses. Each model course uses pinned primary sources and a controlled reconstruction rather than treating one umbrella survey as a substitute for studying the lab.
 
@@ -37,7 +40,7 @@ pnpm install --frozen-lockfile
 pnpm course
 ```
 
-Open the printed `http://127.0.0.1:4173` URL in the Codex built-in browser, a normal browser, or Claude Code Desktop Preview. The local library shows the foundation, shared research-skills course, and planned model specializations. Select an available course. Codex should then follow that course's `AGENTS.md` and tutor you through its active lesson. For example:
+Open the printed `http://127.0.0.1:4173` URL in the Codex built-in browser, a normal browser, or Claude Code Desktop Preview. The local library shows the foundation, shared research-skills course, and planned model specializations. Select an available course, read its overview, then start or resume it. Codex should follow that course's `AGENTS.md` and tutor you through its active lesson. For example:
 
 > Start AI from First Principles.
 

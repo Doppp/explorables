@@ -1,7 +1,7 @@
 ---
 id: next-token-training
 title: Next-token training
-order: 10
+order: 11
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Take a next-token training step", completion: explorable-event, instanceId: next-token-lab, event: simulation-completed }

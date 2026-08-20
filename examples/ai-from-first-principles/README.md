@@ -3,13 +3,15 @@
 An expanding interactive course for software developers who use AI tools and want to understand
 the machinery underneath them. The lesson prose establishes the definitions and worked examples;
 the explorables, exercises, and coding-agent tutor turn them into predictions, experiments, code,
-and explanations. The complete thirteen-lesson foundation builds from scalar gradients through a
-trained tiny Transformer, cached autoregressive generation, sampling, and claim-aligned evaluation.
+and explanations. The complete fourteen-lesson foundation begins with the plain-language learning
+loop, then builds from scalar gradients through a trained tiny Transformer, cached autoregressive
+generation, sampling, and claim-aligned evaluation.
 
 ## Prerequisites
 
-Basic TypeScript, algebra, arrays, a terminal, Git, and the ability to read a test failure. No
-machine-learning background is assumed. The current course takes roughly eighteen hours.
+Basic programming, ordinary arithmetic, arrays, a terminal, Git, and the ability to read a test
+failure. No machine-learning or calculus background is assumed; TypeScript is introduced where
+the exercises need it. The current course takes roughly nineteen hours.
 
 ## Start
 

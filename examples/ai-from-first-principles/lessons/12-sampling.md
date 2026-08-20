@@ -1,7 +1,7 @@
 ---
 id: sampling
 title: Sampling and generation
-order: 12
+order: 13
 checkpoints:
   - { id: predict, title: "Record your prediction", completion: learner }
   - { id: experiment, title: "Sample from the distribution", completion: explorable-event, instanceId: sampling-lab, event: simulation-completed }

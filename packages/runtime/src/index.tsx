@@ -58,6 +58,20 @@ const LessonArticle = memo(function LessonArticle({
   );
 });
 
+const CourseIntroduction = memo(function CourseIntroduction({
+  html,
+  title,
+}: {
+  html: string;
+  title: string;
+}) {
+  return (
+    <div className="course-overview-body">
+      <LessonArticle html={html} title={title} />
+    </div>
+  );
+});
+
 export const THEME_STORAGE_KEY = "explorables:theme";
 
 function isTheme(value: unknown): value is Theme {
@@ -138,6 +152,20 @@ function hashLessonId(first: string, routePrefix = "", preferred = first): strin
     : preferred;
 }
 
+function currentHashRoute(): string {
+  return window.location.hash.replace(/^#\/?/, "").replace(/\/$/, "");
+}
+
+function useCurrentHashRoute(): string {
+  const [route, setRoute] = useState(currentHashRoute);
+  useEffect(() => {
+    const onHash = () => setRoute(currentHashRoute());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  return route;
+}
+
 function useHashLesson(
   course: RuntimeCourse,
   routePrefix = "",
@@ -176,11 +204,13 @@ function CheckpointPanel({
   state,
   dispatch,
   onRestart,
+  summaryOnly = false,
 }: {
   lesson: RuntimeLesson;
   state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
   onRestart: (checkpointId: string) => void;
+  summaryOnly?: boolean;
 }) {
   const [restartCheckpointId, setRestartCheckpointId] = useState<string | null>(null);
   const checkpoints = lesson.frontmatter.checkpoints ?? [];
@@ -247,6 +277,12 @@ function CheckpointPanel({
                     Restart here
                   </button>
                 )
+              ) : summaryOnly ? (
+                <small className="automatic-checkpoint">
+                  {checkpoint.id === firstIncompleteId
+                    ? "Continue in the lesson below"
+                    : "Available after the prior checkpoint"}
+                </small>
               ) : checkpoint.completion === "learner" ? (
                 checkpoint.id === firstIncompleteId ? (
                   checkpoint.response ? (
@@ -328,6 +364,221 @@ function CheckpointPanel({
         })}
       </ol>
     </section>
+  );
+}
+
+function ActiveCheckpointControl({
+  lesson,
+  phase,
+  state,
+  dispatch,
+}: {
+  lesson: RuntimeLesson;
+  phase: Checkpoint["phase"];
+  state: GuidedCourseStateV2;
+  dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+}) {
+  const checkpoints = lesson.frontmatter.checkpoints ?? [];
+  const completed = new Set(state.completedCheckpoints[lesson.frontmatter.id] ?? []);
+  const checkpointIndex = checkpoints.findIndex(
+    (checkpoint) => !completed.has(checkpoint.id),
+  );
+  const checkpoint = checkpoints[checkpointIndex];
+  if (!checkpoint || checkpoint.phase !== phase) return null;
+  const response = state.checkpointResponses[lesson.frontmatter.id]?.[checkpoint.id];
+
+  return (
+    <section
+      className={`checkpoint-control checkpoint-control-${phase ?? "general"}`}
+      aria-labelledby={`active-checkpoint-${checkpoint.id}`}
+    >
+      <p className="eyebrow">
+        Checkpoint {checkpointIndex + 1} of {checkpoints.length}
+      </p>
+      <h2 id={`active-checkpoint-${checkpoint.id}`}>{checkpoint.title}</h2>
+      {checkpoint.completion === "learner" ? (
+        checkpoint.response ? (
+          <form
+            className="checkpoint-response-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              dispatch({
+                type: "submit-response",
+                lessonId: lesson.frontmatter.id,
+                checkpointId: checkpoint.id,
+              });
+            }}
+          >
+            <label htmlFor={`checkpoint-${checkpoint.id}`}>
+              {checkpoint.response.prompt}
+            </label>
+            {checkpoint.response.format === "long-text" ? (
+              <textarea
+                id={`checkpoint-${checkpoint.id}`}
+                value={response?.text ?? ""}
+                onChange={(event) =>
+                  dispatch({
+                    type: "set-response",
+                    lessonId: lesson.frontmatter.id,
+                    checkpointId: checkpoint.id,
+                    text: event.target.value,
+                  })
+                }
+              />
+            ) : (
+              <input
+                id={`checkpoint-${checkpoint.id}`}
+                type="text"
+                value={response?.text ?? ""}
+                onChange={(event) =>
+                  dispatch({
+                    type: "set-response",
+                    lessonId: lesson.frontmatter.id,
+                    checkpointId: checkpoint.id,
+                    text: event.target.value,
+                  })
+                }
+              />
+            )}
+            <button type="submit" disabled={!response?.text.trim()}>
+              Save response
+            </button>
+            <small>Saved only in this browser and not graded.</small>
+          </form>
+        ) : (
+          <>
+            <p>Complete the work described here before recording your progress.</p>
+            <button
+              type="button"
+              onClick={() =>
+                dispatch({
+                  type: "complete",
+                  lessonId: lesson.frontmatter.id,
+                  checkpointId: checkpoint.id,
+                })
+              }
+            >
+              Mark complete
+            </button>
+          </>
+        )
+      ) : (
+        <p>Use the explorable here and save meaningful evidence to continue.</p>
+      )}
+    </section>
+  );
+}
+
+type DiscoveryLessonSegments = {
+  introduction: string;
+  explorable: string;
+  explanation: string;
+  exercise: string;
+  conclusion: string;
+};
+
+function serializeLessonNodes(nodes: ChildNode[]): string {
+  const wrapper = document.createElement("div");
+  for (const node of nodes) wrapper.append(node.cloneNode(true));
+  return wrapper.innerHTML;
+}
+
+function discoveryLessonSegments(html: string, title: string): DiscoveryLessonSegments {
+  const template = document.createElement("template");
+  template.innerHTML = lessonBodyHtml(html, title);
+  const nodes = Array.from(template.content.childNodes);
+  const explorableIndex = nodes.findIndex(
+    (node) => node instanceof Element && node.matches("[data-explorable]"),
+  );
+  if (explorableIndex < 0)
+    return {
+      introduction: serializeLessonNodes(nodes),
+      explorable: "",
+      explanation: "",
+      exercise: "",
+      conclusion: "",
+    };
+  const exerciseIndex = nodes.findIndex(
+    (node, index) =>
+      index > explorableIndex &&
+      node instanceof Element &&
+      node.matches("[data-exercise]"),
+  );
+  return {
+    introduction: serializeLessonNodes(nodes.slice(0, explorableIndex)),
+    explorable: serializeLessonNodes(nodes.slice(explorableIndex, explorableIndex + 1)),
+    explanation: serializeLessonNodes(
+      nodes.slice(
+        explorableIndex + 1,
+        exerciseIndex < 0 ? nodes.length : exerciseIndex,
+      ),
+    ),
+    exercise:
+      exerciseIndex < 0
+        ? ""
+        : serializeLessonNodes(nodes.slice(exerciseIndex, exerciseIndex + 1)),
+    conclusion:
+      exerciseIndex < 0 ? "" : serializeLessonNodes(nodes.slice(exerciseIndex + 1)),
+  };
+}
+
+const LessonHtmlFragment = memo(function LessonHtmlFragment({
+  html,
+}: {
+  html: string;
+}) {
+  if (!html) return null;
+  return (
+    // biome-ignore lint/security/noDangerouslySetInnerHtml: the Markdown package sanitises this HTML before it enters runtime data.
+    <div className="lesson-fragment" dangerouslySetInnerHTML={{ __html: html }} />
+  );
+});
+
+function DiscoveryLessonArticle({
+  lesson,
+  state,
+  dispatch,
+}: {
+  lesson: RuntimeLesson;
+  state: GuidedCourseStateV2;
+  dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+}) {
+  const segments = useMemo(
+    () => discoveryLessonSegments(lesson.html, lesson.frontmatter.title),
+    [lesson],
+  );
+  return (
+    <article className="lesson-body discovery-lesson-body">
+      <LessonHtmlFragment html={segments.introduction} />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="predict"
+        state={state}
+        dispatch={dispatch}
+      />
+      <LessonHtmlFragment html={segments.explorable} />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="experiment"
+        state={state}
+        dispatch={dispatch}
+      />
+      <LessonHtmlFragment html={segments.explanation} />
+      <LessonHtmlFragment html={segments.exercise} />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="apply"
+        state={state}
+        dispatch={dispatch}
+      />
+      <LessonHtmlFragment html={segments.conclusion} />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="reflect"
+        state={state}
+        dispatch={dispatch}
+      />
+    </article>
   );
 }
 
@@ -492,6 +743,134 @@ function activeCheckpointId(
   return (lesson?.frontmatter.checkpoints ?? []).find(
     (checkpoint) => !completed.has(checkpoint.id),
   )?.id;
+}
+
+function CourseOverview({
+  course,
+  theme,
+  onToggleTheme,
+  routePrefix = "",
+  onBack,
+}: {
+  course: RuntimeCourse;
+  theme: Theme;
+  onToggleTheme: () => void;
+  routePrefix?: string;
+  onBack?: () => void;
+}) {
+  const persistenceEnabled = course.frontmatter.guidance?.persistLocally ?? true;
+  const progress = useMemo(() => {
+    if (!persistenceEnabled)
+      return {
+        hasSavedProgress: false,
+        lessonId: course.lessons[0]?.frontmatter.id ?? "",
+        checkpoint: null,
+      };
+
+    const sessionRead = readBrowserStorage(courseSessionStorageKey(course));
+    const session = parseCourseSessionState(course, sessionRead.value);
+    if (!course.frontmatter.guidance)
+      return {
+        hasSavedProgress: Boolean(sessionRead.value),
+        lessonId: session?.activeLessonId ?? course.lessons[0]?.frontmatter.id ?? "",
+        checkpoint: null,
+      };
+
+    const currentGuidedRead = readBrowserStorage(guidedStorageKey(course));
+    const guidedRead = currentGuidedRead.value
+      ? currentGuidedRead
+      : readBrowserStorage(legacyGuidedStorageKey(course));
+    const guidedState = parseGuidedState(course, guidedRead.value);
+    return {
+      hasSavedProgress: Boolean(sessionRead.value || guidedRead.value),
+      lessonId: guidedState.activeLessonId,
+      checkpoint: savedCheckpointTitle(course, guidedState),
+    };
+  }, [course, persistenceEnabled]);
+  const savedLesson = course.lessons.find(
+    (lesson) => lesson.frontmatter.id === progress.lessonId,
+  );
+  const firstLesson = course.lessons[0];
+  const destination = progress.hasSavedProgress ? savedLesson : firstLesson;
+
+  return (
+    <main className="course-overview">
+      <header className="course-overview-masthead">
+        {onBack ? (
+          <button className="brand brand-button" type="button" onClick={onBack}>
+            <span aria-hidden="true">←</span> All courses
+          </button>
+        ) : (
+          <a className="brand" href="#/">
+            Explorables
+          </a>
+        )}
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+      </header>
+      <section className="course-overview-hero" aria-labelledby="course-overview-title">
+        <div>
+          <p className="eyebrow">Course overview</p>
+          <h1 id="course-overview-title">{course.frontmatter.title}</h1>
+          <p className="course-overview-summary">{course.frontmatter.summary}</p>
+        </div>
+        <dl className="course-overview-facts">
+          {course.frontmatter.estimatedHours ? (
+            <div>
+              <dt>Estimated time</dt>
+              <dd>About {course.frontmatter.estimatedHours} hours</dd>
+            </div>
+          ) : null}
+          <div>
+            <dt>Lessons</dt>
+            <dd>{course.lessons.length}</dd>
+          </div>
+          {course.frontmatter.audience?.length ? (
+            <div>
+              <dt>Designed for</dt>
+              <dd>{course.frontmatter.audience.join(", ")}</dd>
+            </div>
+          ) : null}
+          {course.frontmatter.prerequisites?.length ? (
+            <div>
+              <dt>Prerequisites</dt>
+              <dd>{course.frontmatter.prerequisites.join(", ")}</dd>
+            </div>
+          ) : null}
+        </dl>
+      </section>
+      <section className="course-overview-start" aria-labelledby="course-start-title">
+        <div>
+          <p className="eyebrow">Your course session</p>
+          <h2 id="course-start-title">
+            {progress.hasSavedProgress
+              ? "Continue where you stopped"
+              : "Begin with context"}
+          </h2>
+          <p>
+            {progress.hasSavedProgress && savedLesson
+              ? `Saved at ${savedLesson.frontmatter.title}${progress.checkpoint ? ` — ${progress.checkpoint}` : ""}.`
+              : "Read the orientation first, then move into the technical lessons. Progress stays in this browser."}
+          </p>
+        </div>
+        {destination ? (
+          <button
+            className="course-action"
+            type="button"
+            onClick={() => {
+              window.location.hash = `/${routePrefix}${destination.frontmatter.id}`;
+            }}
+          >
+            {progress.hasSavedProgress ? "Resume course" : "Start course"}{" "}
+            <span aria-hidden="true">→</span>
+          </button>
+        ) : null}
+      </section>
+      <CourseIntroduction
+        html={course.introductionHtml}
+        title={course.frontmatter.title}
+      />
+    </main>
+  );
 }
 
 function CourseSessionPanel({
@@ -1009,6 +1388,7 @@ function Lesson({
     !guidance ||
     state.mode === "explore" ||
     isLessonComplete(course, state, lesson.frontmatter.id);
+  const contextualCheckpoints = Boolean(lesson.frontmatter.discoveryCycle);
 
   const goNext = () => {
     if (!next || !canAdvance) return;
@@ -1146,6 +1526,7 @@ function Lesson({
               lesson={lesson}
               state={state}
               dispatch={dispatch}
+              summaryOnly={contextualCheckpoints}
               onRestart={(checkpointId) => {
                 const restarted = restartGuidedStateFrom(
                   course,
@@ -1161,7 +1542,11 @@ function Lesson({
             <ExperimentJournal lesson={lesson} state={state} dispatch={dispatch} />
           </>
         ) : null}
-        <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />
+        {guidance && state.mode === "guided" && contextualCheckpoints ? (
+          <DiscoveryLessonArticle lesson={lesson} state={state} dispatch={dispatch} />
+        ) : (
+          <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />
+        )}
         <nav className="lesson-pagination" aria-label="Lesson pagination">
           {previous ? (
             <button type="button" onClick={() => navigate(previous.frontmatter.id)}>
@@ -1195,7 +1580,7 @@ function Lesson({
                 {next.frontmatter.title} →
               </button>
               {!canAdvance ? (
-                <small>Complete the checkpoints above to continue.</small>
+                <small>Complete the active checkpoint in the lesson to continue.</small>
               ) : null}
             </div>
           ) : (
@@ -1404,6 +1789,7 @@ function CollectionCourse({
 }) {
   const [course, setCourse] = useState<RuntimeCourse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const route = useCurrentHashRoute();
   useEffect(() => {
     setCourse(null);
     setError(null);
@@ -1431,6 +1817,19 @@ function CollectionCourse({
       <main className="loading" aria-busy="true">
         Loading course…
       </main>
+    );
+  const courseRoute = `courses/${encodeURIComponent(courseId)}`;
+  if (route === courseRoute)
+    return (
+      <CourseOverview
+        course={course}
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+        routePrefix={`${courseRoute}/lessons/`}
+        onBack={() => {
+          window.location.hash = "/courses";
+        }}
+      />
     );
   return (
     <Lesson
@@ -1492,6 +1891,7 @@ function CollectionApp({
 
 export function CourseApp() {
   const [theme, toggleTheme] = useTheme();
+  const route = useCurrentHashRoute();
   const [course, setCourse] = useState<RuntimeCourse | null>(null);
   const [collection, setCollection] = useState<RuntimeCourseCollection | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -1527,7 +1927,11 @@ export function CourseApp() {
       />
     );
   if (course)
-    return <Lesson course={course} theme={theme} onToggleTheme={toggleTheme} />;
+    return route ? (
+      <Lesson course={course} theme={theme} onToggleTheme={toggleTheme} />
+    ) : (
+      <CourseOverview course={course} theme={theme} onToggleTheme={toggleTheme} />
+    );
   return (
     <main className="loading" aria-busy="true">
       Loading Explorables…

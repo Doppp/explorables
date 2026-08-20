@@ -1,8 +1,8 @@
 # Explorables: Open Explorable Course Runtime
 ## Product Requirements, Technical Specification, and Course Authoring Guide
 
-**Status:** Draft v0.4
-**Date:** 19 August 2026
+**Status:** Draft v0.5
+**Date:** 20 August 2026
 **Display name:** `Explorables`
 **Supported initial hosts:** Codex and Claude Code Desktop  
 **Public site:** `https://explorables.ai`  
@@ -304,6 +304,12 @@ pnpm course
 pnpm site:dev
 ```
 
+Opening a course first presents a course overview compiled from the body and frontmatter of
+`COURSE.md`. It states the promise, audience, prerequisites, estimated effort, lesson map, local
+progress boundary, and how to use the course. A new learner chooses **Start course** before entering
+Lesson 1; a returning learner chooses **Resume course** to return to the saved lesson and Guided
+checkpoint. Direct lesson links remain valid.
+
 ## 6.2 Screen layout
 
 The intended desktop experience is:
@@ -346,6 +352,13 @@ These stages are pedagogical guidance, not mandatory runtime primitives. Most ca
 
 Terms and notation required for a meaningful prediction must appear before it. The full mechanism
 may remain until after the learner has generated evidence.
+
+The runtime must preserve that reading order. In a discovery-cycle lesson it may show a compact
+checkpoint summary near the lesson header, but the active prediction control appears after the
+orienting definitions and immediately before the referenced explorable. Experiment guidance stays
+with that explorable, application follows the exercise, and reflection follows the concluding
+explanation. This placement is derived from checkpoint phases and the existing `explorable` and
+`exercise` anchors; it does not add a third Markdown directive.
 
 ## 6.4 Course sessions and learner language
 
@@ -1181,6 +1194,8 @@ The `explorables` runtime performs only the following:
 10. Provide development errors with file and line references.
 11. For courses that opt in, present guided checkpoints, ordered navigation,
     explicit skip/Explore controls, and local resume state.
+12. Present a course overview from `COURSE.md` before Lesson 1 and place discovery controls in their
+    instructional context.
 
 It does not teach the subject itself. The course content and Codex instructions do that.
 
@@ -1245,6 +1260,11 @@ The local state may contain checkpoint IDs, skips, the active lesson, mode, a le
 A course or individual lesson may opt into a discovery cycle. Discovery lessons declare ordered prediction, experiment, application, and reflection checkpoint phases. Prediction and reflection may capture a bounded local text response. An experiment completes only after a meaningful interaction emits a structured experiment record; initial render never completes it.
 
 The runtime may show saved runs and compare a selected baseline with the latest evidence. Experiment payloads contain bounded scalar input/output fields. The main runtime validates and stores them; explorable iframes receive no browser storage access. These learning artifacts support reflection but are not proof of understanding, assessment results, analytics, or remote submissions.
+
+The runtime renders the discovery progress list separately from the active checkpoint control.
+Sanitised lesson HTML supplies the existing explorable and exercise anchors used for contextual
+placement. Non-discovery Guided lessons retain the ordinary checkpoint panel for backward
+compatibility.
 
 ---
 
@@ -2664,6 +2684,9 @@ See how it works. Build it yourself.
 - [ ] A local collection can list and open explicitly configured course roots.
 - [ ] Planned collection entries are visibly unavailable and cannot be opened.
 - [ ] Standalone course start and build behavior remains supported.
+- [ ] Opening a course presents its `COURSE.md` orientation before Lesson 1.
+- [ ] Discovery predictions appear after their prerequisite prose and before the referenced
+      explorable in DOM and keyboard order.
 
 ## Agent hosts
 
@@ -2705,6 +2728,8 @@ See how it works. Build it yourself.
 - [ ] Each foundational lesson defines prediction prerequisites before the prompt and provides an
   observed-value explanation, worked example, implementation bridge, deliberate failure, and
   explanation-based recap.
+- [ ] The reference course begins with a plain-language learning-loop orientation before gradient
+  descent or other mathematical machinery.
 - [ ] At least five target learners complete two lessons.
 - [ ] Setup failures and authoring friction are documented.
 - [ ] Feedback informs the v1 format before the full course is produced.
