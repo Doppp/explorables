@@ -90,6 +90,7 @@ learner-study evidence also remain.
 ## Latest verification
 
 ```text
+20 Aug tutor-led LLM runway           pass (clean pnpm 11 worktree: format/lint/typecheck, 36 suites/109 tests, collection and minimal validation, all builds, 20 course suites/61 model tests, 14 starter/reference exercise pairs, 17 browser tests including tutor state/reference notes/ordered-list containment/320px/axe, and 2 site tests)
 20 Aug course orientation              pass (clean Node 24/pnpm 11 worktree: format/lint/typecheck, 34 suites/105 tests, collection and minimal validation, all builds, 18 course suites/57 tests, 14 starter/reference pairs, 16 browser tests including overview/contextual order/320px/axe, and 2 site tests)
 20 Aug compact library hero          pass (16 browser tests; 320×700, 720×800, 900×700, 1100×760, and 1427×900 geometry; light/dark in-app Codex visual QA; scoped format/lint, typecheck, 33 suites/102 tests, validation, and all builds)
 19 Aug foundations + PRD v0.4     pass (clean worktree: format/lint/typecheck, 33 suites/102 tests, 17 course suites/54 tests, 14 starter/reference pairs, all builds, 16 browser tests, axe, 320px overflow check, and in-app visual QA)
