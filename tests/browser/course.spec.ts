@@ -25,8 +25,53 @@ async function openFoundation(page: Page) {
   await expect(page.getByText("Course overview", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Start course" }).click();
   await expect(
-    page.getByRole("heading", { name: "How machines learn", level: 1 }),
+    page.getByRole("heading", {
+      name: "Generative AI and language models",
+      level: 1,
+    }),
   ).toBeVisible();
+  await page
+    .getByLabel(
+      "Is a photo classifier generative AI, and is a chatbot the same thing as the language model inside it? Explain your current guess.",
+    )
+    .fill("A classifier is learned but not generative; a chatbot surrounds its LLM.");
+  await page.getByRole("button", { name: "Save response" }).click();
+  await page
+    .frameLocator("iframe")
+    .first()
+    .getByRole("button", { name: "Save this classification" })
+    .click();
+  await page.getByRole("button", { name: "Mark complete" }).click();
+  await page
+    .getByLabel(
+      "Explain how AI, machine learning, generative AI, an LLM, and a chatbot product relate without using them as synonyms.",
+    )
+    .fill(
+      "AI is broad; ML learns; generative AI creates; an LLM models language; a chatbot is a product around it.",
+    );
+  await page.getByRole("button", { name: "Save response" }).click();
+  await page.getByRole("button", { name: "The next-token loop →" }).click();
+  await page
+    .getByLabel(
+      "If a model assigns 55% to ‘sat’, 30% to ‘slept’, and 15% to ‘purred’, must it always choose ‘sat’? What becomes the next input?",
+    )
+    .fill("It can sample another token; the selected token joins the growing context.");
+  await page.getByRole("button", { name: "Save response" }).click();
+  await page
+    .frameLocator("iframe")
+    .first()
+    .getByRole("button", { name: "Generate one token" })
+    .click();
+  await page.getByRole("button", { name: "Mark complete" }).click();
+  await page
+    .getByLabel(
+      "Explain how tokens, next-token probabilities, selection, and the growing context turn one prediction into generated text.",
+    )
+    .fill(
+      "The model scores tokens, decoding selects one, and that token extends the next input.",
+    );
+  await page.getByRole("button", { name: "Save response" }).click();
+  await page.getByRole("button", { name: "How machines learn →" }).click();
   await page
     .getByLabel(
       "Which value should training change: the input, the target, or the model parameter—and should inference change it too?",
@@ -169,7 +214,7 @@ test("follows the system theme, syncs explorables, and persists an override", as
   await page.getByRole("button", { name: "Start course" }).click();
   const frame = page.frameLocator("iframe").first();
   await expect(
-    frame.getByRole("heading", { name: "Trace one learning step" }),
+    frame.getByRole("heading", { name: "Map the terms onto real systems" }),
   ).toBeVisible();
   await expect(frame.locator("html")).toHaveAttribute("data-theme", "light");
 
@@ -298,21 +343,16 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
   ).toContainText("Locked");
   await expect(page.getByRole("button", { name: "Backpropagation →" })).toBeDisabled();
   const predictionControl = page.locator(".checkpoint-control-predict");
-  const lessonBody = page.locator(".discovery-lesson-body");
+  const lessonBody = page.locator(".tutor-led-lesson-body");
   await expect(predictionControl).toBeVisible();
   expect(
     await lessonBody.evaluate((root) => {
-      const setup = [...root.querySelectorAll("h2")].find(
-        (heading) =>
-          heading.textContent?.trim() === "The smallest possible learning problem",
-      );
       const checkpoint = root.querySelector(".checkpoint-control-predict");
       const explorable = root.querySelector("[data-explorable]");
-      if (!setup || !checkpoint || !explorable) return false;
+      const notes = root.querySelector<HTMLDetailsElement>(".lesson-reference-notes");
+      if (!checkpoint || !explorable || !notes) return false;
       return (
-        Boolean(
-          setup.compareDocumentPosition(checkpoint) & Node.DOCUMENT_POSITION_FOLLOWING,
-        ) &&
+        !notes.open &&
         Boolean(
           checkpoint.compareDocumentPosition(explorable) &
             Node.DOCUMENT_POSITION_FOLLOWING,
@@ -380,6 +420,7 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
     page.getByRole("heading", { name: "Backpropagation", level: 1 }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Gradient descent Done" })).toBeVisible();
+  await page.getByText("Session and saved progress").click();
   await expect(
     page.getByRole("heading", { name: "Your progress is saved" }),
   ).toBeVisible();
@@ -392,6 +433,7 @@ test("guides progress, records interaction, and resumes locally", async ({ page 
 
 test("explains session phrases and confirms checkpoint rollback", async ({ page }) => {
   await openFoundation(page);
+  await page.getByText("Session and saved progress").click();
   await page.getByText("How to pause, resume, or change position").click();
   for (const phrase of [
     "Pause this course",
@@ -455,6 +497,7 @@ test("warns when browser progress storage is unavailable", async ({ page }) => {
     };
   });
   await openFoundation(page);
+  await page.getByText("Session and saved progress").click();
   await expect(
     page.getByText(
       "Browser storage is unavailable. Progress will last only for this open page.",
@@ -515,13 +558,24 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
 }) => {
   await page.goto("/#/courses/ai-from-first-principles/lessons/sampling");
   await expect(
-    page.getByRole("heading", { name: "How machines learn", level: 1 }),
+    page.getByRole("heading", {
+      name: "Generative AI and language models",
+      level: 1,
+    }),
   ).toBeVisible();
   await expect(page.getByText(/That lesson is still ahead/)).toBeVisible();
   await page.getByText("Question parking lot (0)").click();
   await page.getByLabel("Question to revisit").fill("How does MoE routing work?");
   await page.getByRole("button", { name: "Park question" }).click();
   await expect(page.getByText("Question parking lot (1)")).toBeVisible();
+  await page.getByRole("button", { name: "Skip lesson" }).click();
+  await expect(
+    page.getByRole("heading", { name: "The next-token loop", level: 1 }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Skip lesson" }).click();
+  await expect(
+    page.getByRole("heading", { name: "How machines learn", level: 1 }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Skip lesson" }).click();
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
@@ -535,11 +589,15 @@ test("recovers locked deep links and supports parking, skipping, explore, and re
   await expect(
     page.getByRole("heading", { name: "Gradient descent", level: 1 }),
   ).toBeVisible();
+  await page.getByText("Session and saved progress").click();
   await page.getByText("How to pause, resume, or change position").click();
   await page.getByRole("button", { name: "Reset this course" }).click();
   await page.getByRole("button", { name: "Reset course", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "How machines learn", level: 1 }),
+    page.getByRole("heading", {
+      name: "Generative AI and language models",
+      level: 1,
+    }),
   ).toBeVisible();
   await expect(page.getByText("Question parking lot (0)")).toBeVisible();
 });

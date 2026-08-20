@@ -567,7 +567,6 @@ function TutorLedLessonArticle({
     <article className="lesson-body tutor-led-lesson-body">
       <section
         className="tutor-handoff"
-        aria-labelledby="tutor-handoff-title"
         data-tutor-lesson-id={lesson.frontmatter.id}
         data-tutor-checkpoint-id={checkpoint?.id}
         data-tutor-checkpoint-phase={phase}

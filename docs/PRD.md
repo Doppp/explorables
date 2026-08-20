@@ -326,12 +326,17 @@ The intended desktop experience is:
 └───────────────────────────┴────────────────────────────────────┘
 ```
 
-The browser or preview pane is the primary reading and interaction surface. The coding-agent workspace is the primary tutoring and implementation surface.
+For a tutor-led course, the coding-agent conversation is the primary teaching surface and the
+browser or preview pane is the primary activity surface. The agent initiates the active checkpoint,
+adapts explanations, asks questions, and helps debug. The browser presents the current task,
+explorable, evidence, and progress. Complete lesson Markdown remains available there as reference
+notes and remains readable on GitHub.
 
 This is also a content boundary. Definitions, prerequisite bridges, notation, worked explanations,
-and exercise context belong in the lesson Markdown rendered in the browser. The coding agent may
-adapt, question, restate, and clarify that material, but a course must not depend on chat as the
-only place where a learner can obtain the foundational explanation.
+and exercise context belong in lesson Markdown as the durable subject record. In tutor-led mode the
+agent teaches from that record conversationally; the browser keeps it behind an explicit reference
+control so it does not compete with the live tutor. A course must not depend on a conversation
+transcript as its only durable explanation.
 
 ## 6.3 Typical lesson flow
 
@@ -604,8 +609,9 @@ This repository contains an interactive course.
 ## Tutoring behaviour
 
 - Teach through questions, prediction, inspection, and debugging.
-- Treat lesson Markdown as the canonical explanation. Point to its definitions, worked example,
-  and recap before supplementing it.
+- In tutor-led courses, act as the primary adaptive teacher and initiate the active checkpoint in
+  conversation. Teach from the canonical lesson Markdown and use the browser for interaction,
+  evidence, progress, and optional reference notes.
 - Check only the prerequisite vocabulary needed for the active checkpoint. Explain a missing term
   briefly, return to the lesson, and do not make chat the only source of a core concept.
 - Do not complete the central exercise implementation for the learner.
@@ -749,6 +755,25 @@ By the end of the course, you should be able to:
 | `language` | BCP-47 string |
 | `tags` | string array |
 
+### Optional teaching profile
+
+A course may declare:
+
+```yaml
+teaching:
+  mode: tutor-led
+```
+
+`tutor-led` makes the coding-agent conversation the live teaching surface. The browser defaults to
+the active checkpoint, explorable, evidence, and exercise, while complete lesson prose remains
+available through an accessible reference-notes disclosure. Omitting the profile preserves the
+ordinary browser-led rendering used by existing and standalone courses.
+
+The runtime exposes read-only `data-explorables-*` and `data-tutor-*` attributes for the visible
+lesson, Guided position, active checkpoint, checkpoint phase, mode, and persistence status. These
+attributes contain no solutions or hidden assessment data and cannot complete progress. They are a
+host-neutral inspection contract, not a private Codex or Claude bridge.
+
 ---
 
 # 9. Lesson Markdown specification
@@ -757,9 +782,10 @@ By the end of the course, you should be able to:
 
 A lesson must be useful as plain Markdown.
 
-Lesson Markdown is the canonical teaching material, not an outline that requires a coding agent to
-supply the missing lecture. The runtime adds interactivity and the tutor adds adaptation, but the
-durable explanation remains reviewable in the course repository.
+Lesson Markdown is the canonical durable subject record, not a loose outline or a hidden answer
+key. In tutor-led courses the coding agent is expected to teach from it rather than asking the
+learner to read a browser lecture first. The complete explanation remains reviewable in the course
+repository and in optional browser reference notes.
 
 The runtime adds interactivity, but the source should still communicate:
 
@@ -1197,7 +1223,9 @@ The `explorables` runtime performs only the following:
 12. Present a course overview from `COURSE.md` before Lesson 1 and place discovery controls in their
     instructional context.
 
-It does not teach the subject itself. The course content and Codex instructions do that.
+It does not generate subject explanations itself. In tutor-led mode the coding agent teaches from
+the course-authored Markdown; the runtime scopes that conversation and supplies the activity,
+reference, evidence, and progress surfaces.
 
 ## 13.2 Runtime component diagram
 
@@ -1517,8 +1545,9 @@ When asked to start the course, Codex should:
 2. Verify dependencies.
 3. Run `pnpm course`.
 4. Open the local URL in the built-in browser.
-5. Introduce the first lesson.
-6. Ask the learner to interact with the page rather than summarising the entire course.
+5. Inspect the visible lesson and checkpoint state and introduce that checkpoint in conversation.
+6. Teach the minimum prerequisite concepts, ask for a prediction, then direct the learner to use
+   the browser activity and report its evidence.
 7. Move into exercise files only when referenced by the current lesson.
 
 Codex may activate the portable `start-course` skill or use `AGENTS.md` directly. Both paths must produce the same course behavior.
@@ -2140,6 +2169,23 @@ By completion, a learner should be able to:
 
 ## 20.4 Proposed modules
 
+### Beginner runway — What generative AI and LLMs do
+
+Topics:
+
+- AI, machine learning, and generative AI as overlapping but distinct terms
+- Language models versus chatbot product systems
+- Tokens, context, and next-token probability distributions
+- Autoregressive generation as repeated prediction, selection, and append
+- Model output versus decoding policy
+- The limits of a tiny architectural explanation: data, scale, post-training, evaluation, tools,
+  retrieval, and product policy
+
+Explorables:
+
+- Classify rule-based, learned, generative, language-model, and product-system examples
+- Step through a deterministic next-token loop before inspecting how its probabilities are learned
+
 ### Module 0 — Learning with LLMs without outsourcing understanding
 
 Topics:
@@ -2730,6 +2776,8 @@ See how it works. Build it yourself.
   explanation-based recap.
 - [ ] The reference course begins with a plain-language learning-loop orientation before gradient
   descent or other mathematical machinery.
+- [ ] Before the learning loop, a beginner can distinguish AI, machine learning, generative AI, an
+  LLM, and a chatbot product, then trace one autoregressive next-token step.
 - [ ] At least five target learners complete two lessons.
 - [ ] Setup failures and authoring friction are documented.
 - [ ] Feedback informs the v1 format before the full course is produced.
@@ -2748,7 +2796,10 @@ A learner clones the course, opens it in Codex or Claude Code Desktop, and says:
 
 > Start the course.
 
-The coding-agent host handles guidance, code, files, tests, and discussion. The built-in browser or preview pane handles explanations, graphics, simulations, and interaction. The repository remains the source of truth. The same repository also publishes a basic static landing page at `explorables.ai`.
+The coding-agent host handles teaching, guidance, code, files, tests, and discussion. In tutor-led
+mode the built-in browser or preview pane handles activity prompts, reference notes, graphics,
+simulations, evidence, and progress. The repository remains the source of truth. The same
+repository also publishes a basic static landing page at `explorables.ai`.
 
 The first course, *AI from First Principles*, takes software developers from basic machine-learning concepts through transformers, open-weight models, evaluation, fine-tuning, agents, and a practical route toward AI engineering or open-source contribution.
 

@@ -43,6 +43,8 @@ audience:
 prerequisites:
   - basic programming and arithmetic
 estimatedHours: 3
+teaching:
+  mode: tutor-led
 ---
 
 # Systems Course
@@ -64,6 +66,28 @@ Required fields are `id`, `title`, `version`, `summary`, and `license`. IDs use 
 Opening a course renders this introduction, the declared audience and prerequisites, estimated
 time, and lesson count before entering Lesson 1. Keep the orientation useful in plain Markdown;
 do not move the course promise or essential setup into tutor instructions.
+
+### Optional tutor-led teaching
+
+Set `teaching.mode: tutor-led` when the course is designed for a coding agent to be the primary
+adaptive teacher:
+
+```yaml
+teaching:
+  mode: tutor-led
+```
+
+In Guided mode the browser then defaults to the current checkpoint, explorable, evidence, and
+exercise. The complete lesson explanation remains available through **Open lesson reference notes**
+and in the Markdown source. Existing courses that omit `teaching` keep browser-led full-lesson
+rendering. Explore mode also shows the full lesson because the learner has explicitly chosen
+self-directed browsing.
+
+For tutor-led courses, `AGENTS.md` should require the host to inspect `data-explorables-*` and
+`data-tutor-*` state when possible, initiate the active checkpoint in conversation, check only the
+needed vocabulary, ask for a prediction, direct manipulation, and ask the learner to report and
+explain evidence. Do not copy subject prose into host adapters; they remain policy, not a second
+course.
 
 ### Optional guided course mode
 
@@ -150,11 +174,11 @@ Resume is scoped to the course ID/version, browser profile, and web origin. Keep
 
 ## 4. Write a lesson
 
-Lessons should remain useful on GitHub. The lesson Markdown is the canonical teaching material, not
-an outline that depends on a coding agent to supply the missing lecture. A learner should be able to
-identify the important terms, follow a concrete example, and understand the explorable's result by
-reading the lesson without opening chat. The tutor then diagnoses missing prerequisites, asks
-questions, gives hints, and helps the learner connect that material to code and tests.
+Lessons should remain useful on GitHub. The lesson Markdown is the canonical durable subject
+record, not a loose outline that forces the tutor to invent the course. It should define important
+terms, include a concrete example, explain the explorable's result, and state failure boundaries.
+In a tutor-led course the coding agent teaches that material conversationally; the browser keeps it
+as optional reference notes while prioritising the active task and interaction.
 
 A strong sequence is encounter, predict, manipulate, inspect, explain, implement, debug, and
 transfer. “Encounter before explaining” means delaying the full mechanism until the learner has a
