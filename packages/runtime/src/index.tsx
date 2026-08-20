@@ -524,15 +524,102 @@ function discoveryLessonSegments(html: string, title: string): DiscoveryLessonSe
 
 const LessonHtmlFragment = memo(function LessonHtmlFragment({
   html,
+  className,
 }: {
   html: string;
+  className?: string;
 }) {
   if (!html) return null;
   return (
     // biome-ignore lint/security/noDangerouslySetInnerHtml: the Markdown package sanitises this HTML before it enters runtime data.
-    <div className="lesson-fragment" dangerouslySetInnerHTML={{ __html: html }} />
+    <div
+      className={className ? `lesson-fragment ${className}` : "lesson-fragment"}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 });
+
+function TutorLedLessonArticle({
+  lesson,
+  state,
+  dispatch,
+}: {
+  lesson: RuntimeLesson;
+  state: GuidedCourseStateV2;
+  dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+}) {
+  const segments = useMemo(
+    () => discoveryLessonSegments(lesson.html, lesson.frontmatter.title),
+    [lesson],
+  );
+  const completed = new Set(state.completedCheckpoints[lesson.frontmatter.id] ?? []);
+  const checkpoint = (lesson.frontmatter.checkpoints ?? []).find(
+    (candidate) => !completed.has(candidate.id),
+  );
+  const phase = checkpoint?.phase;
+  const referenceNotes = [
+    segments.introduction,
+    segments.explanation,
+    segments.conclusion,
+  ].join("");
+
+  return (
+    <article className="lesson-body tutor-led-lesson-body">
+      <section
+        className="tutor-handoff"
+        aria-labelledby="tutor-handoff-title"
+        data-tutor-lesson-id={lesson.frontmatter.id}
+        data-tutor-checkpoint-id={checkpoint?.id}
+        data-tutor-checkpoint-phase={phase}
+      >
+        <p className="eyebrow">Conversation leads; browser supports</p>
+        <h2 id="tutor-handoff-title">
+          {checkpoint ? checkpoint.title : "Review this lesson with your tutor"}
+        </h2>
+        <p>
+          Tell your coding-agent tutor you are at this checkpoint. Discuss the idea in
+          chat, then use this pane to predict, manipulate, and inspect evidence.
+        </p>
+      </section>
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="predict"
+        state={state}
+        dispatch={dispatch}
+      />
+      <LessonHtmlFragment html={segments.explorable} className="tutor-activity" />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="experiment"
+        state={state}
+        dispatch={dispatch}
+      />
+      <LessonHtmlFragment html={segments.exercise} className="tutor-activity" />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="apply"
+        state={state}
+        dispatch={dispatch}
+      />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="reflect"
+        state={state}
+        dispatch={dispatch}
+      />
+      {referenceNotes ? (
+        <details className="lesson-reference-notes">
+          <summary>Open lesson reference notes</summary>
+          <p>
+            These are the canonical definitions, worked examples, and recap. Use them
+            when you want to review or verify the conversation.
+          </p>
+          <LessonHtmlFragment html={referenceNotes} />
+        </details>
+      ) : null}
+    </article>
+  );
+}
 
 function DiscoveryLessonArticle({
   lesson,
@@ -1389,6 +1476,7 @@ function Lesson({
     state.mode === "explore" ||
     isLessonComplete(course, state, lesson.frontmatter.id);
   const contextualCheckpoints = Boolean(lesson.frontmatter.discoveryCycle);
+  const tutorLed = course.frontmatter.teaching?.mode === "tutor-led";
 
   const goNext = () => {
     if (!next || !canAdvance) return;
@@ -1485,6 +1573,9 @@ function Lesson({
         data-explorables-course-id={course.frontmatter.id}
         data-explorables-course-version={course.frontmatter.version}
         data-explorables-mode={guidance ? state.mode : "unguided"}
+        data-explorables-teaching-mode={
+          course.frontmatter.teaching?.mode ?? "browser-led"
+        }
         data-explorables-guided-lesson-id={guidance ? state.activeLessonId : undefined}
         data-explorables-visible-lesson-id={lesson.frontmatter.id}
         data-explorables-checkpoint-id={
@@ -1509,17 +1600,34 @@ function Lesson({
           </p>
           <h1>{lesson.frontmatter.title}</h1>
         </header>
-        <CourseSessionPanel
-          course={course}
-          currentLesson={lesson}
-          savedSession={startupSession}
-          hasSavedProgress={hasSavedProgress}
-          guidedState={state}
-          persistenceEnabled={persistenceEnabled}
-          persistenceAvailable={persistenceAvailable}
-          onResume={resumeCourse}
-          onReset={resetCourse}
-        />
+        {tutorLed ? (
+          <details className="compact-session">
+            <summary>Session and saved progress</summary>
+            <CourseSessionPanel
+              course={course}
+              currentLesson={lesson}
+              savedSession={startupSession}
+              hasSavedProgress={hasSavedProgress}
+              guidedState={state}
+              persistenceEnabled={persistenceEnabled}
+              persistenceAvailable={persistenceAvailable}
+              onResume={resumeCourse}
+              onReset={resetCourse}
+            />
+          </details>
+        ) : (
+          <CourseSessionPanel
+            course={course}
+            currentLesson={lesson}
+            savedSession={startupSession}
+            hasSavedProgress={hasSavedProgress}
+            guidedState={state}
+            persistenceEnabled={persistenceEnabled}
+            persistenceAvailable={persistenceAvailable}
+            onResume={resumeCourse}
+            onReset={resetCourse}
+          />
+        )}
         {guidance && state.mode === "guided" ? (
           <>
             <CheckpointPanel
@@ -1542,7 +1650,9 @@ function Lesson({
             <ExperimentJournal lesson={lesson} state={state} dispatch={dispatch} />
           </>
         ) : null}
-        {guidance && state.mode === "guided" && contextualCheckpoints ? (
+        {guidance && state.mode === "guided" && tutorLed ? (
+          <TutorLedLessonArticle lesson={lesson} state={state} dispatch={dispatch} />
+        ) : guidance && state.mode === "guided" && contextualCheckpoints ? (
           <DiscoveryLessonArticle lesson={lesson} state={state} dispatch={dispatch} />
         ) : (
           <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />

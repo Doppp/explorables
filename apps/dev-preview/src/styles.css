@@ -1007,6 +1007,70 @@ pre {
   background: var(--sage);
 }
 
+.compact-session {
+  margin: 0 0 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.compact-session > summary,
+.lesson-reference-notes > summary {
+  min-height: 2.75rem;
+  padding: 0.65rem 0;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.compact-session .course-session-panel {
+  margin-top: 0;
+}
+
+.tutor-led-lesson-body {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.tutor-handoff {
+  padding: clamp(1rem, 3vw, 1.35rem);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--blue);
+}
+
+.tutor-handoff .eyebrow,
+.tutor-handoff h2,
+.tutor-handoff p:last-child {
+  margin-top: 0;
+}
+
+.tutor-handoff h2 {
+  margin-bottom: 0.55rem;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+}
+
+.tutor-handoff p:last-child {
+  margin-bottom: 0;
+}
+
+.tutor-led-lesson-body .checkpoint-control {
+  margin: 0;
+}
+
+.lesson-reference-notes {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.lesson-reference-notes > p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.lesson-reference-notes .lesson-fragment {
+  padding-top: 0.5rem;
+}
+
 .checkpoint-heading {
   display: flex;
   align-items: start;

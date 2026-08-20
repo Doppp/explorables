@@ -73,6 +73,16 @@ describe("course schemas", () => {
   it("parses opt-in guidance and both checkpoint completion mechanisms", () => {
     expect(
       courseFrontmatterSchema.parse({
+        id: "tutor-led-course",
+        title: "Tutor-led course",
+        version: "0.1.0",
+        summary: "A course taught through conversation.",
+        license: "CC-BY-4.0",
+        teaching: { mode: "tutor-led" },
+      }).teaching,
+    ).toEqual({ mode: "tutor-led" });
+    expect(
+      courseFrontmatterSchema.parse({
         id: "guided-course",
         title: "Guided course",
         version: "0.1.0",

@@ -17,6 +17,8 @@ language: en
 tags:
   - machine-learning
   - language-models
+teaching:
+  mode: tutor-led
 guidance:
   defaultMode: guided
   allowExploreMode: true
