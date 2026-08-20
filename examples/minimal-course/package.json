@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "course": "explorables start .",
+    "tutor": "explorables tutor",
     "build": "explorables build .",
     "validate": "explorables validate .",
     "test": "vitest run --config vitest.config.ts"

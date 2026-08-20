@@ -43,6 +43,7 @@ import {
   restartGuidedStateFrom,
 } from "./guided-state.ts";
 import { lessonBodyHtml } from "./lesson-html.ts";
+import { publishTutorInteraction } from "./tutor-events.ts";
 
 const LessonArticle = memo(function LessonArticle({
   html,
@@ -52,9 +53,20 @@ const LessonArticle = memo(function LessonArticle({
   title: string;
 }) {
   const sanitizedMarkup = { __html: lessonBodyHtml(html, title) };
+  const articleRef = useRef<HTMLElement>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: changed HTML replaces the scroll regions that need keyboard access.
+  useEffect(() => {
+    for (const region of articleRef.current?.querySelectorAll("pre, table") ?? []) {
+      if (region.scrollWidth > region.clientWidth) (region as HTMLElement).tabIndex = 0;
+    }
+  }, [html]);
   return (
-    // biome-ignore lint/security/noDangerouslySetInnerHtml: the Markdown package sanitises this HTML before it enters runtime data.
-    <article className="lesson-body" dangerouslySetInnerHTML={sanitizedMarkup} />
+    <article
+      className="lesson-body"
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: the Markdown package sanitises this HTML before it enters runtime data.
+      dangerouslySetInnerHTML={sanitizedMarkup}
+      ref={articleRef}
+    />
   );
 });
 
@@ -204,12 +216,14 @@ function CheckpointPanel({
   state,
   dispatch,
   onRestart,
+  onComplete,
   summaryOnly = false,
 }: {
   lesson: RuntimeLesson;
   state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
   onRestart: (checkpointId: string) => void;
+  onComplete: (checkpoint: Checkpoint, response?: string) => void;
   summaryOnly?: boolean;
 }) {
   const [restartCheckpointId, setRestartCheckpointId] = useState<string | null>(null);
@@ -295,6 +309,7 @@ function CheckpointPanel({
                           lessonId: lesson.frontmatter.id,
                           checkpointId: checkpoint.id,
                         });
+                        onComplete(checkpoint, response?.text);
                       }}
                     >
                       <label htmlFor={`checkpoint-${checkpoint.id}`}>
@@ -336,13 +351,14 @@ function CheckpointPanel({
                   ) : (
                     <button
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
                         dispatch({
                           type: "complete",
                           lessonId: lesson.frontmatter.id,
                           checkpointId: checkpoint.id,
-                        })
-                      }
+                        });
+                        onComplete(checkpoint);
+                      }}
                     >
                       Mark complete
                     </button>
@@ -372,11 +388,13 @@ function ActiveCheckpointControl({
   phase,
   state,
   dispatch,
+  onComplete,
 }: {
   lesson: RuntimeLesson;
   phase: Checkpoint["phase"];
   state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+  onComplete: (checkpoint: Checkpoint, response?: string) => void;
 }) {
   const checkpoints = lesson.frontmatter.checkpoints ?? [];
   const completed = new Set(state.completedCheckpoints[lesson.frontmatter.id] ?? []);
@@ -407,6 +425,7 @@ function ActiveCheckpointControl({
                 lessonId: lesson.frontmatter.id,
                 checkpointId: checkpoint.id,
               });
+              onComplete(checkpoint, response?.text);
             }}
           >
             <label htmlFor={`checkpoint-${checkpoint.id}`}>
@@ -450,13 +469,14 @@ function ActiveCheckpointControl({
             <p>Complete the work described here before recording your progress.</p>
             <button
               type="button"
-              onClick={() =>
+              onClick={() => {
                 dispatch({
                   type: "complete",
                   lessonId: lesson.frontmatter.id,
                   checkpointId: checkpoint.id,
-                })
-              }
+                });
+                onComplete(checkpoint);
+              }}
             >
               Mark complete
             </button>
@@ -543,10 +563,12 @@ function TutorLedLessonArticle({
   lesson,
   state,
   dispatch,
+  onComplete,
 }: {
   lesson: RuntimeLesson;
   state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+  onComplete: (checkpoint: Checkpoint, response?: string) => void;
 }) {
   const segments = useMemo(
     () => discoveryLessonSegments(lesson.html, lesson.frontmatter.title),
@@ -557,11 +579,7 @@ function TutorLedLessonArticle({
     (candidate) => !completed.has(candidate.id),
   );
   const phase = checkpoint?.phase;
-  const referenceNotes = [
-    segments.introduction,
-    segments.explanation,
-    segments.conclusion,
-  ].join("");
+  const referenceNotes = [segments.explanation, segments.conclusion].join("");
 
   return (
     <article className="lesson-body tutor-led-lesson-body">
@@ -580,11 +598,13 @@ function TutorLedLessonArticle({
           chat, then use this pane to predict, manipulate, and inspect evidence.
         </p>
       </section>
+      <LessonHtmlFragment html={segments.introduction} className="tutor-foundations" />
       <ActiveCheckpointControl
         lesson={lesson}
         phase="predict"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       <LessonHtmlFragment html={segments.explorable} className="tutor-activity" />
       <ActiveCheckpointControl
@@ -592,6 +612,7 @@ function TutorLedLessonArticle({
         phase="experiment"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       <LessonHtmlFragment html={segments.exercise} className="tutor-activity" />
       <ActiveCheckpointControl
@@ -599,19 +620,21 @@ function TutorLedLessonArticle({
         phase="apply"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       <ActiveCheckpointControl
         lesson={lesson}
         phase="reflect"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       {referenceNotes ? (
         <details className="lesson-reference-notes">
-          <summary>Open lesson reference notes</summary>
+          <summary>Open worked explanation and recap</summary>
           <p>
-            These are the canonical definitions, worked examples, and recap. Use them
-            when you want to review or verify the conversation.
+            These are the canonical worked examples and recap. Use them when you want to
+            review or verify the conversation.
           </p>
           <LessonHtmlFragment html={referenceNotes} />
         </details>
@@ -624,10 +647,12 @@ function DiscoveryLessonArticle({
   lesson,
   state,
   dispatch,
+  onComplete,
 }: {
   lesson: RuntimeLesson;
   state: GuidedCourseStateV2;
   dispatch: React.Dispatch<Parameters<typeof guidedCourseReducer>[1]>;
+  onComplete: (checkpoint: Checkpoint, response?: string) => void;
 }) {
   const segments = useMemo(
     () => discoveryLessonSegments(lesson.html, lesson.frontmatter.title),
@@ -641,6 +666,7 @@ function DiscoveryLessonArticle({
         phase="predict"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       <LessonHtmlFragment html={segments.explorable} />
       <ActiveCheckpointControl
@@ -648,6 +674,7 @@ function DiscoveryLessonArticle({
         phase="experiment"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       <LessonHtmlFragment html={segments.explanation} />
       <LessonHtmlFragment html={segments.exercise} />
@@ -656,6 +683,7 @@ function DiscoveryLessonArticle({
         phase="apply"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
       <LessonHtmlFragment html={segments.conclusion} />
       <ActiveCheckpointControl
@@ -663,6 +691,7 @@ function DiscoveryLessonArticle({
         phase="reflect"
         state={state}
         dispatch={dispatch}
+        onComplete={onComplete}
       />
     </article>
   );
@@ -1145,6 +1174,23 @@ function GuidedTools({
   const guidance = course.frontmatter.guidance;
   if (!guidance) return null;
 
+  const publishModeChange = (mode: "guided" | "explore") => {
+    const lesson = course.lessons.find(
+      (candidate) => candidate.frontmatter.id === state.activeLessonId,
+    );
+    if (!lesson) return;
+    publishTutorInteraction({
+      schemaVersion: 1,
+      type: "mode-changed",
+      courseId: course.frontmatter.id,
+      courseVersion: course.frontmatter.version,
+      lessonId: lesson.frontmatter.id,
+      lessonTitle: lesson.frontmatter.title,
+      mode,
+      source: "learner",
+    });
+  };
+
   const park = (event: FormEvent) => {
     event.preventDefault();
     dispatch({ type: "park-question", question });
@@ -1165,6 +1211,7 @@ function GuidedTools({
               type="button"
               onClick={() => {
                 dispatch({ type: "set-mode", mode: "explore" });
+                publishModeChange("explore");
                 setConfirmation(null);
               }}
             >
@@ -1184,6 +1231,7 @@ function GuidedTools({
           type="button"
           onClick={() => {
             dispatch({ type: "set-mode", mode: "guided" });
+            publishModeChange("guided");
             window.location.hash = `/${routePrefix}${state.activeLessonId}`;
           }}
         >
@@ -1371,12 +1419,29 @@ function Lesson({
 
   useEffect(() => {
     if (!lesson) return;
+    publishTutorInteraction({
+      schemaVersion: 1,
+      type: "lesson-opened",
+      courseId: course.frontmatter.id,
+      courseVersion: course.frontmatter.version,
+      lessonId: lesson.frontmatter.id,
+      lessonTitle: lesson.frontmatter.title,
+    });
+  }, [course.frontmatter.id, course.frontmatter.version, lesson]);
+
+  useEffect(() => {
+    if (!lesson) return;
     const controllers: SandboxController[] = [];
+    const statuses: HTMLElement[] = [];
     for (const explorable of lesson.explorables) {
       const host = document.querySelector<HTMLElement>(
         `[data-instance-id="${CSS.escape(explorable.instanceId)}"]`,
       );
       if (!host) continue;
+      for (const staleStatus of host.querySelectorAll(
+        ":scope > .explorable-status, :scope > .explorable-error",
+      ))
+        staleStatus.remove();
       const status = document.createElement("p");
       status.className = "explorable-status";
       status.setAttribute("role", "status");
@@ -1418,11 +1483,24 @@ function Lesson({
                   record,
                 });
               }
-              dispatch({
-                type: "complete",
-                lessonId: lesson.frontmatter.id,
-                checkpointId: checkpoint.id,
-              });
+              if (!completed.has(checkpoint.id)) {
+                dispatch({
+                  type: "complete",
+                  lessonId: lesson.frontmatter.id,
+                  checkpointId: checkpoint.id,
+                });
+                publishTutorInteraction({
+                  schemaVersion: 1,
+                  type: "checkpoint-completed",
+                  courseId: course.frontmatter.id,
+                  courseVersion: course.frontmatter.version,
+                  lessonId: lesson.frontmatter.id,
+                  lessonTitle: lesson.frontmatter.title,
+                  checkpointId: checkpoint.id,
+                  checkpointTitle: checkpoint.title,
+                  source: "explorable",
+                });
+              }
             }
           }
         },
@@ -1433,6 +1511,7 @@ function Lesson({
         },
       });
       host.append(status);
+      statuses.push(status);
       controllers.push(controller);
     }
     sandboxControllers.current = controllers;
@@ -1459,8 +1538,9 @@ function Lesson({
       controllers.forEach((controller) => {
         controller.destroy();
       });
+      for (const status of statuses) status.remove();
     };
-  }, [lesson]);
+  }, [course.frontmatter.id, course.frontmatter.version, lesson]);
 
   useEffect(() => {
     for (const controller of sandboxControllers.current) controller.setTheme(theme);
@@ -1476,6 +1556,21 @@ function Lesson({
     isLessonComplete(course, state, lesson.frontmatter.id);
   const contextualCheckpoints = Boolean(lesson.frontmatter.discoveryCycle);
   const tutorLed = course.frontmatter.teaching?.mode === "tutor-led";
+
+  const publishLearnerCheckpoint = (checkpoint: Checkpoint, response?: string) => {
+    publishTutorInteraction({
+      schemaVersion: 1,
+      type: "checkpoint-completed",
+      courseId: course.frontmatter.id,
+      courseVersion: course.frontmatter.version,
+      lessonId: lesson.frontmatter.id,
+      lessonTitle: lesson.frontmatter.title,
+      checkpointId: checkpoint.id,
+      checkpointTitle: checkpoint.title,
+      ...(response ? { response } : {}),
+      source: "learner",
+    });
+  };
 
   const goNext = () => {
     if (!next || !canAdvance) return;
@@ -1634,6 +1729,7 @@ function Lesson({
               state={state}
               dispatch={dispatch}
               summaryOnly={contextualCheckpoints}
+              onComplete={publishLearnerCheckpoint}
               onRestart={(checkpointId) => {
                 const restarted = restartGuidedStateFrom(
                   course,
@@ -1643,6 +1739,20 @@ function Lesson({
                 );
                 stateRef.current = restarted;
                 dispatch({ type: "reset", state: restarted });
+                const checkpoint = lesson.frontmatter.checkpoints?.find(
+                  (candidate) => candidate.id === checkpointId,
+                );
+                publishTutorInteraction({
+                  schemaVersion: 1,
+                  type: "checkpoint-restarted",
+                  courseId: course.frontmatter.id,
+                  courseVersion: course.frontmatter.version,
+                  lessonId: lesson.frontmatter.id,
+                  lessonTitle: lesson.frontmatter.title,
+                  checkpointId,
+                  ...(checkpoint ? { checkpointTitle: checkpoint.title } : {}),
+                  source: "learner",
+                });
                 navigate(lesson.frontmatter.id);
               }}
             />
@@ -1650,9 +1760,19 @@ function Lesson({
           </>
         ) : null}
         {guidance && state.mode === "guided" && tutorLed ? (
-          <TutorLedLessonArticle lesson={lesson} state={state} dispatch={dispatch} />
+          <TutorLedLessonArticle
+            lesson={lesson}
+            state={state}
+            dispatch={dispatch}
+            onComplete={publishLearnerCheckpoint}
+          />
         ) : guidance && state.mode === "guided" && contextualCheckpoints ? (
-          <DiscoveryLessonArticle lesson={lesson} state={state} dispatch={dispatch} />
+          <DiscoveryLessonArticle
+            lesson={lesson}
+            state={state}
+            dispatch={dispatch}
+            onComplete={publishLearnerCheckpoint}
+          />
         ) : (
           <LessonArticle html={lesson.html} title={lesson.frontmatter.title} />
         )}
@@ -1678,6 +1798,15 @@ function Lesson({
                       type: "skip",
                       lessonId: lesson.frontmatter.id,
                       nextLessonId: next.frontmatter.id,
+                    });
+                    publishTutorInteraction({
+                      schemaVersion: 1,
+                      type: "lesson-skipped",
+                      courseId: course.frontmatter.id,
+                      courseVersion: course.frontmatter.version,
+                      lessonId: lesson.frontmatter.id,
+                      lessonTitle: lesson.frontmatter.title,
+                      source: "learner",
                     });
                     navigate(next.frontmatter.id);
                   }}

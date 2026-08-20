@@ -47,11 +47,15 @@ test("orients a beginner before the first prediction and technical lesson", asyn
     "data-tutor-checkpoint-id",
     "predict",
   );
+  await expect(
+    lesson.getByRole("heading", { name: "A nested map, not a bag of synonyms" }),
+  ).toBeVisible();
+  await expect(lesson.getByText("Artificial intelligence (AI)")).toBeVisible();
   const notes = lesson.locator(".lesson-reference-notes");
   await expect(notes).not.toHaveAttribute("open", "");
-  await notes.getByText("Open lesson reference notes").click();
+  await notes.getByText("Open worked explanation and recap").click();
   await expect(
-    notes.getByRole("heading", { name: "A nested map, not a bag of synonyms" }),
+    notes.getByRole("heading", { name: "Explain the evidence" }),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "Switch to Explore mode" }).click();

@@ -356,7 +356,7 @@ Keep tasks focused and deterministic. Include an edge case or intentional failur
 
 Put launch and tutoring policy in `AGENTS.md`. It must prohibit solving central starter files before an attempt and revealing protected paths. `CLAUDE.md` should contain `@AGENTS.md` plus only Preview-specific guidance. `.claude/launch.json` uses schema version `0.0.1`, runs `pnpm course`, and names the preview port. Do not put lesson content in host adapters.
 
-Keep `plugin.json` at the course root and target the canonical Agent Plugins v1 schema. Its `name` and `version` must match `COURSE.md`. Put portable startup instructions in `skills/start-course/SKILL.md`; its `name` must match the `start-course` directory, and it should read `../../AGENTS.md` rather than copy the tutoring policy. MCP is optional in Agent Plugins v1 and is not needed for an explorables course.
+Keep `plugin.json` at the course root and target the canonical Agent Plugins v1 schema. Its `name` and `version` must match `COURSE.md`. Put portable startup instructions in `skills/start-course/SKILL.md`; its `name` must match the `start-course` directory, and it should read `../../AGENTS.md` rather than copy the tutoring policy. During active tutoring the skill runs `pnpm tutor` in a second terminal, keeps the tutoring turn open, and reacts to its semantic browser events; raw explorable controls are deliberately excluded. MCP is optional in Agent Plugins v1 and is not needed for an explorables course.
 
 ## 8. Validate and publish
 

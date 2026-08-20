@@ -3,6 +3,7 @@ import process from "node:process";
 import { Command } from "commander";
 import {
   buildCourse,
+  monitorTutorEvents,
   scaffoldCourse,
   startCourse,
   testCourse,
@@ -32,6 +33,12 @@ program
   });
 
 program.command("test").argument("[path]", "course directory", ".").action(testCourse);
+
+program
+  .command("tutor")
+  .description("listen for local browser interactions during a tutoring session")
+  .option("-u, --url <url>", "local course URL", "http://127.0.0.1:4173")
+  .action(async (options) => monitorTutorEvents(options.url));
 
 program
   .command("build")

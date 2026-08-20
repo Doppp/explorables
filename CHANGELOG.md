@@ -6,6 +6,10 @@ All notable changes to `explorables` are documented here.
 
 ### Added
 
+- A bounded loopback tutor event stream and `explorables tutor` listener so lesson navigation and
+  checkpoint actions in the browser can prompt the adjacent coding-agent tutor during an active
+  session without analytics, accounts, raw control telemetry, or private host APIs.
+
 - Opt-in `teaching.mode: tutor-led` presentation: the coding-agent conversation leads the live
   lesson while the browser defaults to checkpoint, explorable, evidence, exercise, and collapsed
   reference notes. Stable `data-tutor-*` state keeps host inspection provider-neutral.
@@ -35,6 +39,9 @@ All notable changes to `explorables` are documented here.
 - Visible browser-storage availability and same-origin resume guidance.
 
 ### Changed
+
+- Tutor-led lessons now keep prerequisite bridges and foundational definitions in the main lesson
+  flow; only worked explanations and recaps remain in the optional reference-notes disclosure.
 
 - `AI from First Principles` is versioned as `0.6.0-tutor-led.1`, now contains sixteen lessons, and
   uses Codex/Claude conversation as the primary teaching surface. Its browser-progress namespace is

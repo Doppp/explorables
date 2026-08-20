@@ -765,9 +765,10 @@ teaching:
 ```
 
 `tutor-led` makes the coding-agent conversation the live teaching surface. The browser defaults to
-the active checkpoint, explorable, evidence, and exercise, while complete lesson prose remains
-available through an accessible reference-notes disclosure. Omitting the profile preserves the
-ordinary browser-led rendering used by existing and standalone courses.
+the prerequisite bridge and foundational definitions followed by the active checkpoint,
+explorable, evidence, and exercise; worked explanations and recaps may remain in an accessible
+reference-notes disclosure. Omitting the profile preserves the ordinary browser-led rendering used
+by existing and standalone courses.
 
 The runtime exposes read-only `data-explorables-*` and `data-tutor-*` attributes for the visible
 lesson, Guided position, active checkpoint, checkpoint phase, mode, and persistence status. These
@@ -1018,6 +1019,8 @@ They allow:
 - Tests to assert expected behaviour
 
 They are not sent to a remote analytics service.
+
+The trusted parent runtime may promote a small allowlist of semantic lesson and checkpoint events to the loopback course server so an actively listening coding-agent tutor can react. This local bridge must be bounded, versioned, process-memory-only, unavailable from static builds, and free of raw control telemetry. It must not call private host APIs or treat interaction as proof of understanding.
 
 Recommended event conventions:
 
@@ -1544,11 +1547,15 @@ When asked to start the course, Codex should:
 1. Read `COURSE.md`.
 2. Verify dependencies.
 3. Run `pnpm course`.
-4. Open the local URL in the built-in browser.
-5. Inspect the visible lesson and checkpoint state and introduce that checkpoint in conversation.
-6. Teach the minimum prerequisite concepts, ask for a prediction, then direct the learner to use
+4. Run `pnpm tutor` in a second terminal and keep the tutoring turn open while waiting for its
+   semantic events during the active session.
+5. Open the local URL in the built-in browser.
+6. Inspect the visible lesson and checkpoint state and introduce that checkpoint in conversation.
+7. React to semantic browser checkpoint events without inferring understanding from a click.
+8. Teach the minimum prerequisite concepts, ask for a prediction, then direct the learner to use
    the browser activity and report its evidence.
-7. Move into exercise files only when referenced by the current lesson.
+9. Move into exercise files only when referenced by the current lesson, and stop the listener when
+   the session ends.
 
 Codex may activate the portable `start-course` skill or use `AGENTS.md` directly. Both paths must produce the same course behavior.
 
@@ -1567,10 +1574,13 @@ When asked to start the course, Claude Code Desktop should:
 
 1. Read `CLAUDE.md` and `COURSE.md`.
 2. Start the preview using `.claude/launch.json` or `pnpm course`.
-3. Open the local course in the Browser or Preview pane.
-4. Keep the preview beside the conversation where practical.
-5. Use file and terminal panes for exercises.
-6. Apply the same tutoring restrictions as Codex.
+3. Start the local tutor-event listener in a second terminal and keep the tutoring turn open while
+   waiting for its events during the active session.
+4. Open the local course in the Browser or Preview pane.
+5. Keep the preview beside the conversation where practical.
+6. React to semantic browser checkpoint events without inferring understanding from a click.
+7. Use file and terminal panes for exercises.
+8. Apply the same tutoring restrictions as Codex.
 
 Claude may activate the same portable `skills/start-course/SKILL.md` when its Agent Plugins integration supports it; `.claude/launch.json` remains a thin preview adapter.
 
@@ -1586,6 +1596,12 @@ When the learner says “continue”, the host should infer the current location
 No remote progress record is needed.
 
 The host must also honor the course-session language in section 6.4. Pausing flushes local browser progress before the host stops the local process. Reviewing does not roll progress back. Restarting from a checkpoint and resetting the course require explicit confirmation. Host conversation history may supplement the runtime state but is never the authoritative progress record.
+
+During active tutoring, the host runs `explorables tutor` against the loopback course URL and keeps
+the tutoring turn open while the learner works in the browser. A semantic browser event is new
+learner input: the host may acknowledge the action, address an explicitly saved response, direct
+the learner to the next current checkpoint, and resume waiting. The listener stops with the
+tutoring session. It does not make a static course page or an inactive host conversation autonomous.
 
 ## 16.5 Adapter principle
 

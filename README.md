@@ -54,13 +54,14 @@ Agent Plugins-compatible clients discover the portable `start-course` skill. Cod
 
 ```bash
 explorables start [path]
+explorables tutor [--url <local-course-url>]
 explorables validate [path]
 explorables test [path]
 explorables build [path]
 explorables new <name>
 ```
 
-`explorables start` uses the strict default address `127.0.0.1:4173` so local resume state remains available. `--port <port>` is supported explicitly, but a different port has separate browser storage.
+`explorables start` uses the strict default address `127.0.0.1:4173` so local resume state remains available. `--port <port>` is supported explicitly, but a different port has separate browser storage. During an active guided session, the host adapter runs `explorables tutor` beside the server. It listens only to the local server's bounded semantic event stream so browser checkpoint actions can prompt the coding-agent tutor; it sends no analytics or remote learner data.
 
 From this source checkout, run the CLI as `pnpm exec explorables` or use the root scripts:
 

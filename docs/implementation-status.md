@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 20 August 2026
+Updated: 21 August 2026
 
 ## Completed
 
@@ -59,6 +59,8 @@ Updated: 20 August 2026
 - Integrated all five frontier-family views into the learner-facing Atlas alongside the exact tiny Transformer and GPT-2 baseline. A shared guided prompt asks learners to identify the changed information path, inspect its evidence label, and recognize which numerical comparisons the incomplete source freeze does not support.
 - Added a published-only GPT lineage: report-derived GPT-1 and GPT-3 configurations complement the GPT-2 code baseline, while GPT-4 presents the technical report's explicit architecture-withholding boundary as an undisclosed interior. Later product names are not used to infer topology.
 - Completed Model Atlas hardening and documentation: the PRD, architecture, authoring guide, course roadmap, changelog, security model, actual catalogue bundle budget, responsive browser interaction, semantic fallback, and full repository checks now cover the feature. Redundant inline runtime source maps were removed after measurement showed they dominated compressed iframe size; compile diagnostics retain source locations.
+- Added a bounded in-memory loopback tutor event stream and `explorables tutor` listener. First-party and scaffolded tutor adapters now keep that listener active so lesson navigation and checkpoint completion, restart, skip, and mode changes can prompt the adjacent coding-agent tutor without private host APIs, raw interaction telemetry, accounts, or a second chatbot.
+- Made the tutor-led lesson setup and foundational definitions visible beside the conversation instead of hiding them inside collapsed reference notes. The existing three-lesson beginner runway defines AI, machine learning, models, data, parameters, training, inference, generative AI, language models, LLMs, and model-versus-product boundaries before gradient descent.
 
 ## Current work
 
@@ -90,6 +92,7 @@ learner-study evidence also remain.
 ## Latest verification
 
 ```text
+21 Aug reciprocal tutor + visible foundations pass (format/lint/typecheck, 38 suites/113 tests, collection and minimal validation, all builds, 20 course suites/61 model tests, 14 starter/reference exercise pairs, 18 browser tests including learner/explorable tutor events, visible definitions, responsive layout, and axe, plus 2 site tests and live loopback-listener verification)
 20 Aug tutor-led LLM runway           pass (clean pnpm 11 worktree: format/lint/typecheck, 36 suites/109 tests, collection and minimal validation, all builds, 20 course suites/61 model tests, 14 starter/reference exercise pairs, 17 browser tests including tutor state/reference notes/ordered-list containment/320px/axe, and 2 site tests)
 20 Aug course orientation              pass (clean Node 24/pnpm 11 worktree: format/lint/typecheck, 34 suites/105 tests, collection and minimal validation, all builds, 18 course suites/57 tests, 14 starter/reference pairs, 16 browser tests including overview/contextual order/320px/axe, and 2 site tests)
 20 Aug compact library hero          pass (16 browser tests; 320×700, 720×800, 900×700, 1100×760, and 1427×900 geometry; light/dark in-app Codex visual QA; scoped format/lint, typecheck, 33 suites/102 tests, validation, and all builds)

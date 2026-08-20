@@ -248,3 +248,20 @@ state why training is a separate activity before entering gradient descent.
 
 Exit check: the full check/build/course/browser/site matrix passes; the pull request is merged only
 after required CI is green.
+
+## Milestone 15 — reciprocal tutor interaction and visible foundations
+
+Deliverables:
+
+- Add a bounded, versioned, process-memory-only loopback event stream for semantic lesson and
+  checkpoint actions, plus a CLI listener that host adapters keep open during active tutoring.
+- Publish learner checkpoint submissions, explorable checkpoint completion, navigation, restart,
+  skip, and mode changes without exposing raw control telemetry or weakening iframe isolation.
+- Keep the prerequisite bridge and foundational definitions visible in tutor-led lessons while
+  leaving worked explanations and recaps available as optional reference notes.
+- Cover the bridge, runtime publication, beginner content visibility, and learner/explorable event
+  sources with unit, browser, accessibility, build, and validation checks.
+
+Exit check: completing learner and explorable checkpoints emits semantic events the adjacent tutor
+can react to; the first lesson visibly defines its core vocabulary before the prediction control;
+and the full repository verification matrix passes.

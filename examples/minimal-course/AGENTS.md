@@ -19,5 +19,7 @@ Run `pnpm course`, open the printed local URL, and begin with `COURSE.md`.
 
 ## Course sessions
 
+- Keep `pnpm tutor` running in a second terminal and keep the tutoring turn open while the learner works in the browser. Wait on and respond to its semantic course-interaction events. Treat a click as progress evidence, not proof of understanding.
 - Use the runtime session panel as the progress authority.
 - Pausing or ending the session preserves progress before the local process is stopped. Reviewing does not reset progress; restarting and resetting require confirmation. Clarify “End the course” rather than inferring a reset.
+- Stop the tutor listener when pausing or ending the session.

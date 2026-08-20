@@ -16,6 +16,12 @@ async function enterExploreMode(page: Page) {
   await page.getByRole("button", { name: "Enter Explore mode" }).click();
 }
 
+async function openCourseStart(page: Page) {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Open course" }).click();
+  await page.getByRole("button", { name: "Start course" }).click();
+}
+
 async function openFoundation(page: Page) {
   await page.goto("/");
   await page.getByRole("link", { name: "Open course" }).click();
@@ -321,6 +327,60 @@ test("rejects unknown collection courses and escaped asset requests", async ({
     "/courses/ai-from-first-principles/course-files/%2e%2e%2f%2e%2e%2fpackage.json",
   );
   expect(escaped.status()).not.toBe(200);
+});
+
+test("starts with core definitions and publishes semantic tutor events", async ({
+  page,
+}) => {
+  await openCourseStart(page);
+  await expect(
+    page.getByRole("heading", {
+      name: "Generative AI and language models",
+      level: 1,
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Artificial intelligence (AI)")).toBeVisible();
+  await expect(page.getByText("Machine learning (ML)")).toBeVisible();
+  await expect(page.getByText("Chatbot product")).toBeVisible();
+
+  const response =
+    "A classifier is learned but not generative; a chatbot surrounds its LLM.";
+  await page
+    .getByLabel(
+      "Is a photo classifier generative AI, and is a chatbot the same thing as the language model inside it? Explain your current guess.",
+    )
+    .fill(response);
+  const eventRequest = page.waitForRequest(
+    (request) =>
+      request.method() === "POST" &&
+      new URL(request.url()).pathname === "/__explorables/tutor-events",
+  );
+  await page.getByRole("button", { name: "Save response" }).click();
+  const interaction = (await eventRequest).postDataJSON();
+  expect(interaction).toMatchObject({
+    schemaVersion: 1,
+    type: "checkpoint-completed",
+    courseId: "ai-from-first-principles",
+    lessonId: "generative-ai-and-llms",
+    checkpointId: "predict",
+    source: "learner",
+    response,
+  });
+
+  const frame = page.frameLocator("iframe").first();
+  const explorableRequest = page.waitForRequest(
+    (request) =>
+      request.method() === "POST" &&
+      new URL(request.url()).pathname === "/__explorables/tutor-events",
+  );
+  await frame.getByRole("button", { name: "Save this classification" }).click();
+  expect((await explorableRequest).postDataJSON()).toMatchObject({
+    type: "checkpoint-completed",
+    lessonId: "generative-ai-and-llms",
+    checkpointId: "experiment",
+    source: "explorable",
+  });
+  await expect(page.getByText("2 of 4")).toBeVisible();
 });
 
 test("guides progress, records interaction, and resumes locally", async ({ page }) => {

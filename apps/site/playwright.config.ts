@@ -1,13 +1,16 @@
-import { defineConfig } from "@playwright/test";
 import path from "node:path";
+import { defineConfig } from "@playwright/test";
+
+const sitePort = process.env.EXPLORABLES_SITE_TEST_PORT ?? "4174";
+const siteUrl = `http://127.0.0.1:${sitePort}`;
 
 export default defineConfig({
   testDir: "./tests",
-  use: { baseURL: "http://127.0.0.1:4174" },
+  use: { baseURL: siteUrl },
   webServer: {
-    command: "pnpm site:dev --host 127.0.0.1 --port 4174",
+    command: `pnpm site:dev --host 127.0.0.1 --port ${sitePort}`,
     cwd: path.resolve(import.meta.dirname, "../.."),
-    url: "http://127.0.0.1:4174",
+    url: siteUrl,
     reuseExistingServer: !process.env.CI,
   },
 });

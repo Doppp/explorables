@@ -125,7 +125,7 @@ function App() {
 
         <section className="section course-feature" id="course">
           <div>
-            <p className="kicker">Course 001 · thirteen foundation lessons</p>
+            <p className="kicker">Course 001 · sixteen foundation lessons</p>
             <h2>
               AI from
               <br />

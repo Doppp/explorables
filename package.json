@@ -13,6 +13,7 @@
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm course:validate",
     "course": "tsx packages/cli/src/bin.ts start .",
     "course:foundation": "tsx packages/cli/src/bin.ts start examples/ai-from-first-principles",
+    "course:tutor": "tsx packages/cli/src/bin.ts tutor",
     "course:build": "tsx packages/cli/src/bin.ts build .",
     "course:test": "tsx packages/cli/src/bin.ts test examples/ai-from-first-principles",
     "course:validate": "tsx packages/cli/src/bin.ts validate . && tsx packages/cli/src/bin.ts validate examples/minimal-course",

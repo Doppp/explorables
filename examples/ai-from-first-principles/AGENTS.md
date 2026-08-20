@@ -38,6 +38,8 @@ Run `pnpm course`, open the printed local URL, read `COURSE.md`, and introduce t
 
 ## Course sessions
 
+- Keep `pnpm tutor` running in a second terminal and keep the tutoring turn open while the learner works in the browser. Wait on its semantic course-interaction events and respond in conversation to checkpoint completion, restart, skip, and navigation with the smallest useful next prompt. A click is progress evidence, not proof of understanding.
 - Use the runtime session panel and its active checkpoint as the progress authority; conversation history is only supporting context.
 - “Pause this course” and “End this session” mean preserve browser progress and stop the host-owned local process. “Finish the course” requires the final checkpoint.
 - Review without changing Guided progress. Require confirmation before a checkpoint restart or full reset. Clarify the ambiguous phrase “End the course” instead of erasing progress.
+- Stop the tutor listener when pausing or ending the session.

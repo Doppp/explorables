@@ -10,6 +10,7 @@ import {
   validateCourseCollection,
 } from "@explorables/validator";
 import { createServer, type Plugin, build as viteBuild } from "vite";
+import { createTutorEventBridge } from "./tutor-bridge.ts";
 
 const packageDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(packageDirectory, "../../..");
@@ -88,12 +89,16 @@ async function sendCourseFile(
   }
 }
 
-function coursePlugin(coursePath: string): Plugin {
+function coursePlugin(
+  coursePath: string,
+  tutorBridge: ReturnType<typeof createTutorEventBridge>,
+): Plugin {
   let compiled: Awaited<ReturnType<typeof compileRuntimeCourse>> | undefined;
   return {
     name: "explorables-course",
     configureServer(server) {
       server.middlewares.use(async (request, response, next) => {
+        if (await tutorBridge.handle(request, response)) return;
         const pathname = request.url?.split("?")[0] ?? "";
         if (pathname.startsWith("/course-files/")) {
           await sendCourseFile(
@@ -124,12 +129,14 @@ function coursePlugin(coursePath: string): Plugin {
 
 function collectionPlugin(
   collection: Awaited<ReturnType<typeof loadCourseCollection>>,
+  tutorBridge: ReturnType<typeof createTutorEventBridge>,
 ): Plugin {
   const compiled = new Map<string, Awaited<ReturnType<typeof compileRuntimeCourse>>>();
   return {
     name: "explorables-course-collection",
     configureServer(server) {
       server.middlewares.use(async (request, response, next) => {
+        if (await tutorBridge.handle(request, response)) return;
         const pathname = request.url?.split("?")[0] ?? "";
         if (pathname === "/explorables-library.json") {
           response.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -211,24 +218,27 @@ export async function startCourse(coursePath: string, port = 4173): Promise<void
   const root = path.resolve(coursePath);
   if (!(await validate(root))) throw new Error("Course validation failed.");
   const collection = await isCollection(root);
+  const tutorBridge = createTutorEventBridge();
   const server = await createServer({
     root: previewRoot,
     plugins: [
       collection
-        ? collectionPlugin(await loadCourseCollection(root))
-        : coursePlugin(root),
+        ? collectionPlugin(await loadCourseCollection(root), tutorBridge)
+        : coursePlugin(root, tutorBridge),
     ],
     server: { host: "127.0.0.1", port, strictPort: true },
   });
   try {
     await server.listen();
   } catch (error) {
+    tutorBridge.close();
     await server.close();
     throw new Error(
       `Could not start explorables on port ${port}. Stop the process using that port, or explicitly choose another with --port <port>. A different port has separate browser progress.`,
       { cause: error },
     );
   }
+  server.httpServer?.once("close", tutorBridge.close);
   server.printUrls();
 }
 
@@ -303,3 +313,4 @@ export async function testCourse(coursePath: string): Promise<void> {
 }
 
 export { scaffoldCourse } from "create-explorables-course";
+export { monitorTutorEvents } from "./tutor-bridge.ts";
