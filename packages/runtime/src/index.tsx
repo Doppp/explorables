@@ -530,12 +530,12 @@ const LessonHtmlFragment = memo(function LessonHtmlFragment({
   className?: string;
 }) {
   if (!html) return null;
+  const fragmentClassName = className
+    ? `lesson-fragment ${className}`
+    : "lesson-fragment";
   return (
     // biome-ignore lint/security/noDangerouslySetInnerHtml: the Markdown package sanitises this HTML before it enters runtime data.
-    <div
-      className={className ? `lesson-fragment ${className}` : "lesson-fragment"}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div className={fragmentClassName} dangerouslySetInnerHTML={{ __html: html }} />
   );
 });
 

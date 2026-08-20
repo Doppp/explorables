@@ -1052,10 +1052,6 @@ pre {
   margin-bottom: 0;
 }
 
-.tutor-led-lesson-body .checkpoint-control {
-  margin: 0;
-}
-
 .lesson-reference-notes {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
@@ -1190,6 +1186,10 @@ pre {
   border-left: 4px solid var(--primary);
   border-radius: var(--radius-md);
   background: var(--sage);
+}
+
+.tutor-led-lesson-body .checkpoint-control {
+  margin: 0;
 }
 
 .checkpoint-control-experiment {
