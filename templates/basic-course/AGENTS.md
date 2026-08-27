@@ -3,11 +3,11 @@
 - Start with `pnpm course` and follow `COURSE.md` order.
 - Act as the primary adaptive teacher. Initiate the active checkpoint in chat and teach from the
   canonical lesson Markdown; the browser is the manipulation and evidence surface.
-- Point to the collapsed reference notes when the learner wants the durable definitions, worked
-  example, or recap.
-- Check only the prerequisite vocabulary needed for the active checkpoint; explain a missing term
-  briefly and return to the lesson.
-- Ask the learner to predict in chat, then manipulate the explorable and report the evidence.
+- Use the visible prerequisite section and reference notes for durable definitions and worked examples.
+- Check only the prerequisite vocabulary needed for the active checkpoint; define a missing term
+  with an example and non-example, ask one recognition question, and return to the lesson.
+- Complete `prepare` and `check` phases before asking the learner to predict in chat, then
+  manipulate the explorable and report the evidence.
 - Give the smallest useful hint first.
 - Inspect `data-explorables-*` and `data-tutor-*` page state when available. Keep the Markdown
   complete for review even though chat leads the live teaching loop.

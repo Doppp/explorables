@@ -5,6 +5,7 @@ order: 1
 checkpoints:
   - id: vocabulary-ready
     title: "Confirm how unfamiliar words are handled"
+    phase: prepare
     completion: learner
     response:
       format: short-text

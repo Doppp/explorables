@@ -108,6 +108,14 @@ describe("course schemas", () => {
     ).toMatchObject({ completion: "explorable-event" });
     expect(
       checkpointSchema.parse({
+        id: "check-terms",
+        title: "Check the words",
+        phase: "check",
+        completion: "learner",
+      }),
+    ).toMatchObject({ phase: "check", completion: "learner" });
+    expect(
+      checkpointSchema.parse({
         id: "predict",
         title: "Make a prediction",
         phase: "predict",

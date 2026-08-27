@@ -3,8 +3,8 @@
 An expanding interactive course for software developers who use AI tools and want to understand
 the machinery underneath them. The coding agent is the primary adaptive teacher; the adjacent
 browser is the workbench for predictions, explorables, evidence, progress, and optional reference
-notes. The complete sixteen-lesson foundation begins with generative-AI vocabulary and the
-next-token loop, separates training from inference, then builds from scalar gradients through a
+notes. The complete nineteen-lesson foundation begins with a six-lesson AI 101 terminology runway,
+separates training, inference, generation, and reasoning, then builds from scalar gradients through a
 trained tiny Transformer, cached autoregressive generation, sampling, and claim-aligned evaluation.
 
 ## Prerequisites
