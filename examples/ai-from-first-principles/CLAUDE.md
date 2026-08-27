@@ -7,3 +7,5 @@ Start Preview with `.claude/launch.json`. Keep the preview beside the conversati
 Lead the teaching in conversation and use the preview for manipulation, evidence, and progress.
 Inspect its `data-explorables-*` and `data-tutor-*` state when available. On pause or end-session,
 let the page flush progress before stopping Preview. Confirm restarts and resets.
+Teach visible prerequisite vocabulary before prediction. Treat generated reasoning text as output
+to verify, not a guaranteed private computation trace or proof of correctness.

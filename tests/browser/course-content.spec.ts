@@ -29,7 +29,7 @@ test("orients a beginner before the first prediction and technical lesson", asyn
 
   await expect(
     page.getByRole("heading", {
-      name: "Generative AI and language models",
+      name: "Start with the words",
       level: 1,
     }),
   ).toBeVisible();
@@ -41,18 +41,16 @@ test("orients a beginner before the first prediction and technical lesson", asyn
   await expect(
     lesson
       .locator(".tutor-handoff")
-      .getByRole("heading", { name: "Classify a familiar AI product" }),
+      .getByRole("heading", { name: "Confirm how unfamiliar words are handled" }),
   ).toBeVisible();
   await expect(lesson.locator(".tutor-handoff")).toHaveAttribute(
     "data-tutor-checkpoint-id",
-    "predict",
+    "vocabulary-ready",
   );
-  const notes = lesson.locator(".lesson-reference-notes");
-  await expect(notes).not.toHaveAttribute("open", "");
-  await notes.getByText("Open lesson reference notes").click();
   await expect(
-    notes.getByRole("heading", { name: "A nested map, not a bag of synonyms" }),
+    lesson.getByRole("heading", { name: "Words for this step" }),
   ).toBeVisible();
+  await expect(lesson.locator(".checkpoint-prerequisites")).toBeVisible();
 
   await page.getByRole("button", { name: "Switch to Explore mode" }).click();
   await page.getByRole("button", { name: "Enter Explore mode" }).click();

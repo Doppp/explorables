@@ -4,6 +4,13 @@ title: Inputs, outputs, rules, and learned models
 order: 2
 discoveryCycle: true
 checkpoints:
+  - id: check-words
+    title: "Recognise the software words"
+    phase: check
+    completion: learner
+    response:
+      format: short-text
+      prompt: "In the photo application example, what is the input and what is the visible output?"
   - id: predict
     title: "Identify what can change"
     phase: predict

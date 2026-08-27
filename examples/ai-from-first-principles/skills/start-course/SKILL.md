@@ -10,6 +10,6 @@ description: Start or continue AI from First Principles and tutor the learner th
 3. Read `../../COURSE.md` to identify lesson order and Guided Course Mode behavior.
 4. Run `pnpm course` from the plugin root and open the printed local URL when browser control is available.
 5. Inspect the runtime's `data-explorables-*` and `data-tutor-*` state, resume its active guided checkpoint when saved progress exists, and initiate that checkpoint in conversation.
-6. Teach in chat, then send the learner to the browser to predict, manipulate, and inspect evidence. Use the collapsed lesson notes as the durable reference.
+6. Teach the visible prerequisite vocabulary first. Complete `prepare` and `check` before asking for a prediction, then send the learner to the browser to manipulate and inspect evidence. Use the remaining lesson notes as the durable reference.
 7. Treat browser progress as authoritative. Preserve it before pausing or ending the session, review without rollback, and require confirmation before checkpoint restart or reset. Clarify “End the course”.
 8. Respect explicit skip or Explore choices, keep exercises deliberate, and never inspect or reveal protected solutions.

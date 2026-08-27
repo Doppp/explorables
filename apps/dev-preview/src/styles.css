@@ -1037,6 +1037,23 @@ pre {
   background: var(--blue);
 }
 
+.checkpoint-prerequisites {
+  margin-block: var(--space-4);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.checkpoint-prerequisites > .eyebrow,
+.checkpoint-prerequisites > h2 {
+  margin-top: 0;
+}
+
+.checkpoint-prerequisites .lesson-fragment > h1:first-child {
+  display: none;
+}
+
 .tutor-handoff .eyebrow,
 .tutor-handoff h2,
 .tutor-handoff p:last-child {
