@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-from-first-principles",
-  "version": "0.6.0-tutor-led.1",
+  "version": "0.7.0-ai-101.1",
   "description": "A tutor-led course for learning modern AI and language-model foundations through conversation, prediction, experimentation, implementation, and debugging.",
   "repository": "https://github.com/Doppp/explorables",
   "license": "MIT AND CC-BY-4.0",
