@@ -248,3 +248,26 @@ state why training is a separate activity before entering gradient descent.
 
 Exit check: the full check/build/course/browser/site matrix passes; the pull request is merged only
 after required CI is green.
+
+## Milestone 15 — AI 101 terminology and supported reasoning
+
+Deliverables:
+
+- Publish a course-local terminology register with stable beginner definitions, refinements,
+  prerequisites, examples, non-examples, and misconception boundaries.
+- Replace the compressed opening with a short beginner runway covering software inputs and
+  outputs, rules and learned models, classification and generation, language models and products,
+  training and inference, and inference, generation, and reasoning.
+- Require recognition checks before predictions in foundational lessons and make prerequisite
+  vocabulary visible in the tutor-led activity surface rather than only in collapsed notes.
+- Teach reasoning as observable problem-solving behaviour that may span model inference, product
+  orchestration, and tools; do not present generated explanations as faithful private computation
+  or as proof of correctness.
+- Update the host-neutral tutor policy, authoring guidance, validator coverage, browser tests,
+  learner-study protocol, PRD, implementation status, and changelog.
+
+Exit check: a programming-literate learner with no AI vocabulary can progress through the runway
+without external definitions, distinguish classification from generation, distinguish a model from
+its product, separate training, inference, and generation, and give a cautious explanation of
+reasoning. Automated checks verify instructional order and accessibility; the existing five-learner
+study remains required external evidence before the curriculum claim is considered validated.
