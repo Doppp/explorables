@@ -158,9 +158,13 @@ test("follows the system theme, syncs explorables, and persists an override", as
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.getByRole("link", { name: "Open course" }).click();
   await page.getByRole("button", { name: "Start course" }).click();
+  await enterExploreMode(page);
+  await page
+    .getByRole("link", { name: "Inputs, outputs, rules, and learned models" })
+    .click();
   const frame = page.frameLocator("iframe").first();
   await expect(
-    frame.getByRole("heading", { name: "Map the terms onto real systems" }),
+    frame.getByRole("heading", { name: "Follow one input through the application" }),
   ).toBeVisible();
   await expect(frame.locator("html")).toHaveAttribute("data-theme", "light");
 
