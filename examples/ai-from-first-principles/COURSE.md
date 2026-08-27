@@ -1,7 +1,7 @@
 ---
 id: ai-from-first-principles
 title: AI from First Principles
-version: 0.6.0-tutor-led.1
+version: 0.7.0-ai-101.1
 summary: Learn, inspect, implement, and debug the foundations behind modern language models.
 license: CC-BY-4.0
 audience:
@@ -28,6 +28,11 @@ guidance:
 
 # AI from First Principles
 
+This course assumes that you can read basic code, use arrays, and work in a terminal. It does not
+assume that you already know AI or machine-learning terminology. Each important term is introduced
+with a concrete example before a checkpoint asks you to use it. Predictions are starting guesses,
+not grades. If a word is unclear, stop and ask the tutor to explain that word before continuing.
+
 Start by locating generative AI, language models, and chat products on the same map. Then trace the
 next-token loop and ask how training improves its probabilities before meeting the mathematical
 machinery. The coding agent teaches and adapts the active checkpoint in conversation. The browser
@@ -46,6 +51,10 @@ Ask the coding-agent tutor to introduce the active checkpoint. Answer its predic
 the browser explorable to generate evidence, then return to conversation to explain what happened.
 Open the browser's reference notes whenever you want the canonical definitions or worked example.
 Guided checkpoints remain local to this browser and are not grades.
+
+Use [the course glossary](GLOSSARY.md) to revisit the canonical beginner definition of a term. The
+lesson that first uses a term still explains it in context, so the glossary is a review aid rather
+than a prerequisite reading assignment.
 
 ## Lessons
 
