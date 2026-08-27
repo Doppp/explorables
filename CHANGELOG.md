@@ -6,6 +6,15 @@ All notable changes to `explorables` are documented here.
 
 ### Added
 
+- A six-lesson AI 101 runway that teaches course vocabulary, software inputs and outputs, rules and
+  learned models, classification and generation, language models and products, training and
+  inference, and inference, generation, and reasoning before mathematical machinery.
+- A course-local learner glossary with stable beginner definitions and later refinements.
+- Optional `prepare` and `check` checkpoint phases for terminology orientation and concrete
+  recognition before prediction.
+- A visible tutor-led prerequisite surface backed by canonical lesson Markdown, plus two accessible
+  sandboxed activities for software-component and reasoning-path boundaries.
+- ADR 0012 and an expanded consented learner-study protocol for the zero-ML-vocabulary audience.
 - Opt-in `teaching.mode: tutor-led` presentation: the coding-agent conversation leads the live
   lesson while the browser defaults to checkpoint, explorable, evidence, exercise, and collapsed
   reference notes. Stable `data-tutor-*` state keeps host inspection provider-neutral.
@@ -36,6 +45,12 @@ All notable changes to `explorables` are documented here.
 
 ### Changed
 
+- `AI from First Principles` is versioned as `0.7.0-ai-101.1`, now contains nineteen lessons, and
+  starts with terminology rather than an unsupported classification question. Its new progress
+  namespace leaves prior browser-local progress untouched.
+- Tutor policies now require a definition, example, non-example, and recognition check for missing
+  prerequisite vocabulary. They distinguish inference, generation, reasoning, and product
+  orchestration without treating generated explanations as private computation traces.
 - `AI from First Principles` is versioned as `0.6.0-tutor-led.1`, now contains sixteen lessons, and
   uses Codex/Claude conversation as the primary teaching surface. Its browser-progress namespace is
   intentionally fresh; earlier local progress remains untouched under its prior course version.
