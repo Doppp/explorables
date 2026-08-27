@@ -4,6 +4,10 @@ Updated: 21 August 2026
 
 ## Completed
 
+- Added the `0.7.0-ai-101.1` terminology correction: a course-local glossary, six-lesson beginner
+  runway, visible prerequisite surface, `prepare` and `check` phases, software-pipeline and
+  reasoning-path explorables, host-neutral tutor policy, authoring guidance, ADR 0013, and focused
+  schema/browser coverage. External learner validation remains explicitly pending.
 - Read the complete PRD and build assignment.
 - Verified authenticated SSH GitHub access as `Doppp`.
 - Verified `Doppp/explorables` is public and defaults to `master`.
@@ -66,7 +70,7 @@ Updated: 21 August 2026
 
 The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, clean-checkout verification, and pull-request CI are complete.
 
-`AI from First Principles` `0.6.0-tutor-led.1`, Guided Course Mode, Agent Plugins v1 packaging, the
+`AI from First Principles` `0.7.0-ai-101.1`, Guided Course Mode, Agent Plugins v1 packaging, the
 general local course library, course overview, and contextual discovery flow are implemented. The
 library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM
 specializations as planned rather than runnable. Its DeepSeek and GLM cards reflect the V4 and 5.2
