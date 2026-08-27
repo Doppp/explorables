@@ -29,7 +29,7 @@ test("orients a beginner before the first prediction and technical lesson", asyn
 
   await expect(
     page.getByRole("heading", {
-      name: "Generative AI and language models",
+      name: "Start with the words",
       level: 1,
     }),
   ).toBeVisible();
@@ -41,21 +41,33 @@ test("orients a beginner before the first prediction and technical lesson", asyn
   await expect(
     lesson
       .locator(".tutor-handoff")
-      .getByRole("heading", { name: "Classify a familiar AI product" }),
+      .getByRole("heading", { name: "Confirm how unfamiliar words are handled" }),
   ).toBeVisible();
   await expect(lesson.locator(".tutor-handoff")).toHaveAttribute(
     "data-tutor-checkpoint-id",
-    "predict",
+    "vocabulary-ready",
   );
   await expect(
-    lesson.getByRole("heading", { name: "A nested map, not a bag of synonyms" }),
+    lesson.getByRole("heading", { name: "Words for this step" }),
   ).toBeVisible();
-  await expect(lesson.getByText("Artificial intelligence (AI)")).toBeVisible();
-  const notes = lesson.locator(".lesson-reference-notes");
-  await expect(notes).not.toHaveAttribute("open", "");
-  await notes.getByText("Open worked explanation and recap").click();
+  await expect(lesson.locator(".checkpoint-prerequisites")).toBeVisible();
+  await lesson
+    .locator(".checkpoint-control-prepare input")
+    .fill("Pause, define it with examples, and check recognition before continuing.");
+  await lesson.getByRole("button", { name: "Save response" }).click();
+  await page
+    .getByRole("button", { name: "Inputs, outputs, rules, and learned models →" })
+    .click();
+  await expect(page.locator(".tutor-handoff")).toHaveAttribute(
+    "data-tutor-checkpoint-phase",
+    "check",
+  );
   await expect(
-    notes.getByRole("heading", { name: "Explain the evidence" }),
+    page
+      .locator(".tutor-led-lesson-body")
+      .getByLabel(
+        "In the photo application example, what is the input and what is the visible output?",
+      ),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "Switch to Explore mode" }).click();

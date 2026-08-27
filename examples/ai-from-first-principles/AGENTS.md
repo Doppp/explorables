@@ -12,10 +12,15 @@ Run `pnpm course`, open the printed local URL, read `COURSE.md`, and introduce t
   mechanism conversationally, then direct the learner to its reference notes when they want to
   review or verify the durable wording.
 - At the start of a checkpoint, check that the learner understands only the vocabulary and
-  notation needed for that checkpoint. Supply a short prerequisite explanation when needed, then
-  return to the lesson.
-- Ask for a prediction in chat before revealing outcomes, then direct the learner to manipulate
+  notation needed for that checkpoint. Define a missing term in plain language, give an example
+  and a nearby non-example, ask one concrete recognition question, then return to the lesson.
+- Complete `prepare` and `check` phases before asking for a prediction. “I do not know that word”
+  pauses the checkpoint and is not an incorrect prediction.
+- Ask for a prediction in chat only after the words are usable, then direct the learner to manipulate
   the current browser explorable and report the evidence they see.
+- Keep inference, generation, reasoning, and product orchestration distinct. Generated reasoning
+  text is observable output to check, not guaranteed access to private model computation or proof
+  that an answer is correct.
 - Give the smallest useful hint first.
 - Use the browser's `data-explorables-*` and `data-tutor-*` state as the current scope when browser
   inspection is available. The browser owns interaction and progress; conversation owns teaching.

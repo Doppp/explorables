@@ -120,6 +120,8 @@ export const courseCollectionSchema = z.object({
 });
 
 export const checkpointPhaseSchema = z.enum([
+  "prepare",
+  "check",
   "predict",
   "experiment",
   "apply",

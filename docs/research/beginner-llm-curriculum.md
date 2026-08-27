@@ -41,15 +41,22 @@ decisions remain governed by `docs/PRD.md`.
 
 ## Resulting sequence
 
-1. Generative AI and language models
-2. The next-token loop
-3. How machines learn: training versus inference
-4. Gradient descent and backpropagation
-5. Vectors, losses, and optimisation
-6. Tokenisation and numerical representations
-7. Attention and Transformer blocks
-8. Next-token training, inference, caching, and sampling
-9. Evaluation and leakage
+1. Course vocabulary and recognition-before-prediction
+2. Software inputs, outputs, components, rules, and learned models
+3. Classification, generation, language models, and products
+4. The next-token loop
+5. How machines learn: training versus inference
+6. Inference, generation, reasoning, and product orchestration
+7. Gradient descent and backpropagation
+8. Vectors, losses, and optimisation
+9. Tokenisation and numerical representations
+10. Attention and Transformer blocks
+11. Next-token training, inference, caching, and sampling
+12. Evaluation and leakage
+
+The added terminology runway follows learner feedback that the earlier first checkpoint still
+assumed the meanings of classifier, label, learned model, product boundary, inference, and
+reasoning. The correction treats those terms as course content, not as a diagnostic prerequisite.
 
 The sequence is intentionally spiral-shaped: the learner first sees the complete next-token loop,
 then revisits each component with more mathematical and implementation detail.

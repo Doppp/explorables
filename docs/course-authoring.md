@@ -192,6 +192,17 @@ Before the prediction, give the learner:
 - plain-language definitions for every new term or symbol needed to make the prediction; and
 - a small, concrete setup whose values can be inspected by hand.
 
+For a zero-domain-knowledge audience, use `prepare` and `check` checkpoints before `predict` when
+the learner must acquire terminology first. `prepare` establishes the definition, example, and
+non-example; `check` asks a concrete recognition question. These phases use ordinary lesson
+Markdown and the existing checkpoint schema, not a custom directive. A prediction must test
+reasoning from the supplied setup rather than prior familiarity with the vocabulary.
+
+When authoring AI material, distinguish model inference, repeated generation, and reasoning that
+may span product orchestration or tools. Generated step-by-step prose is an output that can be
+checked; do not describe it as a guaranteed faithful transcript of private model computation or as
+evidence that the answer is correct.
+
 After the interaction, include:
 
 - an explanation that connects the observed values to the formal mechanism;

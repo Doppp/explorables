@@ -805,6 +805,19 @@ For a lesson that introduces a foundational concept, the Markdown must also prov
 - at least one deliberate failure and the invariant it violates; and
 - a concise recap or self-check that asks the learner to explain rather than merely recognise.
 
+For a declared zero-domain-knowledge audience, prerequisite terminology is itself an instructional
+objective. Define each required term in plain language, give a concrete example and a nearby
+non-example, and ask a recognition question before asking for a prediction. Tutor-led presentation
+must keep this prerequisite material visible on the activity surface; it must not require the
+learner to discover essential definitions inside collapsed reference notes. Courses may use
+optional `prepare` and `check` checkpoint phases before `predict` without adding a Markdown
+directive or a second progress store.
+
+AI courses must distinguish training, inference, generation, and reasoning. “Reasoning” describes
+problem-solving behaviour that may span model inference, repeated calls, product orchestration,
+and tools. Generated step-by-step prose is output to verify, not guaranteed evidence of private
+model computation or correctness.
+
 This contract does not imply a minimum word count or rigid heading vocabulary. Automated validation
 continues to check structure, paths, fallbacks, and executable contracts; editorial review and
 learner playtesting determine whether the explanation is sufficient for the declared audience.
@@ -2793,7 +2806,8 @@ See how it works. Build it yourself.
 - [ ] The reference course begins with a plain-language learning-loop orientation before gradient
   descent or other mathematical machinery.
 - [ ] Before the learning loop, a beginner can distinguish AI, machine learning, generative AI, an
-  LLM, and a chatbot product, then trace one autoregressive next-token step.
+  LLM, and a chatbot product; separate training, inference, generation, and reasoning; then trace
+  one autoregressive next-token step without relying on undefined AI terminology.
 - [ ] At least five target learners complete two lessons.
 - [ ] Setup failures and authoring friction are documented.
 - [ ] Feedback informs the v1 format before the full course is produced.

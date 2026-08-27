@@ -4,6 +4,10 @@ Updated: 21 August 2026
 
 ## Completed
 
+- Added the `0.7.0-ai-101.1` terminology correction: a course-local glossary, six-lesson beginner
+  runway, visible prerequisite surface, `prepare` and `check` phases, software-pipeline and
+  reasoning-path explorables, host-neutral tutor policy, authoring guidance, ADR 0013, and focused
+  schema/browser coverage. External learner validation remains explicitly pending.
 - Read the complete PRD and build assignment.
 - Verified authenticated SSH GitHub access as `Doppp`.
 - Verified `Doppp/explorables` is public and defaults to `master`.
@@ -66,7 +70,7 @@ Updated: 21 August 2026
 
 The v0.1 runtime MVP remains verified. Course-session continuity now provides a framework-owned resume surface, lesson-level local state for persistent courses, Guided checkpoint resume and confirmed rollback, page-exit flushing, storage-failure messaging, host-neutral state attributes, shared lifecycle language, and a stable strict development origin. Model Atlas implementation, local hardening, clean-checkout verification, and pull-request CI are complete.
 
-`AI from First Principles` `0.6.0-tutor-led.1`, Guided Course Mode, Agent Plugins v1 packaging, the
+`AI from First Principles` `0.7.0-ai-101.1`, Guided Course Mode, Agent Plugins v1 packaging, the
 general local course library, course overview, and contextual discovery flow are implemented. The
 library presents the shared frontier core and DeepSeek, Kimi, Qwen, MiniMax, and GLM
 specializations as planned rather than runnable. Its DeepSeek and GLM cards reflect the V4 and 5.2
@@ -93,6 +97,7 @@ learner-study evidence also remain.
 
 ```text
 21 Aug reciprocal tutor + visible foundations pass (format/lint/typecheck, 38 suites/113 tests, collection and minimal validation, all builds, 20 course suites/61 model tests, 14 starter/reference exercise pairs, 18 browser tests including learner/explorable tutor events, visible definitions, responsive layout, and axe, plus 2 site tests and live loopback-listener verification)
+27 Aug AI 101 terminology runway       pass (clean pnpm 11 worktree after latest-master reconciliation: format/lint/typecheck, 38 suites/113 tests, collection/minimal validation, all builds, 20 course suites/61 model tests, all 14 starter/reference exercise pairs, 18 browser tests on an isolated port including prerequisite progression/tutor events/19-lesson progress/theme/narrow layout/axe, and 2 site tests)
 20 Aug tutor-led LLM runway           pass (clean pnpm 11 worktree: format/lint/typecheck, 36 suites/109 tests, collection and minimal validation, all builds, 20 course suites/61 model tests, 14 starter/reference exercise pairs, 17 browser tests including tutor state/reference notes/ordered-list containment/320px/axe, and 2 site tests)
 20 Aug course orientation              pass (clean Node 24/pnpm 11 worktree: format/lint/typecheck, 34 suites/105 tests, collection and minimal validation, all builds, 18 course suites/57 tests, 14 starter/reference pairs, 16 browser tests including overview/contextual order/320px/axe, and 2 site tests)
 20 Aug compact library hero          pass (16 browser tests; 320×700, 720×800, 900×700, 1100×760, and 1427×900 geometry; light/dark in-app Codex visual QA; scoped format/lint, typecheck, 33 suites/102 tests, validation, and all builds)

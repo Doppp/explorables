@@ -594,11 +594,33 @@ function TutorLedLessonArticle({
           {checkpoint ? checkpoint.title : "Review this lesson with your tutor"}
         </h2>
         <p>
-          Tell your coding-agent tutor you are at this checkpoint. Discuss the idea in
-          chat, then use this pane to predict, manipulate, and inspect evidence.
+          Tell your coding-agent tutor you are at this checkpoint. Learn or check the
+          required words first, then use this pane to predict, manipulate, and inspect
+          evidence.
         </p>
       </section>
-      <LessonHtmlFragment html={segments.introduction} className="tutor-foundations" />
+      <section
+        className="checkpoint-prerequisites"
+        aria-labelledby="checkpoint-prerequisites-title"
+      >
+        <p className="eyebrow">Required before this checkpoint</p>
+        <h2 id="checkpoint-prerequisites-title">Vocabulary and worked setup</h2>
+        <LessonHtmlFragment html={segments.introduction} />
+      </section>
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="prepare"
+        state={state}
+        dispatch={dispatch}
+        onComplete={onComplete}
+      />
+      <ActiveCheckpointControl
+        lesson={lesson}
+        phase="check"
+        state={state}
+        dispatch={dispatch}
+        onComplete={onComplete}
+      />
       <ActiveCheckpointControl
         lesson={lesson}
         phase="predict"
@@ -633,8 +655,8 @@ function TutorLedLessonArticle({
         <details className="lesson-reference-notes">
           <summary>Open worked explanation and recap</summary>
           <p>
-            These are the canonical worked examples and recap. Use them when you want to
-            review or verify the conversation.
+            These are the canonical explanation, implementation bridge, failure cases,
+            and recap. The prerequisite vocabulary and setup remain visible above.
           </p>
           <LessonHtmlFragment html={referenceNotes} />
         </details>

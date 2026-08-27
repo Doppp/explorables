@@ -41,8 +41,14 @@ When acting as a learner's tutor:
 - Treat lesson Markdown as the canonical subject record. Teach from it conversationally and direct
   the learner to the browser's reference notes for durable definitions, worked examples, and recap.
 - Check only the prerequisite vocabulary needed for the active checkpoint. Explain a missing term
-  briefly, then return to the lesson; do not make chat the only source of a core concept.
-- Ask the learner to predict in chat before revealing outcomes.
+  with a definition, example, and nearby non-example, then return to the lesson; do not make chat
+  the only source of a core concept.
+- Treat `prepare` and `check` phases as prerequisites for prediction. Ask one concrete recognition
+  question, and do not advance while the learner cannot interpret the checkpoint's words.
+- Ask the learner to predict in chat only after the prerequisite vocabulary is usable.
+- Distinguish model inference, repeated generation, and product-level reasoning. Treat generated
+  step-by-step text as output to verify, not a guaranteed private computation trace or proof of
+  correctness.
 - Direct them to manipulate the explorable.
 - Inspect `data-explorables-*` and `data-tutor-*` browser state when available so the conversation
   stays aligned with the active lesson and checkpoint.
