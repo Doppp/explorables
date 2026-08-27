@@ -33,8 +33,8 @@ assume that you already know AI or machine-learning terminology. Each important 
 with a concrete example before a checkpoint asks you to use it. Predictions are starting guesses,
 not grades. If a word is unclear, stop and ask the tutor to explain that word before continuing.
 
-Start by locating generative AI, language models, and chat products on the same map. Then trace the
-next-token loop and ask how training improves its probabilities before meeting the mathematical
+Start with the words used to describe software and learned models. Then locate classification,
+generation, language models, chat products, training, inference, and reasoning before meeting the mathematical
 machinery. The coding agent teaches and adapts the active checkpoint in conversation. The browser
 is the adjacent workbench for predictions, manipulation, evidence, and durable reference notes.
 
@@ -58,19 +58,22 @@ than a prerequisite reading assignment.
 
 ## Lessons
 
-1. [Generative AI and language models](lessons/00-generative-ai-and-llms.md)
-2. [The next-token loop](lessons/00-next-token-loop.md)
-3. [How machines learn](lessons/00-how-machines-learn.md)
-4. [Gradient descent](lessons/01-gradient-descent.md)
-5. [Backpropagation](lessons/02-backpropagation.md)
-6. [Vectors, matrices, and linear layers](lessons/03-vectors-matrices-linear-layers.md)
-7. [Losses and optimisers](lessons/04-losses-optimisers.md)
-8. [BPE tokenisation](lessons/05-bpe-tokenisation.md)
-9. [Embeddings and positional information](lessons/06-embeddings-positional-information.md)
-10. [Self-attention](lessons/07-self-attention.md)
-11. [Multi-head attention](lessons/08-multi-head-attention.md)
-12. [The Transformer block](lessons/09-transformer-block.md)
-13. [Next-token training](lessons/10-next-token-training.md)
-14. [Autoregressive inference and KV caching](lessons/11-autoregressive-inference-kv-caching.md)
-15. [Sampling and generation](lessons/12-sampling.md)
-16. [Evaluation leakage](lessons/13-evaluation-leakage.md)
+1. [Start with the words](lessons/00-course-language.md)
+2. [Inputs, outputs, rules, and learned models](lessons/00-software-models.md)
+3. [Generative AI and language models](lessons/00-generative-ai-and-llms.md)
+4. [The next-token loop](lessons/00-next-token-loop.md)
+5. [How machines learn](lessons/00-how-machines-learn.md)
+6. [Inference, generation, and reasoning](lessons/00-inference-generation-reasoning.md)
+7. [Gradient descent](lessons/01-gradient-descent.md)
+8. [Backpropagation](lessons/02-backpropagation.md)
+9. [Vectors, matrices, and linear layers](lessons/03-vectors-matrices-linear-layers.md)
+10. [Losses and optimisers](lessons/04-losses-optimisers.md)
+11. [BPE tokenisation](lessons/05-bpe-tokenisation.md)
+12. [Embeddings and positional information](lessons/06-embeddings-positional-information.md)
+13. [Self-attention](lessons/07-self-attention.md)
+14. [Multi-head attention](lessons/08-multi-head-attention.md)
+15. [The Transformer block](lessons/09-transformer-block.md)
+16. [Next-token training](lessons/10-next-token-training.md)
+17. [Autoregressive inference and KV caching](lessons/11-autoregressive-inference-kv-caching.md)
+18. [Sampling and generation](lessons/12-sampling.md)
+19. [Evaluation leakage](lessons/13-evaluation-leakage.md)
