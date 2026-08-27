@@ -52,9 +52,7 @@ test("orients a beginner before the first prediction and technical lesson", asyn
   ).toBeVisible();
   await expect(lesson.locator(".checkpoint-prerequisites")).toBeVisible();
   await lesson
-    .getByLabel(
-      "If a word in this course is unfamiliar, what should happen before you are asked to use it?",
-    )
+    .locator(".checkpoint-control-prepare input")
     .fill("Pause, define it with examples, and check recognition before continuing.");
   await lesson.getByRole("button", { name: "Save response" }).click();
   await page

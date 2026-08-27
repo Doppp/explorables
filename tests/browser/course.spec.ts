@@ -279,37 +279,52 @@ test("starts with core definitions and publishes semantic tutor events", async (
   await openCourseStart(page);
   await expect(
     page.getByRole("heading", {
-      name: "Generative AI and language models",
+      name: "Start with the words",
       level: 1,
     }),
   ).toBeVisible();
-  await expect(page.getByText("Artificial intelligence (AI)")).toBeVisible();
-  await expect(page.getByText("Machine learning (ML)")).toBeVisible();
-  await expect(page.getByText("Chatbot product")).toBeVisible();
+  await expect(page.getByText("AI vocabulary is taught, not assumed.")).toBeVisible();
 
   const response =
-    "A classifier is learned but not generative; a chatbot surrounds its LLM.";
-  await page
-    .getByLabel(
-      "Is a photo classifier generative AI, and is a chatbot the same thing as the language model inside it? Explain your current guess.",
-    )
-    .fill(response);
+    "Pause, define the word with examples, and check recognition before continuing.";
+  await page.locator(".checkpoint-control-prepare input").fill(response);
   const eventRequest = page.waitForRequest(
     (request) =>
       request.method() === "POST" &&
       new URL(request.url()).pathname === "/__explorables/tutor-events",
   );
-  await page.getByRole("button", { name: "Save response" }).click();
+  await page
+    .locator(".checkpoint-control-prepare")
+    .getByRole("button", { name: "Save response" })
+    .click();
   const interaction = (await eventRequest).postDataJSON();
   expect(interaction).toMatchObject({
     schemaVersion: 1,
     type: "checkpoint-completed",
     courseId: "ai-from-first-principles",
-    lessonId: "generative-ai-and-llms",
-    checkpointId: "predict",
+    lessonId: "course-language",
+    checkpointId: "vocabulary-ready",
     source: "learner",
     response,
   });
+
+  await page
+    .getByRole("button", { name: "Inputs, outputs, rules, and learned models →" })
+    .click();
+  await page
+    .locator(".checkpoint-control-check input")
+    .fill("The photo is the input and dog is the visible output.");
+  await page
+    .locator(".checkpoint-control-check")
+    .getByRole("button", { name: "Save response" })
+    .click();
+  await page
+    .locator(".checkpoint-control-predict input")
+    .fill("Training can change the learned photo model.");
+  await page
+    .locator(".checkpoint-control-predict")
+    .getByRole("button", { name: "Save response" })
+    .click();
 
   const frame = page.frameLocator("iframe").first();
   const explorableRequest = page.waitForRequest(
@@ -317,14 +332,14 @@ test("starts with core definitions and publishes semantic tutor events", async (
       request.method() === "POST" &&
       new URL(request.url()).pathname === "/__explorables/tutor-events",
   );
-  await frame.getByRole("button", { name: "Save this classification" }).click();
+  await frame.getByRole("button", { name: "Save this component" }).click();
   expect((await explorableRequest).postDataJSON()).toMatchObject({
     type: "checkpoint-completed",
-    lessonId: "generative-ai-and-llms",
+    lessonId: "software-models",
     checkpointId: "experiment",
     source: "explorable",
   });
-  await expect(page.getByText("2 of 4")).toBeVisible();
+  await expect(page.getByText("3 of 5")).toBeVisible();
 });
 
 test("guides progress, records interaction, and resumes locally", async ({ page }) => {
