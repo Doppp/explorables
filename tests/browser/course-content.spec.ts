@@ -51,6 +51,26 @@ test("orients a beginner before the first prediction and technical lesson", asyn
     lesson.getByRole("heading", { name: "Words for this step" }),
   ).toBeVisible();
   await expect(lesson.locator(".checkpoint-prerequisites")).toBeVisible();
+  await lesson
+    .getByLabel(
+      "If a word in this course is unfamiliar, what should happen before you are asked to use it?",
+    )
+    .fill("Pause, define it with examples, and check recognition before continuing.");
+  await lesson.getByRole("button", { name: "Save response" }).click();
+  await page
+    .getByRole("button", { name: "Inputs, outputs, rules, and learned models →" })
+    .click();
+  await expect(page.locator(".tutor-handoff")).toHaveAttribute(
+    "data-tutor-checkpoint-phase",
+    "check",
+  );
+  await expect(
+    page
+      .locator(".tutor-led-lesson-body")
+      .getByLabel(
+        "In the photo application example, what is the input and what is the visible output?",
+      ),
+  ).toBeVisible();
 
   await page.getByRole("button", { name: "Switch to Explore mode" }).click();
   await page.getByRole("button", { name: "Enter Explore mode" }).click();
